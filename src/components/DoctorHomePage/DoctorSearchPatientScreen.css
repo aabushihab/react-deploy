@@ -1,0 +1,752 @@
+/* DoctorSearchPatientScreen.css */
+
+.doctor-search-patient {
+  padding: 20px;
+  background: #f0f2f5;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ==================== HEADER ==================== */
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    min-height: 70px; /* ⬅️ slightly taller header */
+
+}
+/* ==================== CLOSE BUTTON ==================== */
+.btn-close-screen {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  background: #e74c3c;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-screen:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+.search-header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.status-badge {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.status-badge.success {
+  background: #e8f8f5;
+  color: #27ae60;
+}
+
+.status-badge.error {
+  background: #fdedec;
+  color: #e74c3c;
+}
+
+.status-badge.loading {
+  background: #fef9e7;
+  color: #f39c12;
+}
+
+.status-badge.info {
+  background: #eaf2f8;
+  color: #3498db;
+}
+
+/* ==================== SEARCH SECTION ==================== */
+.search-section {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.search-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #dce4ec;
+  font-size: 14px;
+  background: white;
+  min-width: 120px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #dce4ec;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.btn-search {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #3498db;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-search:hover:not(:disabled) {
+  background: #2980b9;
+  transform: scale(1.02);
+}
+
+.btn-search:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-clear {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #95a5a6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-clear:hover {
+  background: #7f8c8d;
+  transform: scale(1.02);
+}
+
+.loading-spinner-small {
+  width: 25px;
+  height: 25px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==================== TABLE SECTION ==================== */
+.table-section {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.total-results {
+  background: #e8f8f5;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #1abc9c;
+}
+
+.table-container {
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.patients-table th {
+  background: #f8f9fa;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: bold;
+  color: #2c3e50;
+  border-bottom: 2px solid #e9ecef;
+  font-size: 13px;
+}
+
+.patients-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.patient-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.patient-row:hover {
+  background: #f8f9fa;
+}
+
+.patient-row.selected {
+  background: #ebf5fb;
+}
+
+.patient-row.temp {
+  background: #fff3cd;
+}
+
+.patient-type-badge {
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.patient-type-badge.temp {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.patient-type-badge.permanent {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.temp {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.status-badge.permanent {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #95a5a6;
+  font-size: 16px;
+}
+
+/* ==================== ACTIONS SECTION ==================== */
+.actions-section {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.btn-action {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-action:not(:disabled):hover {
+  transform: scale(1.02);
+}
+
+.btn-visits {
+  background: #9b59b6;
+}
+
+.btn-visits:not(:disabled):hover {
+  background: #8e44ad;
+}
+
+.btn-history {
+  background: #27ae60;
+}
+
+.btn-history:not(:disabled):hover {
+  background: #1e8449;
+}
+
+/* ==================== VISIT CARDS ==================== */
+.visit-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  overflow: hidden;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+
+.visit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.visit-card-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.visit-id {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.visit-header-spacer {
+  flex: 1;
+}
+
+.visit-card-body {
+  padding: 15px;
+}
+
+.visit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.visit-detail {
+  font-size: 13px;
+  color: #34495e;
+}
+
+.visit-actions {
+  margin-top: 10px;
+}
+
+.btn-view-details {
+  padding: 6px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #3498db;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view-details:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+/* ==================== MODALS ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  max-width: 700px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-content.large {
+  max-width: 900px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  color: #e74c3c;
+}
+
+.modal-content h2 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.modal-content h3 {
+  margin: 15px 0 10px 0;
+  color: #2c3e50;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-weight: bold;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.detail-value {
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+.drugs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drug-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.drug-name {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.drug-strength, .drug-route, .drug-form {
+  color: #34495e;
+}
+
+.visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.history-record {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8f9fa;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.history-date {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.history-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 20px;
+  font-size: 13px;
+}
+
+.history-body div {
+  padding: 2px 0;
+}
+
+.empty-state.small {
+  padding: 15px;
+  font-size: 14px;
+}
+
+/* ==================== RTL SUPPORT ==================== */
+.doctor-search-patient.rtl {
+  direction: rtl;
+}
+
+.doctor-search-patient.rtl .search-controls {
+  flex-direction: row-reverse;
+}
+
+.doctor-search-patient.rtl .table-header {
+  flex-direction: row-reverse;
+}
+
+.doctor-search-patient.rtl .modal-close {
+  right: auto;
+  left: 15px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .search-controls {
+    flex-direction: column;
+  }
+  
+  .search-input {
+    min-width: 100%;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .history-body {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 15px;
+  }
+  
+  .patients-table {
+    font-size: 12px;
+  }
+  
+  .patients-table th,
+  .patients-table td {
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .actions-section {
+    flex-direction: column;
+  }
+  
+  .btn-action {
+    width: 100%;
+  }
+}
+/* ==================== PAGINATION ==================== */
+.pagination-container {
+    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 10px 5px 10px;
+  border-top: 1px solid #e9ecef;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 6px 14px;
+  border: 1px solid #dce4ec;
+  border-radius: 6px;
+  background: white;
+  color: #2c3e50;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 36px;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+  background: #f0f2f5;
+  border-color: #3498db;
+}
+
+.pagination-btn.active {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+  font-weight: bold;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  color: #95a5a6;
+  padding: 0 5px;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #7f8c8d;
+  padding: 0 10px;
+}
+
+/* ==================== RTL PAGINATION ==================== */
+.doctor-search-patient.rtl .pagination-container {
+  direction: rtl;
+}
+
+.doctor-search-patient.rtl .pagination-btn {
+  margin: 0 2px;
+}
+
+/* ==================== RESPONSIVE PAGINATION ==================== */
+@media (max-width: 768px) {
+  .pagination-container {
+    gap: 4px;
+    padding: 10px 5px;
+  }
+  
+  .pagination-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    min-width: 30px;
+  }
+  
+  .pagination-info {
+    font-size: 11px;
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-container {
+    gap: 3px;
+  }
+  
+  .pagination-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+    min-width: 26px;
+  }
+}
+/* Row History Button */
+.btn-row-history {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 5px;
+  background: #27ae60;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-row-history:hover:not(:disabled) {
+  background: #1e8449;
+  transform: scale(1.05);
+}
+
+.btn-row-history:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Adjust table column widths */
+.patients-table th:last-child,
+.patients-table td:last-child {
+  text-align: center;
+  width: 100px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .btn-row-history {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+}
+.modal-overlay {
+  z-index: 9999;
+}
+
+.modal-content {
+  z-index: 10000;
+}

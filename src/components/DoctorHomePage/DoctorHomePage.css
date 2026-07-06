@@ -1,0 +1,1913 @@
+/* ==================== DOCTOR HOME PAGE STYLES ==================== */
+
+.doctor-home {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.doctor-home.rtl {
+  direction: rtl;
+}
+
+/* ==================== LOADING & ERROR STATES ==================== */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 24px;
+  color: #1E90FF;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.error-message h2 {
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.error-message p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.error-message button {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 20px;
+  background: #1E90FF;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.error-message button:hover {
+  background: #4169E1;
+  transform: scale(1.05);
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+  width: 55px;
+  min-width: 55px;
+  max-width: 250px;
+  background: linear-gradient(to bottom, #1a2332, #2c3e50);
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: width 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.sidebar.open {
+  width: 250px;
+  min-width: 250px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu-icon {
+  font-size: 24px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.menu-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ecf0f1;
+  white-space: nowrap;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sidebar-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  color: #ecf0f1;
+  font-size: 14px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-left: 3px solid var(--hover-color, #3498db);
+  transform: scale(1.02);
+}
+
+.sidebar-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.sidebar-text {
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-text {
+  display: none;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ==================== WELCOME SECTION ==================== */
+.welcome-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.welcome-greeting {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(to right, #1E90FF, #00CED1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.find-visit {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.find-visit-input {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #dce4ec;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 150px;
+}
+
+.find-visit-input:focus {
+  border-color: #1E90FF;
+}
+
+.find-visit-btn {
+  background: #1E90FF;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.find-visit-btn:hover {
+  background: #4169E1;
+}
+
+.notification-icon {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s;
+  color: #FF4500;
+}
+
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+.notification-pulse {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* ==================== SUMMARY CARDS ==================== */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.summary-card {
+  padding: 15px;
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: slideUp 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.summary-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.summary-card-title {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.summary-card-value {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== PERFORMANCE WIDGET ==================== */
+.performance-widget {
+  background: white;
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+  padding: 5px 15px 15px 15px;
+}
+
+.performance-widget summary {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.performance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 30px;
+  padding: 10px 0;
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.performance-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.performance-icon {
+  font-size: 20px;
+}
+
+.performance-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.performance-label {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.performance-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* ==================== FILTERS BAR ==================== */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 5px 0 10px 0;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-button {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.filter-button.active {
+  background: linear-gradient(to right, #1E90FF, #4169E1);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(30, 144, 255, 0.4);
+}
+
+.filter-button.inactive {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.filter-button.inactive:hover {
+  background: #e0e0e0;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-action-btn {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-action-btn.refresh {
+  background: #28a745;
+}
+
+.filter-action-btn.refresh:hover {
+  background: #218838;
+}
+
+.filter-action-btn.layout {
+  background: #17a2b8;
+}
+
+.filter-action-btn.layout:hover {
+  background: #138496;
+}
+
+.filter-action-btn.sort {
+  background: #6c757d;
+}
+
+.filter-action-btn.sort:hover {
+  background: #5a6268;
+}
+
+.search-input {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #dce4ec;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 200px;
+}
+
+.search-input:focus {
+  border-color: #1E90FF;
+}
+
+/* ==================== PATIENT AVATAR ==================== */
+.patient-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  position: relative;
+}
+
+.patient-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==================== VISIT CARDS ==================== */
+.card-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.card-container {
+  padding: 5px 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.visit-card {
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+}
+
+.visit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.visit-card-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  background: #FFD700;
+  gap: 10px;
+}
+
+.visit-id {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.visit-header-spacer {
+  flex: 1;
+}
+
+.status-badge {
+  padding: 2px 12px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.visit-card-body {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 15px;
+}
+
+.visit-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  border: 2px solid #e9ecef;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.visit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.visit-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.visit-details {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.visit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.visit-actions button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 100px;
+}
+
+.btn-open {
+  background: #1E90FF;
+  color: white;
+}
+
+.btn-open:hover {
+  background: #4169E1;
+}
+
+.btn-details {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-details:hover {
+  background: #5a6268;
+}
+
+.empty-state {
+  font-size: 18px;
+  color: #95a5a6;
+  padding: 50px;
+  text-align: center;
+}
+
+/* ==================== PAGINATION ==================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+
+.pagination button {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-prev,
+.pagination-next {
+  background: #6c757d;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination-prev:disabled,
+.pagination-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-prev:hover:not(:disabled),
+.pagination-next:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.pagination-page {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.pagination-page.active {
+  background: #1E90FF;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination-page:hover:not(.active) {
+  background: #e0e0e0;
+}
+
+.pagination-ellipsis {
+  color: #555;
+  padding: 0 5px;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #555;
+  padding: 0 10px;
+}
+
+/* ==================== VISIT SCREEN MODAL ==================== */
+.visit-screen-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.visit-screen-modal-content {
+  background: white;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 1400px;
+  height: 92vh;
+  max-height: 950px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+.visit-screen-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10000;
+  color: #555;
+  transition: all 0.2s;
+  padding: 8px 12px;
+  border-radius: 50%;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 44px;
+  height: 44px;
+  display: none !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.visit-screen-close-btn:hover {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Make sure the DoctorVisitScreen component fits properly */
+.visit-screen-modal-content > * {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Override DoctorVisitScreen header padding to make room for close button */
+.visit-screen-modal-content .doctor-visit-screen {
+  padding-top: 20px;
+  padding-right: 70px;
+}
+
+/* ==================== VISIT POPUP (SEARCH RESULT) ==================== */
+.visit-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.visit-popup-content {
+  background: white;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+.visit-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  padding: 5px 10px;
+  border-radius: 50%;
+}
+
+.visit-popup-close:hover {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.visit-popup-title {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 22px;
+}
+
+.visit-popup-card {
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.visit-popup-card .visit-card-body {
+  flex-wrap: wrap;
+}
+
+.visit-popup-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.visit-popup-actions button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.visit-popup-actions .btn-open {
+  background: #1E90FF;
+  color: white;
+}
+
+.visit-popup-actions .btn-open:hover {
+  background: #4169E1;
+}
+
+.visit-popup-actions .btn-details {
+  background: #6c757d;
+  color: white;
+}
+
+.visit-popup-actions .btn-details:hover {
+  background: #5a6268;
+}
+
+.visit-popup-actions .btn-close-popup {
+  background: #e74c3c;
+  color: white;
+}
+
+.visit-popup-actions .btn-close-popup:hover {
+  background: #c0392b;
+}
+
+.visit-search-result-card {
+  margin: 10px 0 20px 0;
+  animation: fadeIn 0.3s ease;
+  border-left: 4px solid #1E90FF;
+}
+
+.visit-search-error {
+  margin: 10px 0 20px 0;
+  padding: 10px 15px;
+  background: #ffe6e6;
+  color: #c0392b;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ==================== RTL SUPPORT ==================== */
+.rtl .sidebar-button {
+  text-align: right;
+}
+
+.rtl .sidebar-button:hover {
+  border-left: none;
+  border-right: 3px solid var(--hover-color, #3498db);
+}
+
+.rtl .visit-card-body {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-actions {
+  align-items: flex-start;
+}
+
+.rtl .welcome-actions {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-screen-close-btn {
+  right: auto;
+  left: 20px;
+}
+
+.rtl .visit-screen-modal-content .doctor-visit-screen {
+  padding-right: 20px;
+  padding-left: 70px;
+}
+
+.rtl .visit-popup-close {
+  right: auto;
+  left: 15px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 55px;
+    min-width: 55px;
+  }
+  
+  .sidebar.open {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-buttons {
+    justify-content: center;
+  }
+  
+  .filter-actions {
+    justify-content: center;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .visit-card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .visit-actions {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .visit-actions button {
+    min-width: 80px;
+  }
+  
+  .welcome-greeting {
+    font-size: 20px;
+  }
+  
+  .find-visit-input {
+    width: 100px;
+  }
+  
+  .visit-screen-modal-overlay {
+    padding: 10px;
+  }
+  
+  .visit-screen-modal-content {
+    height: 96vh;
+    max-height: none;
+    border-radius: 10px;
+  }
+  
+  .visit-screen-close-btn {
+    top: 10px;
+    right: 12px;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    padding: 6px 10px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 50px;
+  }
+  
+  .rtl .visit-screen-close-btn {
+    right: auto;
+    left: 12px;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 20px;
+    padding-left: 50px;
+  }
+
+  .visit-popup-content {
+    padding: 20px;
+    max-width: 95%;
+  }
+  
+  .visit-popup-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .visit-popup-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .filter-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .visit-screen-modal-overlay {
+    padding: 5px;
+  }
+  
+  .visit-screen-modal-content {
+    border-radius: 8px;
+    height: 98vh;
+  }
+  
+  .visit-screen-close-btn {
+    top: 8px;
+    right: 8px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    padding: 4px 8px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 40px;
+  }
+  
+  .rtl .visit-screen-close-btn {
+    right: auto;
+    left: 8px;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 20px;
+    padding-left: 40px;
+  }
+}
+
+/* ==================== DETAILS MODAL ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: #F0F2F5;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 950px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 25px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-content h2 {
+  color: #2C3E50;
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  padding-right: 40px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  padding: 8px 12px;
+  border-radius: 50%;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== PDF BUTTONS ==================== */
+.pdf-buttons-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  padding: 15px;
+  background: #F8F9FA;
+  border-radius: 10px;
+  border: 1px solid #E8ECF0;
+}
+
+.btn-pdf {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.btn-pdf:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-pdf.patient {
+  background: #2196F3;
+}
+
+.btn-pdf.patient:hover {
+  background: #1976D2;
+}
+
+.btn-pdf.medical {
+  background: #9C27B0;
+}
+
+.btn-pdf.medical:hover {
+  background: #7B1FA2;
+}
+
+.btn-pdf.drugs {
+  background: #4CAF50;
+}
+
+.btn-pdf.drugs:hover {
+  background: #388E3C;
+}
+
+.btn-pdf.procedures {
+  background: #FF9800;
+}
+
+.btn-pdf.procedures:hover {
+  background: #F57C00;
+}
+
+/* ==================== DETAILS SECTIONS ==================== */
+.details-section {
+  margin: 15px 0;
+  padding: 15px;
+  background: #F8F9FA;
+  border-radius: 10px;
+  border: 1px solid #E8ECF0;
+}
+
+.details-section h3 {
+  margin: 0 0 10px 0;
+  color: #2C3E50;
+  font-size: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #E8ECF0;
+}
+
+/* ==================== INFO GRID ==================== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.info-icon {
+  font-size: 20px;
+  min-width: 30px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.info-label {
+  font-size: 11px;
+  color: #7F8C8D;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #2C3E50;
+  font-weight: 500;
+  word-wrap: break-word;
+}
+
+/* ==================== MEDICAL GRID ==================== */
+.medical-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.medical-item {
+  padding: 12px 15px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.medical-header {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.medical-content {
+  font-size: 13px;
+  color: #34495E;
+  word-wrap: break-word;
+}
+
+/* ==================== DRUGS GRID ==================== */
+.drugs-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.drug-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.drug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.drug-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: #2C3E50;
+}
+
+.drug-form-badge {
+  background: #E8ECF0;
+  color: #34495E;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.drug-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 15px;
+}
+
+.drug-detail-row {
+  display: flex;
+  gap: 5px;
+  font-size: 13px;
+  align-items: center;
+}
+
+.drug-label {
+  font-weight: bold;
+  color: #7F8C8D;
+}
+
+.drug-value {
+  color: #2C3E50;
+}
+
+.drug-instructions {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #34495E;
+}
+
+/* ==================== PROCEDURES LIST ==================== */
+.procedures-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.procedure-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #3498DB;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.procedure-icon {
+  font-size: 20px;
+  min-width: 30px;
+}
+
+.procedure-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.procedure-category {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.procedure-name {
+  font-size: 13px;
+  color: #2C3E50;
+  word-wrap: break-word;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.empty-state.small {
+  padding: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #95a5a6;
+}
+
+/* ==================== LOADING STATES ==================== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.loading-spinner-large {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ==================== RTL SUPPORT FOR DETAILS MODAL ==================== */
+.rtl .modal-close {
+  right: auto;
+  left: 20px;
+}
+
+.rtl .info-card {
+  flex-direction: row-reverse;
+}
+
+.rtl .procedure-item {
+  border-left: none;
+  border-right: 4px solid #3498DB;
+}
+
+.rtl .drug-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .pdf-buttons-container {
+  flex-direction: row-reverse;
+}
+
+.rtl .modal-content h2 {
+  padding-right: 0;
+  padding-left: 40px;
+}
+
+/* ==================== RESPONSIVE FOR DETAILS MODAL ==================== */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95%;
+    padding: 15px;
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .modal-content h2 {
+    font-size: 18px;
+    padding-right: 35px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pdf-buttons-container {
+    flex-direction: column;
+  }
+
+  .btn-pdf {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .drug-details {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .rtl .modal-close {
+    right: auto;
+    left: 12px;
+  }
+
+  .rtl .modal-content h2 {
+    padding-right: 0;
+    padding-left: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 12px;
+    max-width: 98%;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .drug-details {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content h2 {
+    font-size: 16px;
+    padding-right: 30px;
+  }
+
+  .modal-close {
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+
+  .rtl .modal-content h2 {
+    padding-right: 0;
+    padding-left: 30px;
+  }
+
+  .rtl .modal-close {
+    right: auto;
+    left: 8px;
+  }
+
+  .details-section {
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .info-card {
+    padding: 10px 12px;
+  }
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #F0F2F5;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #a0a6ab;
+}
+/* Add to DoctorHomePage.css */
+
+/* ==================== DETAILS MODAL SCROLLABLE CONTENT ==================== */
+.details-scrollable {
+  max-height: calc(90vh - 200px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.details-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details-scrollable::-webkit-scrollbar-track {
+  background: #F0F2F5;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #a0a6ab;
+}
+
+/* ==================== PDF BUTTONS UPDATED ==================== */
+.btn-pdf.visit {
+  background: #1a237e;
+}
+
+.btn-pdf.visit:hover {
+  background: #0d47a1;
+}
+
+.btn-pdf:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-pdf:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==================== RTL SUPPORT ==================== */
+.rtl .details-scrollable {
+  padding-right: 0;
+  padding-left: 5px;
+}
+
+.rtl .modal-close {
+  right: auto;
+  left: 20px;
+}
+
+.rtl .pdf-buttons-container {
+  flex-direction: row-reverse;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .details-scrollable {
+    max-height: calc(90vh - 250px);
+  }
+  
+  .pdf-buttons-container {
+    flex-direction: column;
+  }
+  
+  .btn-pdf {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .details-scrollable {
+    max-height: calc(90vh - 280px);
+  }
+}
+/* ==================== DETAILS MODAL SCROLLABLE CONTENT ==================== */
+.details-scrollable {
+  max-height: calc(90vh - 280px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.details-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details-scrollable::-webkit-scrollbar-track {
+  background: #F0F2F5;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #a0a6ab;
+}
+
+/* ==================== PDF BUTTONS UPDATED ==================== */
+.btn-pdf.full {
+  background: #1a237e;
+}
+
+.btn-pdf.full:hover {
+  background: #0d47a1;
+}
+
+.btn-pdf.combined {
+  background: #00695c;
+}
+
+.btn-pdf.combined:hover {
+  background: #004d40;
+}
+
+.btn-pdf:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-pdf:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==================== RTL SUPPORT ==================== */
+.rtl .details-scrollable {
+  padding-right: 0;
+  padding-left: 5px;
+}
+
+.rtl .modal-close {
+  right: auto;
+  left: 20px;
+}
+
+.rtl .pdf-buttons-container {
+  flex-direction: row-reverse;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .details-scrollable {
+    max-height: calc(90vh - 350px);
+  }
+  
+  .pdf-buttons-container {
+    flex-direction: column;
+  }
+  
+  .btn-pdf {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .details-scrollable {
+    max-height: calc(90vh - 380px);
+  }
+}
+/* Password Dialog Styles */
+.password-dialog {
+  max-width: 450px !important;
+  padding: 30px !important;
+}
+
+.password-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.password-dialog-icon {
+  font-size: 32px;
+}
+
+.password-dialog-header h2 {
+  margin: 0;
+  color: #2C3E50;
+  font-size: 24px;
+}
+
+.password-dialog-body {
+  margin-bottom: 20px;
+}
+
+.password-form-group {
+  margin-bottom: 20px;
+}
+
+.password-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #1E90FF;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+}
+
+.password-input::placeholder {
+  color: #bbb;
+}
+
+.password-toggle {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.password-dialog-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.password-btn {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.password-btn.cancel {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.password-btn.cancel:hover {
+  background: #e0e0e0;
+}
+
+.password-btn.submit {
+  background: #1E90FF;
+  color: white;
+}
+
+.password-btn.submit:hover {
+  background: #0077CC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+}
+
+.password-btn.submit:disabled {
+  background: #87CEEB;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.password-btn.cancel:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.password-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.loading-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f0f0f0;
+  border-top: 2px solid #1E90FF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* RTL Support for Password Dialog */
+.rtl .password-dialog-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .password-dialog-footer {
+  flex-direction: row-reverse;
+}
+
+.rtl .toggle-label {
+  flex-direction: row-reverse;
+}
