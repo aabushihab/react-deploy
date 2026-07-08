@@ -1911,3 +1911,36 @@
 .rtl .toggle-label {
   flex-direction: row-reverse;
 }
+/* Reports Modal Styles */
+.reports-modal-content {
+  width: 95% !important;
+  max-width: 1400px !important;
+  height: 95vh !important;
+  max-height: 95vh !important;
+  padding: 10px !important;
+  margin: 2.5vh auto !important;
+  overflow: hidden !important;
+}
+
+.reports-modal-content .reports-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.reports-modal-content .reports-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reports-modal-content .reports-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.reports-modal-content .reports-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.reports-modal-content .reports-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

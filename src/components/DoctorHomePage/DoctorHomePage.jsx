@@ -17457,6 +17457,9 @@ import { BASE_URL } from '../../utils/api';
 import DoctorVisitScreen from '../DoctorHomePage/DoctorVisitScreen';
 import DoctorSearchPatientScreen from '../DoctorHomePage/DoctorSearchPatientScreen';
 import './DoctorHomePage.css';
+import ReportsScreen from '../ReportsScreen/ReportsScreen'; // Add this import
+import DoctorGuide from '../DoctorGuide/DoctorGuide';
+
 
 // Constants
 const SIDEBAR_WIDTH = 250;
@@ -17572,7 +17575,9 @@ const EN_BUNDLE = {
   'doctor.pdf.error': 'Error generating PDF',
   'doctor.pdf.fullReport': 'Full Report',
   'doctor.pdf.patientDrugs': 'Patient + Drugs',
-  'doctor.pdf.patientProcedures': 'Patient + Procedures'
+  'doctor.pdf.patientProcedures': 'Patient + Procedures',
+    'doctor.reports.title': 'Reports Dashboard',
+  'doctor.reports.close': 'Close Reports',
 };
 
 // Arabic translations
@@ -17684,6 +17689,8 @@ const AR_BUNDLE = {
   'doctor.pdf.fullReport': 'تقرير كامل',
   'doctor.pdf.patientDrugs': 'المريض + الأدوية',
   'doctor.pdf.patientProcedures': 'المريض + الإجراءات',
+  'doctor.reports.title': 'لوحة التقارير',
+  'doctor.reports.close': 'إغلاق التقارير',
 };
 
 const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
@@ -17719,6 +17726,9 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [locale, setLocale] = useState(getLanguage());
   
+
+    // ==================== GUIDE STATE ====================
+  const [showGuide, setShowGuide] = useState(false);
   // ==================== SEARCH PATIENT SCREEN STATE ====================
   const [showSearchPatient, setShowSearchPatient] = useState(false);
   
@@ -17739,7 +17749,9 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   });
   const [passwordError, setPasswordError] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
-  
+  // ==================== REPORTS SCREEN STATE ====================
+  const [showReportsScreen, setShowReportsScreen] = useState(false);
+
   // ==================== LOCALIZATION ====================
   const getBundle = useCallback(() => {
     return locale === 'ar' ? AR_BUNDLE : EN_BUNDLE;
@@ -18829,6 +18841,15 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
     setShowSearchPatient(false);
   }, []);
 
+
+   // ==================== REPORTS HANDLING ====================
+  const openReportsScreen = useCallback(() => {
+    setShowReportsScreen(true);
+  }, []);
+
+  const closeReportsScreen = useCallback(() => {
+    setShowReportsScreen(false);
+  }, []);
   // ==================== AVATAR HANDLING ====================
   const getAvatarPath = useCallback((gender) => {
     if (!gender) return `${process.env.PUBLIC_URL}/unknown.PNG`;
@@ -18927,14 +18948,37 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   }, [loadDoctorVisits, loadSummaryCards, checkNotifications, currentFilter]);
 
   // ==================== INITIALIZATION ====================
-  useEffect(() => {
-    const init = async () => {
-      await loadSummaryCards();
-      await loadDoctorVisits('TODAY', true);
-    };
-    init();
-  }, []);
-
+//   useEffect(() => {
+//     const init = async () => {
+//       await loadSummaryCards();
+//       await loadDoctorVisits('TODAY', true);
+//     };
+//     init();
+//   }, []);
+useEffect(() => {
+  let isMounted = true;
+  
+  const initialize = async () => {
+    try {
+      // Load data in parallel
+      await Promise.all([
+        loadSummaryCards(),
+        loadDoctorVisits('TODAY', true)
+      ]);
+    } catch (error) {
+      console.error('Initialization error:', error);
+      if (isMounted) {
+        setError(t('doctor.visit.loadError') || 'Failed to load data');
+      }
+    }
+  };
+  
+  initialize();
+  
+  return () => {
+    isMounted = false;
+  };
+}, []);
   // ==================== SIDEBAR HANDLING ====================
   const handleSidebarMouseEnter = () => {
     if (!sidebarOpen) {
@@ -19713,12 +19757,12 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
             color="#3498db"
             onClick={openSearchPatient}
           />
-          <SidebarButton 
-            icon="📊" 
-            text={t('doctor.sidebar.reports')}
-            color="#2ecc71"
-            onClick={() => alert(t('doctor.reports.comingSoon'))}
-          />
+        <SidebarButton 
+  icon="📊" 
+  text={t('doctor.sidebar.reports')}
+  color="#2ecc71"
+  onClick={openReportsScreen}
+/>
           <SidebarButton 
             icon="🔒" 
             text={t('doctor.sidebar.changePassword')}
@@ -19749,7 +19793,24 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
           </div>
           
           <div className="welcome-actions">
+
+            
             <div className="find-visit">
+                 {/* Add this button */}
+    <button 
+        onClick={() => setShowGuide(true)}
+        style={{
+            background: '#9f7aea',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+    >
+        ❓ Guide
+    </button>
               <input
                 type="text"
                 className="find-visit-input"
@@ -20028,7 +20089,6 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
           </div>
         </div>
       )}
-
       {/* Search Patient Modal */}
       {showSearchPatient && (
         <div className="visit-screen-modal-overlay" onClick={closeSearchPatient}>
@@ -20049,11 +20109,39 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
         </div>
       )}
 
+      {/* Reports Screen Modal */}
+      {showReportsScreen && (
+        <div className="visit-screen-modal-overlay" onClick={closeReportsScreen}>
+          <div className="visit-screen-modal-content reports-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              type="button"
+              className="visit-screen-close-btn"
+              onClick={closeReportsScreen}
+            >
+              ✖
+            </button>
+            <ReportsScreen
+              loggedUser={username}
+              lang={locale}
+              onClose={closeReportsScreen}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Details Modal */}
       <DetailsModal />
 
       {/* Password Change Modal */}
       <PasswordChangeModal />
+      {/* ==================== GUIDE MODAL ==================== */}
+      {showGuide && (
+        <DoctorGuide
+            isOpen={showGuide}
+            onClose={() => setShowGuide(false)}
+            locale={locale}
+        />
+      )}
     </div>
   );
 };
