@@ -469,7 +469,7 @@
 // //           setTranslations(translations[language] || translations.en);
 // //         }
 // //       } catch (err) {
-// //         console.error('Failed to load translations:', err);
+// //         //console.error('Failed to load translations:', err);
 // //         // Fallback to English
 // //         setTranslations({
 // //           title: { reports: 'Reports' },
@@ -597,13 +597,13 @@
 // //     try {
 // //       const startTime = performance.now();
 // //       const url = `${BASE_URL}/api/reports${endpoint}`;
-// //       console.log('📤 Fetching report:', url);
+// //       //console.log('📤 Fetching report:', url);
       
 // //       const response = await fetch(url);
 // //       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
 // //       const rawText = await response.text();
-// //       console.log('📄 Raw response:', rawText);
+// //       //console.log('📄 Raw response:', rawText);
       
 // //       const jsonData = JSON.parse(rawText);
 // //       const elapsed = Math.round(performance.now() - startTime);
@@ -624,7 +624,7 @@
 // //       setLastUpdate(new Date());
       
 // //     } catch (err) {
-// //       console.error('🚨 Load error:', err);
+// //       //console.error('🚨 Load error:', err);
 // //       setStatus('Error loading data', 'error');
 // //       setData([]);
 // //     } finally {
@@ -1638,7 +1638,7 @@
 //           setTranslations(translations[language] || translations.en);
 //         }
 //       } catch (err) {
-//         console.error('Failed to load translations:', err);
+//         //console.error('Failed to load translations:', err);
 //         setTranslations({
 //           title: { reports: 'Reports' },
 //           header: { title: '📊 Reports Dashboard' },
@@ -1781,13 +1781,13 @@
 //     try {
 //       const startTime = performance.now();
 //       const url = `${BASE_URL}/api/reports${endpoint}`;
-//       console.log('📤 Fetching report:', url);
+//       //console.log('📤 Fetching report:', url);
       
 //       const response = await fetch(url);
 //       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
 //       const rawText = await response.text();
-//       console.log('📄 Raw response:', rawText);
+//       //console.log('📄 Raw response:', rawText);
       
 //       const jsonData = JSON.parse(rawText);
 //       const elapsed = Math.round(performance.now() - startTime);
@@ -1810,7 +1810,7 @@
 //       setLastUpdate(new Date());
       
 //     } catch (err) {
-//       console.error('🚨 Load error:', err);
+//       //console.error('🚨 Load error:', err);
 //       setStatus('Error loading data', 'error');
 //       setData([]);
 //     } finally {
@@ -2791,13 +2791,13 @@ const ReportsScreen = ({ loggedUser, lang = 'en', onClose }) => {
     try {
       const startTime = performance.now();
       const url = `${BASE_URL}/api/reports${endpoint}`;
-      console.log('📤 Fetching report:', url);
+      //console.log('📤 Fetching report:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
       const rawText = await response.text();
-      console.log('📄 Raw response:', rawText);
+      //console.log('📄 Raw response:', rawText);
       
       const jsonData = JSON.parse(rawText);
       const elapsed = Math.round(performance.now() - startTime);
@@ -2820,7 +2820,7 @@ const ReportsScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setLastUpdate(new Date());
       
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatus(t.status.error, 'error');
       setData([]);
     } finally {

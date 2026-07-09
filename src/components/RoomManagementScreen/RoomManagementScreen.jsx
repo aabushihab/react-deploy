@@ -811,7 +811,7 @@
 
 //     try {
 //       const url = `${BASE_URL}/api/rooms`;
-//       console.log('📤 Fetching rooms:', url);
+//       //console.log('📤 Fetching rooms:', url);
       
 //       const response = await fetch(url);
 //       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -844,7 +844,7 @@
 //       setStatus(`${t.status.ready} (${total} ${t.label.records})`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Load error:', err);
+//       //console.error('🚨 Load error:', err);
 //       setStatus(t.alert.errorLoading, 'error');
 //       setRooms([]);
 //       setFilteredRooms([]);
@@ -856,7 +856,7 @@
 //   const loadSections = useCallback(async () => {
 //     try {
 //       const url = `${BASE_URL}/api/sections`;
-//       console.log('📤 Fetching sections:', url);
+//       //console.log('📤 Fetching sections:', url);
       
 //       const response = await fetch(url);
 //       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -867,14 +867,14 @@
 //       setSections(sectionsData);
       
 //     } catch (err) {
-//       console.error('🚨 Load sections error:', err);
+//       //console.error('🚨 Load sections error:', err);
 //     }
 //   }, []);
 
 //   const createRoom = useCallback(async (roomNumber, sectionId) => {
 //     try {
 //       const url = `${BASE_URL}/api/rooms/section/${sectionId}`;
-//       console.log('📤 Creating room:', url);
+//       //console.log('📤 Creating room:', url);
       
 //       const response = await fetch(url, {
 //         method: 'POST',
@@ -895,7 +895,7 @@
 //       setStatus(`✅ ${t.status.added}`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Create error:', err);
+//       //console.error('🚨 Create error:', err);
 //       alert(t.alert.errorCreating);
 //     }
 //   }, [loadRooms, t]);
@@ -903,7 +903,7 @@
 //   const updateRoom = useCallback(async (id, roomNumber) => {
 //     try {
 //       const url = `${BASE_URL}/api/rooms/${id}`;
-//       console.log('📤 Updating room:', url);
+//       //console.log('📤 Updating room:', url);
       
 //       const response = await fetch(url, {
 //         method: 'PUT',
@@ -923,7 +923,7 @@
 //       setStatus(`✅ ${t.status.updated}`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Update error:', err);
+//       //console.error('🚨 Update error:', err);
 //       alert(t.alert.errorUpdating);
 //     }
 //   }, [loadRooms, t]);
@@ -931,7 +931,7 @@
 //   const deleteRoom = useCallback(async (id) => {
 //     try {
 //       const url = `${BASE_URL}/api/rooms/${id}`;
-//       console.log('📤 Deleting room:', url);
+//       //console.log('📤 Deleting room:', url);
       
 //       const response = await fetch(url, {
 //         method: 'DELETE'
@@ -948,7 +948,7 @@
 //       setStatus(`🗑️ ${t.status.deleted}`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Delete error:', err);
+//       //console.error('🚨 Delete error:', err);
 //       alert(t.alert.errorDeleting);
 //     }
 //   }, [loadRooms, t]);
@@ -2441,7 +2441,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/rooms`;
-      console.log('📤 Fetching rooms:', url);
+      //console.log('📤 Fetching rooms:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2474,7 +2474,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.ready} (${total} ${t.label.records})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatus(t.alert.errorLoading, 'error');
       setRooms([]);
       setFilteredRooms([]);
@@ -2487,7 +2487,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const loadSections = useCallback(async () => {
     try {
       const url = `${BASE_URL}/api/sections`;
-      console.log('📤 Fetching sections:', url);
+      //console.log('📤 Fetching sections:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2498,7 +2498,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setSections(sectionsData);
       
     } catch (err) {
-      console.error('🚨 Load sections error:', err);
+      //console.error('🚨 Load sections error:', err);
       showToast('Error loading sections', 'error');
     }
   }, [showToast]);
@@ -2506,7 +2506,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const createRoom = useCallback(async (roomNumber, sectionId) => {
     try {
       const url = `${BASE_URL}/api/rooms/section/${sectionId}`;
-      console.log('📤 Creating room:', url);
+      //console.log('📤 Creating room:', url);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -2529,7 +2529,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(message || t.status.added, 'success');
       
     } catch (err) {
-      console.error('🚨 Create error:', err);
+      //console.error('🚨 Create error:', err);
       showToast(err.message || t.alert.errorCreating, 'error');
     }
   }, [loadRooms, t, showToast]);
@@ -2537,7 +2537,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const updateRoom = useCallback(async (id, roomNumber) => {
     try {
       const url = `${BASE_URL}/api/rooms/${id}`;
-      console.log('📤 Updating room:', url);
+      //console.log('📤 Updating room:', url);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -2559,7 +2559,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(message || t.status.updated, 'success');
       
     } catch (err) {
-      console.error('🚨 Update error:', err);
+      //console.error('🚨 Update error:', err);
       showToast(err.message || t.alert.errorUpdating, 'error');
     }
   }, [loadRooms, t, showToast]);
@@ -2567,7 +2567,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const deleteRoom = useCallback(async (id) => {
     try {
       const url = `${BASE_URL}/api/rooms/${id}`;
-      console.log('📤 Deleting room:', url);
+      //console.log('📤 Deleting room:', url);
       
       const response = await fetch(url, {
         method: 'DELETE'
@@ -2588,7 +2588,7 @@ const RoomManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(message || t.status.deleted, 'success');
       
     } catch (err) {
-      console.error('🚨 Delete error:', err);
+      //console.error('🚨 Delete error:', err);
       showToast(err.message || t.alert.errorDeleting, 'error');
       setShowDeleteModal(false);
       setSelectedRoom(null);

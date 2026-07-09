@@ -76,7 +76,7 @@
 // //       const data = await res.json();
 // //       setSections(data);
 // //     } catch (e) {
-// //       console.error('Failed to load sections');
+// //       //console.error('Failed to load sections');
 // //     }
 // //   }, []);
 
@@ -88,7 +88,7 @@
 // //       const data = await res.json();
 // //       setRooms(data);
 // //     } catch (e) {
-// //       console.error('Failed to load rooms');
+// //       //console.error('Failed to load rooms');
 // //     }
 // //   }, []);
 
@@ -99,7 +99,7 @@
 // //       const data = await res.json();
 // //       setDoctors(data);
 // //     } catch (e) {
-// //       console.error('Failed to load doctors');
+// //       //console.error('Failed to load doctors');
 // //     }
 // //   }, []);
 
@@ -560,7 +560,7 @@
 //       const data = await res.json();
 //       setSections(data);
 //     } catch (e) {
-//       console.error('Failed to load sections');
+//       //console.error('Failed to load sections');
 //     }
 //   }, []);
 
@@ -575,7 +575,7 @@
 //       const data = await res.json();
 //       setRooms(data);
 //     } catch (e) {
-//       console.error('Failed to load rooms');
+//       //console.error('Failed to load rooms');
 //     }
 //   }, []);
 
@@ -586,7 +586,7 @@
 //       const data = await res.json();
 //       setDoctors(data);
 //     } catch (e) {
-//       console.error('Failed to load doctors');
+//       //console.error('Failed to load doctors');
 //     }
 //   }, []);
 
@@ -1094,7 +1094,7 @@ const WalkInScreen = ({ patientId, loggedUser, lang = 'en', onClose }) => {
       const data = await res.json();
       setSections(data);
     } catch (e) {
-      console.error('Failed to load sections');
+      //console.error('Failed to load sections');
     }
   }, []);
 
@@ -1109,7 +1109,7 @@ const WalkInScreen = ({ patientId, loggedUser, lang = 'en', onClose }) => {
       const data = await res.json();
       setRooms(data);
     } catch (e) {
-      console.error('Failed to load rooms');
+      //console.error('Failed to load rooms');
     }
   }, []);
 
@@ -1120,7 +1120,7 @@ const WalkInScreen = ({ patientId, loggedUser, lang = 'en', onClose }) => {
       const data = await res.json();
       setDoctors(data);
     } catch (e) {
-      console.error('Failed to load doctors');
+      //console.error('Failed to load doctors');
     }
   }, []);
 

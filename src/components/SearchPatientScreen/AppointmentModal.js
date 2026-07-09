@@ -89,7 +89,7 @@
 // //       const data = await res.json();
 // //       setSections(data.map(s => ({ id: s.id, name: s.name })));
 // //     } catch (err) {
-// //       console.error('Sections error:', err);
+// //       //console.error('Sections error:', err);
 // //     }
 // //   }, []);
 
@@ -105,7 +105,7 @@
 // //         specialty: d.specialty || '',
 // //       })));
 // //     } catch (err) {
-// //       console.error('Doctors error:', err);
+// //       //console.error('Doctors error:', err);
 // //     }
 // //   }, []);
 
@@ -125,7 +125,7 @@
 // //         sectionName: r.section?.name || '',
 // //       })));
 // //     } catch (err) {
-// //       console.error('Rooms error:', err);
+// //       //console.error('Rooms error:', err);
 // //     }
 // //   }, []);
 
@@ -689,7 +689,7 @@
 //       const data = await res.json();
 //       setSections(data.map(s => ({ id: s.id, name: s.name })));
 //     } catch (e) {
-//       console.error('Failed to load sections');
+//       //console.error('Failed to load sections');
 //     }
 //   }, []);
 
@@ -708,7 +708,7 @@
 //         sectionName: r.section?.name || '',
 //       })));
 //     } catch (e) {
-//       console.error('Failed to load rooms');
+//       //console.error('Failed to load rooms');
 //     }
 //   }, []);
 
@@ -722,7 +722,7 @@
 //         fullName: `${d.firstName} ${d.middleName || ''} ${d.lastName}`.replace(/\s+/g, ' ').trim(),
 //       })));
 //     } catch (e) {
-//       console.error('Failed to load doctors');
+//       //console.error('Failed to load doctors');
 //     }
 //   }, []);
 
@@ -1282,7 +1282,7 @@ const AppointmentModal = ({ patientId, loggedUser, lang = 'en', onClose }) => {
       const data = await res.json();
       setSections(data.map(s => ({ id: s.id, name: s.name })));
     } catch (e) {
-      console.error('Failed to load sections');
+      //console.error('Failed to load sections');
     }
   }, []);
 
@@ -1301,7 +1301,7 @@ const AppointmentModal = ({ patientId, loggedUser, lang = 'en', onClose }) => {
         sectionName: r.section?.name || '',
       })));
     } catch (e) {
-      console.error('Failed to load rooms');
+      //console.error('Failed to load rooms');
     }
   }, []);
 
@@ -1315,7 +1315,7 @@ const AppointmentModal = ({ patientId, loggedUser, lang = 'en', onClose }) => {
         fullName: `${d.firstName} ${d.middleName || ''} ${d.lastName}`.replace(/\s+/g, ' ').trim(),
       })));
     } catch (e) {
-      console.error('Failed to load doctors');
+      //console.error('Failed to load doctors');
     }
   }, []);
 

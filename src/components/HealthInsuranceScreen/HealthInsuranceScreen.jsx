@@ -609,7 +609,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/arab-cities/countries`;
-      console.log('📤 Fetching countries:', url);
+      //console.log('📤 Fetching countries:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -627,7 +627,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.countriesLoaded} (${countryNames.length})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load countries error:', err);
+      //console.error('🚨 Load countries error:', err);
       setStatus(t.status.error, 'error');
       alert(t.alert.loadCountriesError);
     } finally {
@@ -644,7 +644,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
     try {
       const encodedCountry = encodeURIComponent(country);
       const url = `${BASE_URL}/api/providers/country/${encodedCountry}`;
-      console.log('📤 Fetching providers:', url);
+      //console.log('📤 Fetching providers:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -668,7 +668,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.providersLoaded} (${parsedProviders.length} ${t.status.providers})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load providers error:', err);
+      //console.error('🚨 Load providers error:', err);
       setStatus(t.status.error, 'error');
       alert(t.alert.loadProvidersError);
       setProviders([]);
@@ -710,7 +710,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/providers`;
-      console.log('📤 Saving provider:', url);
+      //console.log('📤 Saving provider:', url);
       
       const payload = {
         name: name.trim(),
@@ -739,7 +739,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(t.status.providerSaved, 'success');
       
     } catch (err) {
-      console.error('🚨 Save error:', err);
+      //console.error('🚨 Save error:', err);
       setStatus(t.status.error, 'error');
       alert(`${t.alert.saveError}: ${err.message}`);
     } finally {
@@ -753,7 +753,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/providers/${provider.id}`;
-      console.log('📤 Deleting provider:', url);
+      //console.log('📤 Deleting provider:', url);
       
       const response = await fetch(url, {
         method: 'DELETE'
@@ -771,7 +771,7 @@ const HealthInsuranceScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(t.status.providerDeleted, 'success');
       
     } catch (err) {
-      console.error('🚨 Delete error:', err);
+      //console.error('🚨 Delete error:', err);
       setStatus(t.status.error, 'error');
       alert(`${t.alert.deleteError}: ${err.message}`);
     } finally {

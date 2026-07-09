@@ -588,7 +588,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/auth/users`;
-      console.log('📤 Fetching users:', url);
+      //console.log('📤 Fetching users:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -602,7 +602,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.loaded} (${usersData.length} ${t.status.users})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatus(t.status.error, 'error');
       alert(t.alert.loadUsersError);
       setUsers([]);
@@ -615,7 +615,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const addUser = useCallback(async (username, password) => {
     try {
       const url = `${BASE_URL}/api/auth/users`;
-      console.log('📤 Adding user:', url);
+      //console.log('📤 Adding user:', url);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -635,7 +635,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`✅ ${t.status.ready}`, 'success');
       
     } catch (err) {
-      console.error('🚨 Add user error:', err);
+      //console.error('🚨 Add user error:', err);
       alert(`${t.alert.addUserError}: ${err.message}`);
     }
   }, [loadUsers, t]);
@@ -643,7 +643,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const toggleUser = useCallback(async (username) => {
     try {
       const url = `${BASE_URL}/api/auth/users/${username}/toggle`;
-      console.log('📤 Toggling user:', url);
+      //console.log('📤 Toggling user:', url);
       
       const response = await fetch(url, {
         method: 'PUT'
@@ -658,7 +658,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       alert(t.alert.userToggled);
       
     } catch (err) {
-      console.error('🚨 Toggle error:', err);
+      //console.error('🚨 Toggle error:', err);
       alert(`${t.alert.toggleError}: ${err.message}`);
     }
   }, [loadUsers, t]);
@@ -667,7 +667,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const handleResetPasswordSubmit = useCallback(async (username, newPassword) => {
     try {
       const url = `${BASE_URL}/api/auth/reset-password`;
-      console.log('📤 Resetting password:', url);
+      //console.log('📤 Resetting password:', url);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -687,7 +687,7 @@ const UserManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`✅ ${t.status.ready}`, 'success');
       
     } catch (err) {
-      console.error('🚨 Reset password error:', err);
+      //console.error('🚨 Reset password error:', err);
       alert(`${t.alert.resetError}: ${err.message}`);
     }
   }, [t]);

@@ -53,13 +53,13 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
 
   // ----- Fetch patient details (only on initial mount) -----
   const fetchPatient = useCallback(async () => {
-    console.log('🔄 fetchPatient called for patientId:', patientId);
+    //console.log('🔄 fetchPatient called for patientId:', patientId);
     setLoading(true);
     try {
       const res = await fetch(`${API_PATIENT}/search/id/${patientId}`);
       if (!res.ok) throw new Error('Failed to load patient');
       const data = await res.json();
-      console.log('📥 Patient data from API:', data);
+      //console.log('📥 Patient data from API:', data);
 
       setFormData({
         firstName: data.firstName || '',
@@ -97,7 +97,7 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
         return acc;
       }, {});
     } catch (err) {
-      console.error('Country load error:', err);
+      //console.error('Country load error:', err);
     }
   }, []);
 
@@ -128,7 +128,7 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
           setInsuranceProviders(names);
         }
       } catch (err) {
-        console.error('Providers load error:', err);
+        //console.error('Providers load error:', err);
         setInsuranceProviders([]);
       }
     };
@@ -139,7 +139,7 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
   const hasLoaded = useRef(false);
   useEffect(() => {
     if (!hasLoaded.current) {
-      console.log('🔁 Initial load - fetching countries and patient');
+      //console.log('🔁 Initial load - fetching countries and patient');
       fetchCountriesCities();
       fetchPatient();
       logAction('OPEN_UPDATE_PATIENT', `Opened update screen for patientId=${patientId}`);
@@ -149,10 +149,10 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
 
   // ----- Update field handler with logs -----
   const handleChange = (field, value) => {
-    console.log(`✏️ Changing ${field} to:`, value);
+    //console.log(`✏️ Changing ${field} to:`, value);
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
-      console.log('📋 New formData:', updated);
+      //console.log('📋 New formData:', updated);
       return updated;
     });
     setErrors(prev => ({ ...prev, [field]: '' }));
@@ -228,8 +228,8 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
 
   // ----- Save handler (with payload logs) -----
   const handleSave = async () => {
-    console.log('💾 handleSave triggered');
-    console.log('📦 Current formData:', formData);
+    //console.log('💾 handleSave triggered');
+    //console.log('📦 Current formData:', formData);
 
     if (!validate()) {
       setStatusMsg(`⚠️ ${t.alert.fixErrors}`);
@@ -257,7 +257,7 @@ const UpdatePatientModal = ({ patientId, loggedUser, lang = 'en', onClose, onPat
         classC: formData.classC,
       };
 
-      console.log('📤 Payload being sent:', payload);
+      //console.log('📤 Payload being sent:', payload);
 
       const res = await fetch(`${API_PATIENT}/${patientId}`, {
         method: 'PUT',

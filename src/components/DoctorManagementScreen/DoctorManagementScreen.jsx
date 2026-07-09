@@ -724,7 +724,7 @@
       
 // //       setStatusMsg(`✅ ${t.status.ready} (${parsedDoctors.length} ${t.label.records})`);
 // //     } catch (err) {
-// //       console.error('🚨 Load error:', err);
+// //       //console.error('🚨 Load error:', err);
 // //       setStatusMsg(`❌ ${t.alert.errorLoadDoctors}: ${err.message}`);
 // //       setDoctors([]);
 // //       setFilteredDoctors([]);
@@ -756,7 +756,7 @@
 // //         `${isUpdate ? 'Updated' : 'Added'} doctor: ${doctorData.firstName} ${doctorData.lastName}`);
 // //       setStatusMsg(`✅ ${isUpdate ? t.status.updated : t.status.added}`);
 // //     } catch (err) {
-// //       console.error('🚨 Save error:', err);
+// //       //console.error('🚨 Save error:', err);
 // //       alert(`${t.alert.errorSaveDoctor}: ${err.message}`);
 // //     }
 // //   }, [editingDoctor, loadDoctors, t, logAction]);
@@ -777,7 +777,7 @@
 // //       logAction('DELETE_DOCTOR', `Deleted doctor ID: ${doctorId}`);
 // //       setStatusMsg(`🗑️ ${t.status.deleted}`);
 // //     } catch (err) {
-// //       console.error('🚨 Delete error:', err);
+// //       //console.error('🚨 Delete error:', err);
 // //       alert(`${t.alert.errorDeleteDoctor}: ${err.message}`);
 // //     }
 // //   }, [loadDoctors, t, logAction]);
@@ -798,7 +798,7 @@
 // //       logAction('CHANGE_PASSWORD', `Changed password for doctor: ${username}`);
 // //       setStatusMsg(`✅ ${t.status.passwordChanged}`);
 // //     } catch (err) {
-// //       console.error('🚨 Password change error:', err);
+// //       //console.error('🚨 Password change error:', err);
 // //       alert(`${t.alert.errorChangePassword}: ${err.message}`);
 // //     }
 // //   }, [t, logAction]);
@@ -814,7 +814,7 @@
 // //       const parsedAppointments = appointmentsData.map(item => AppointmentRow.fromJson(item));
 // //       setAppointments(parsedAppointments);
 // //     } catch (err) {
-// //       console.error('🚨 Load appointments error:', err);
+// //       //console.error('🚨 Load appointments error:', err);
 // //       alert(t.alert.errorFetchAppointments);
 // //     }
 // //   }, [t]);
@@ -832,7 +832,7 @@
 // //       setSelectedAppointment(null);
 // //       logAction('DELETE_APPOINTMENT', `Deleted appointment ID: ${appointmentId}`);
 // //     } catch (err) {
-// //       console.error('🚨 Delete appointment error:', err);
+// //       //console.error('🚨 Delete appointment error:', err);
 // //       alert(t.alert.errorDeleteAppointment);
 // //     }
 // //   }, [t, logAction]);
@@ -855,7 +855,7 @@
 // //       logAction('REASSIGN_APPOINTMENT', `Reassigned appointment ${appointmentId} to doctor ${newDoctorId}`);
 // //       setStatusMsg(`✅ ${t.status.reassigned}`);
 // //     } catch (err) {
-// //       console.error('🚨 Reassign error:', err);
+// //       //console.error('🚨 Reassign error:', err);
 // //       alert(t.alert.errorReassignAppointment);
 // //     }
 // //   }, [selectedDoctor, loadAppointments, t, logAction]);
@@ -2326,7 +2326,7 @@
       
 //       setStatusMsg(`✅ ${t.status.ready} (${parsedDoctors.length} ${t.label.records})`);
 //     } catch (err) {
-//       console.error('🚨 Load error:', err);
+//       //console.error('🚨 Load error:', err);
 //       setStatusMsg(`❌ ${t.alert.errorLoadDoctors}: ${err.message}`);
 //       setDoctors([]);
 //       setFilteredDoctors([]);
@@ -2354,7 +2354,7 @@
 //       password: doctorData.password.trim(),
 //     };
 
-//     console.log('📤 Sending doctor payload:', payload);
+//     //console.log('📤 Sending doctor payload:', payload);
 
 //     const res = await fetch(url, {
 //       method: isUpdate ? 'PUT' : 'POST',
@@ -2371,7 +2371,7 @@
 //     }
 
 //     if (!res.ok) {
-//       console.error('❌ Server error response:', responseBody);
+//       //console.error('❌ Server error response:', responseBody);
 //       // If responseBody is an object with a message, show that
 //       const errorMessage = typeof responseBody === 'object' && responseBody.message
 //         ? responseBody.message
@@ -2389,7 +2389,7 @@
 //       `${isUpdate ? 'Updated' : 'Added'} doctor: ${payload.firstName} ${payload.lastName}`);
 //     setStatusMsg(`✅ ${isUpdate ? t.status.updated : t.status.added}`);
 //   } catch (err) {
-//     console.error('🚨 Save error:', err);
+//     //console.error('🚨 Save error:', err);
 //     alert(`Error: ${err.message}`);
 //   }
 // }, [editingDoctor, loadDoctors, t, logAction]);
@@ -2409,7 +2409,7 @@
 //       logAction('DELETE_DOCTOR', `Deleted doctor ID: ${doctorId}`);
 //       setStatusMsg(`🗑️ ${t.status.deleted}`);
 //     } catch (err) {
-//       console.error('🚨 Delete error:', err);
+//       //console.error('🚨 Delete error:', err);
 //       alert(`${t.alert.errorDeleteDoctor}: ${err.message}`);
 //     }
 //   }, [loadDoctors, t, logAction]);
@@ -2430,7 +2430,7 @@
 //       logAction('CHANGE_PASSWORD', `Changed password for doctor: ${username}`);
 //       setStatusMsg(`✅ ${t.status.passwordChanged}`);
 //     } catch (err) {
-//       console.error('🚨 Password change error:', err);
+//       //console.error('🚨 Password change error:', err);
 //       alert(`${t.alert.errorChangePassword}: ${err.message}`);
 //     }
 //   }, [t, logAction]);
@@ -2446,7 +2446,7 @@
 //       const parsedAppointments = appointmentsData.map(item => AppointmentRow.fromJson(item));
 //       setAppointments(parsedAppointments);
 //     } catch (err) {
-//       console.error('🚨 Load appointments error:', err);
+//       //console.error('🚨 Load appointments error:', err);
 //       alert(t.alert.errorFetchAppointments);
 //     }
 //   }, [t]);
@@ -2464,7 +2464,7 @@
 //       setSelectedAppointment(null);
 //       logAction('DELETE_APPOINTMENT', `Deleted appointment ID: ${appointmentId}`);
 //     } catch (err) {
-//       console.error('🚨 Delete appointment error:', err);
+//       //console.error('🚨 Delete appointment error:', err);
 //       alert(t.alert.errorDeleteAppointment);
 //     }
 //   }, [t, logAction]);
@@ -2487,7 +2487,7 @@
 //       logAction('REASSIGN_APPOINTMENT', `Reassigned appointment ${appointmentId} to doctor ${newDoctorId}`);
 //       setStatusMsg(`✅ ${t.status.reassigned}`);
 //     } catch (err) {
-//       console.error('🚨 Reassign error:', err);
+//       //console.error('🚨 Reassign error:', err);
 //       alert(t.alert.errorReassignAppointment);
 //     }
 //   }, [selectedDoctor, loadAppointments, t, logAction]);
@@ -3942,11 +3942,11 @@
 //     const doctorsData = Array.isArray(data) ? data : [data];
     
 //     // Log the raw data to see what's coming from the API
-//     console.log('📥 Raw doctor data from API:', doctorsData);
+//     //console.log('📥 Raw doctor data from API:', doctorsData);
     
 //     const parsedDoctors = doctorsData.map(item => {
 //       // Log each doctor's password
-//       console.log(`Doctor ${item.username} password:`, item.password);
+//       //console.log(`Doctor ${item.username} password:`, item.password);
 //       return DoctorRow.fromJson(item);
 //     });
     
@@ -3956,7 +3956,7 @@
     
 //     setStatusMsg(`✅ ${t.status.ready} (${parsedDoctors.length} ${t.label.records})`);
 //   } catch (err) {
-//     console.error('🚨 Load error:', err);
+//     //console.error('🚨 Load error:', err);
 //     setStatusMsg(`❌ ${t.alert.errorLoadDoctors}: ${err.message}`);
 //     setDoctors([]);
 //     setFilteredDoctors([]);
@@ -3984,7 +3984,7 @@
 //         password: doctorData.password.trim(),
 //       };
 
-//       console.log('📤 Sending doctor payload:', payload);
+//       //console.log('📤 Sending doctor payload:', payload);
 
 //       const res = await fetch(url, {
 //         method: isUpdate ? 'PUT' : 'POST',
@@ -4001,7 +4001,7 @@
 //       }
 
 //       if (!res.ok) {
-//         console.error('❌ Server error response:', responseBody);
+//         //console.error('❌ Server error response:', responseBody);
 //         // If responseBody is an object with a message, show that
 //         const errorMessage = typeof responseBody === 'object' && responseBody.message
 //           ? responseBody.message
@@ -4019,7 +4019,7 @@
 //         `${isUpdate ? 'Updated' : 'Added'} doctor: ${payload.firstName} ${payload.lastName}`);
 //       setStatusMsg(`✅ ${isUpdate ? t.status.updated : t.status.added}`);
 //     } catch (err) {
-//       console.error('🚨 Save error:', err);
+//       //console.error('🚨 Save error:', err);
 //       alert(`Error: ${err.message}`);
 //     }
 //   }, [editingDoctor, loadDoctors, t, logAction]);
@@ -4040,7 +4040,7 @@
 //       logAction('DELETE_DOCTOR', `Deleted doctor ID: ${doctorId}`);
 //       setStatusMsg(`🗑️ ${t.status.deleted}`);
 //     } catch (err) {
-//       console.error('🚨 Delete error:', err);
+//       //console.error('🚨 Delete error:', err);
 //       alert(`${t.alert.errorDeleteDoctor}: ${err.message}`);
 //     }
 //   }, [loadDoctors, t, logAction]);
@@ -4058,7 +4058,7 @@
 //     }
 
 //     const payload = { username, oldPassword, newPassword };
-//     console.log('📤 Sending password change payload:', payload);
+//     //console.log('📤 Sending password change payload:', payload);
 
 //     const res = await fetch(`${BASE_URL}/api/doctors/change-password`, {
 //       method: 'PUT',
@@ -4077,7 +4077,7 @@
 //     }
 
 //     if (!res.ok) {
-//       console.error('❌ Server error response:', responseBody);
+//       //console.error('❌ Server error response:', responseBody);
 //       // If responseBody is an object with a message, show that
 //       const errorMessage = typeof responseBody === 'object' && responseBody.message
 //         ? responseBody.message
@@ -4104,7 +4104,7 @@
 //     loadDoctors();
     
 //   } catch (err) {
-//     console.error('🚨 Password change error:', err);
+//     //console.error('🚨 Password change error:', err);
 //     alert(`❌ Error: ${err.message}`);
 //     setStatusMsg(`❌ Error: ${err.message}`);
 //   }
@@ -4121,7 +4121,7 @@
 //       const parsedAppointments = appointmentsData.map(item => AppointmentRow.fromJson(item));
 //       setAppointments(parsedAppointments);
 //     } catch (err) {
-//       console.error('🚨 Load appointments error:', err);
+//       //console.error('🚨 Load appointments error:', err);
 //       alert(t.alert.errorFetchAppointments);
 //     }
 //   }, [t]);
@@ -4139,7 +4139,7 @@
 //       setSelectedAppointment(null);
 //       logAction('DELETE_APPOINTMENT', `Deleted appointment ID: ${appointmentId}`);
 //     } catch (err) {
-//       console.error('🚨 Delete appointment error:', err);
+//       //console.error('🚨 Delete appointment error:', err);
 //       alert(t.alert.errorDeleteAppointment);
 //     }
 //   }, [t, logAction]);
@@ -4162,7 +4162,7 @@
 //       logAction('REASSIGN_APPOINTMENT', `Reassigned appointment ${appointmentId} to doctor ${newDoctorId}`);
 //       setStatusMsg(`✅ ${t.status.reassigned}`);
 //     } catch (err) {
-//       console.error('🚨 Reassign error:', err);
+//       //console.error('🚨 Reassign error:', err);
 //       alert(t.alert.errorReassignAppointment);
 //     }
 //   }, [selectedDoctor, loadAppointments, t, logAction]);
@@ -4254,8 +4254,8 @@
 //   }
   
 //   // Debug: Check what password is stored
-//   console.log('📋 Selected doctor full data:', selectedDoctor);
-//   console.log('🔑 Selected doctor password:', selectedDoctor.password);
+//   //console.log('📋 Selected doctor full data:', selectedDoctor);
+//   //console.log('🔑 Selected doctor password:', selectedDoctor.password);
   
 //   setPasswordData({
 //     oldPassword: selectedDoctor.password || '', // Auto-fill from selected doctor
@@ -5656,11 +5656,11 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       const doctorsData = Array.isArray(data) ? data : [data];
       
       // Log the raw data to see what's coming from the API
-      console.log('📥 Raw doctor data from API:', doctorsData);
+      //console.log('📥 Raw doctor data from API:', doctorsData);
       
       const parsedDoctors = doctorsData.map(item => {
         // Log each doctor's password
-        console.log(`Doctor ${item.username} password:`, item.password);
+        //console.log(`Doctor ${item.username} password:`, item.password);
         return DoctorRow.fromJson(item);
       });
       
@@ -5670,7 +5670,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       
       setStatusMsg(`✅ ${t.status.ready} (${parsedDoctors.length} ${t.label.records})`);
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatusMsg(`❌ ${t.alert.errorLoadDoctors}: ${err.message}`);
       setDoctors([]);
       setFilteredDoctors([]);
@@ -5698,7 +5698,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
         password: doctorData.password.trim(),
       };
 
-      console.log('📤 Sending doctor payload:', payload);
+      //console.log('📤 Sending doctor payload:', payload);
 
       const res = await fetch(url, {
         method: isUpdate ? 'PUT' : 'POST',
@@ -5715,7 +5715,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       }
 
       if (!res.ok) {
-        console.error('❌ Server error response:', responseBody);
+        //console.error('❌ Server error response:', responseBody);
         // If responseBody is an object with a message, show that
         const errorMessage = typeof responseBody === 'object' && responseBody.message
           ? responseBody.message
@@ -5738,7 +5738,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
         `${isUpdate ? 'Updated' : 'Added'} doctor: ${payload.firstName} ${payload.lastName}`);
       setStatusMsg(`✅ ${isUpdate ? t.status.updated : t.status.added}`);
     } catch (err) {
-      console.error('🚨 Save error:', err);
+      //console.error('🚨 Save error:', err);
       setNotification({
         type: 'error',
         message: `❌ Error: ${err.message}`,
@@ -5768,7 +5768,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       logAction('DELETE_DOCTOR', `Deleted doctor ID: ${doctorId}`);
       setStatusMsg(`🗑️ ${t.status.deleted}`);
     } catch (err) {
-      console.error('🚨 Delete error:', err);
+      //console.error('🚨 Delete error:', err);
       setNotification({
         type: 'error',
         message: `❌ ${t.alert.errorDeleteDoctor}: ${err.message}`,
@@ -5798,7 +5798,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       }
 
       const payload = { username, oldPassword, newPassword };
-      console.log('📤 Sending password change payload:', payload);
+      //console.log('📤 Sending password change payload:', payload);
 
       const res = await fetch(`${BASE_URL}/api/doctors/change-password`, {
         method: 'PUT',
@@ -5817,7 +5817,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       }
 
       if (!res.ok) {
-        console.error('❌ Server error response:', responseBody);
+        //console.error('❌ Server error response:', responseBody);
         // If responseBody is an object with a message, show that
         const errorMessage = typeof responseBody === 'object' && responseBody.message
           ? responseBody.message
@@ -5848,7 +5848,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       loadDoctors();
       
     } catch (err) {
-      console.error('🚨 Password change error:', err);
+      //console.error('🚨 Password change error:', err);
       setNotification({
         type: 'error',
         message: `❌ Error: ${err.message}`,
@@ -5869,7 +5869,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       const parsedAppointments = appointmentsData.map(item => AppointmentRow.fromJson(item));
       setAppointments(parsedAppointments);
     } catch (err) {
-      console.error('🚨 Load appointments error:', err);
+      //console.error('🚨 Load appointments error:', err);
       setNotification({
         type: 'error',
         message: `❌ ${t.alert.errorFetchAppointments}`,
@@ -5896,7 +5896,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setSelectedAppointment(null);
       logAction('DELETE_APPOINTMENT', `Deleted appointment ID: ${appointmentId}`);
     } catch (err) {
-      console.error('🚨 Delete appointment error:', err);
+      //console.error('🚨 Delete appointment error:', err);
       setNotification({
         type: 'error',
         message: `❌ ${t.alert.errorDeleteAppointment}`,
@@ -5928,7 +5928,7 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       logAction('REASSIGN_APPOINTMENT', `Reassigned appointment ${appointmentId} to doctor ${newDoctorId}`);
       setStatusMsg(`✅ ${t.status.reassigned}`);
     } catch (err) {
-      console.error('🚨 Reassign error:', err);
+      //console.error('🚨 Reassign error:', err);
       setNotification({
         type: 'error',
         message: `❌ ${t.alert.errorReassignAppointment}`,
@@ -6040,8 +6040,8 @@ const DoctorManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
     }
     
     // Debug: Check what password is stored
-    console.log('📋 Selected doctor full data:', selectedDoctor);
-    console.log('🔑 Selected doctor password:', selectedDoctor.password);
+    //console.log('📋 Selected doctor full data:', selectedDoctor);
+    //console.log('🔑 Selected doctor password:', selectedDoctor.password);
     
     setPasswordData({
       oldPassword: selectedDoctor.password || '', // Auto-fill from selected doctor

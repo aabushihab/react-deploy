@@ -2304,7 +2304,7 @@
 //     const data = await res.json();
 //     return data.clinicName || 'Clinic';
 //   } catch (err) {
-//     console.error('Failed to fetch clinic name', err);
+//     //console.error('Failed to fetch clinic name', err);
 //     return 'Clinic';
 //   }
 // };
@@ -2400,7 +2400,7 @@
 // //           alert(t.alert.pdfSaved || 'PDF saved successfully');
 // //           resolve();
 // //         } catch (err) {
-// //           console.error('PDF generation error:', err);
+// //           //console.error('PDF generation error:', err);
 // //           alert(`PDF generation failed: ${err.message}`);
 // //           setStatusMsg(`❌ ${t.status.error}`);
 // //           reject(err);
@@ -2409,7 +2409,7 @@
 
 // //       imgData.onerror = function() {
 // //         // If image fails to load, generate report without image
-// //         console.warn('Image not found, generating report without header image');
+// //         //console.warn('Image not found, generating report without header image');
         
 // //         try {
 // //           // Generate report without image (fallback)
@@ -2462,7 +2462,7 @@
 // //           alert(t.alert.pdfSaved || 'PDF saved successfully');
 // //           resolve();
 // //         } catch (err) {
-// //           console.error('PDF generation error (fallback):', err);
+// //           //console.error('PDF generation error (fallback):', err);
 // //           alert(`PDF generation failed: ${err.message}`);
 // //           setStatusMsg(`❌ ${t.status.error}`);
 // //           reject(err);
@@ -2470,7 +2470,7 @@
 // //       };
 // //     });
 // //   } catch (err) {
-// //     console.error('PDF generation error:', err);
+// //     //console.error('PDF generation error:', err);
 // //     alert(`PDF generation failed: ${err.message}`);
 // //     setStatusMsg(`❌ ${t.status.error}`);
 // //   }
@@ -2485,7 +2485,7 @@
 //     const res = await fetch(`${BASE_URL}/api/visits/patient/${patient.id}`);
 //     if (!res.ok) throw new Error('Failed to fetch visits');
 //     const visits = await res.json();
-//     console.log('Visits for report:', visits);
+//     //console.log('Visits for report:', visits);
 //     const clinicName = await getClinicName();
     
 //     // ✅ Wait for the PDF generation (including image loading)
@@ -2493,7 +2493,7 @@
     
 //     logAction('PRINT_REPORT', `Printed report for patient ${patient.id}`);
 //   } catch (err) {
-//     console.error('Error fetching visits or generating PDF:', err);
+//     //console.error('Error fetching visits or generating PDF:', err);
 //     alert(`${t.alert.pdfFailed || 'PDF generation failed'}: ${err.message}`);
 //     setStatusMsg(`❌ ${t.status.error}`);
 //   }
@@ -3074,26 +3074,26 @@ const fetchDrugPrescriptions = async (visitId) => {
     const data = await res.json();
     return data || [];
   } catch (err) {
-    console.error(`Failed to fetch prescriptions for visit ${visitId}:`, err);
+    //console.error(`Failed to fetch prescriptions for visit ${visitId}:`, err);
     return [];
   }
 };
 // ---------- Fetch procedures for a visit ----------
 // ---------- Fetch procedures for a visit ----------
 const fetchProcedures = async (visitId) => {
-  console.log(`🔍 Fetching procedures for visit ID: ${visitId}`);
+  //console.log(`🔍 Fetching procedures for visit ID: ${visitId}`);
   try {
     // ✅ Remove /api/ from the path
     const url = `${BASE_URL}/visits/${visitId}/procedures`;
-    console.log(`📤 GET ${url}`);
+    //console.log(`📤 GET ${url}`);
     const res = await fetch(url);
-    console.log(`📡 Response status: ${res.status}`);
+    //console.log(`📡 Response status: ${res.status}`);
     if (!res.ok) return [];
     const data = await res.json();
-    console.log(`✅ Procedures for visit ${visitId}:`, data);
+    //console.log(`✅ Procedures for visit ${visitId}:`, data);
     return data || [];
   } catch (err) {
-    console.error(`Failed to fetch procedures for visit ${visitId}:`, err);
+    //console.error(`Failed to fetch procedures for visit ${visitId}:`, err);
     return [];
   }
 };
@@ -3295,7 +3295,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
       const data = await res.json();
       return data.clinicName || 'Clinic';
     } catch (err) {
-      console.error('Failed to fetch clinic name', err);
+      //console.error('Failed to fetch clinic name', err);
       return 'Clinic';
     }
   };
@@ -3471,7 +3471,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
             alert(t.alert.pdfSaved || 'PDF saved successfully');
             resolve();
           } catch (err) {
-            console.error('PDF generation error:', err);
+            //console.error('PDF generation error:', err);
             alert(`PDF generation failed: ${err.message}`);
             setStatusMsg(`❌ ${t.status.error}`);
             reject(err);
@@ -3479,7 +3479,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
         };
 
         imgData.onerror = async function() {
-          console.warn('Image not found, generating report without header image');
+          //console.warn('Image not found, generating report without header image');
           
           try {
             const startY = 20;
@@ -3610,7 +3610,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
             alert(t.alert.pdfSaved || 'PDF saved successfully');
             resolve();
           } catch (err) {
-            console.error('PDF generation error (fallback):', err);
+            //console.error('PDF generation error (fallback):', err);
             alert(`PDF generation failed: ${err.message}`);
             setStatusMsg(`❌ ${t.status.error}`);
             reject(err);
@@ -3618,7 +3618,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
         };
       });
     } catch (err) {
-      console.error('PDF generation error:', err);
+      //console.error('PDF generation error:', err);
       alert(`PDF generation failed: ${err.message}`);
       setStatusMsg(`❌ ${t.status.error}`);
     }
@@ -3630,14 +3630,14 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
       const res = await fetch(`${BASE_URL}/api/visits/patient/${patient.id}`);
       if (!res.ok) throw new Error('Failed to fetch visits');
       const visits = await res.json();
-      console.log('Visits for report:', visits);
+      //console.log('Visits for report:', visits);
       const clinicName = await getClinicName();
       
       await generatePDFReport(visits, patient, clinicName);
       
       logAction('PRINT_REPORT', `Printed report for patient ${patient.id}`);
     } catch (err) {
-      console.error('Error fetching visits or generating PDF:', err);
+      //console.error('Error fetching visits or generating PDF:', err);
       alert(`${t.alert.pdfFailed || 'PDF generation failed'}: ${err.message}`);
       setStatusMsg(`❌ ${t.status.error}`);
     }

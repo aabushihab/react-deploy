@@ -69,7 +69,7 @@
 // // //           else if (data.classC) setInsuranceClass('C');
 // // //         })
 // // //         .catch(err => {
-// // //           console.error('Failed to load insurance data:', err);
+// // //           //console.error('Failed to load insurance data:', err);
 // // //         });
 // // //     }
 // // //   }, [paymentType, visit.patientId]);
@@ -178,7 +178,7 @@
 // // //         payments: payments
 // // //       };
 
-// // //       console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
+// // //       //console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
 
 // // //       const res = await fetch(`${BASE_URL}/api/visits/payments/${visit.id}`, {
 // // //         method: 'POST',
@@ -202,7 +202,7 @@
 // // //       }
 
 // // //       const result = await res.json();
-// // //       console.log('✅ Payment successful:', result);
+// // //       //console.log('✅ Payment successful:', result);
 
 // // //       // Log the action
 // // //       try {
@@ -222,7 +222,7 @@
 // // //       }
 // // //       onClose();
 // // //     } catch (err) {
-// // //       console.error('❌ Payment error:', err);
+// // //       //console.error('❌ Payment error:', err);
 // // //       setError(err.message || 'Payment failed. Please try again.');
 // // //     } finally {
 // // //       setLoading(false);
@@ -625,7 +625,7 @@
 // //           else if (data.classC) setInsuranceClass('C');
 // //         })
 // //         .catch(err => {
-// //           console.error('Failed to load insurance data:', err);
+// //           //console.error('Failed to load insurance data:', err);
 // //         });
 // //     }
 // //   }, [paymentType, visit.patientId]);
@@ -734,7 +734,7 @@
 // //       payments: payments
 // //     };
 
-// //     console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
+// //     //console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
 
 // //     const res = await fetch(`${BASE_URL}/api/visits/payments/${visit.id}`, {
 // //       method: 'POST',
@@ -772,20 +772,20 @@
 // //       if (text && text.trim() !== '') {
 // //         try {
 // //           result = JSON.parse(text);
-// //           console.log('✅ Payment successful:', result);
+// //           //console.log('✅ Payment successful:', result);
 // //         } catch (parseErr) {
-// //           console.warn('⚠️ Response was not valid JSON:', text);
+// //           //console.warn('⚠️ Response was not valid JSON:', text);
 // //           result = { message: 'Payment processed successfully', raw: text };
 // //         }
 // //       } else {
 // //         // Empty response but successful
-// //         console.log('✅ Payment successful (empty response)');
+// //         //console.log('✅ Payment successful (empty response)');
 // //         result = { message: 'Payment processed successfully' };
 // //       }
 // //     } else {
 // //       // Not JSON response
 // //       const text = await res.text();
-// //       console.log('✅ Payment successful (non-JSON response):', text);
+// //       //console.log('✅ Payment successful (non-JSON response):', text);
 // //       result = { message: text || 'Payment processed successfully' };
 // //     }
 
@@ -807,7 +807,7 @@
 // //     }
 // //     onClose();
 // //   } catch (err) {
-// //     console.error('❌ Payment error:', err);
+// //     //console.error('❌ Payment error:', err);
 // //     setError(err.message || 'Payment failed. Please try again.');
 // //   } finally {
 // //     setLoading(false);
@@ -1233,7 +1233,7 @@
 //           else if (data.classC) setInsuranceClass('C');
 //         })
 //         .catch(err => {
-//           console.error('Failed to load insurance data:', err);
+//           //console.error('Failed to load insurance data:', err);
 //         });
 //     }
 //   }, [paymentType, visit.patientId]);
@@ -1342,7 +1342,7 @@
 //         payments: payments
 //       };
 
-//       console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
+//       //console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
 
 //       const res = await fetch(`${BASE_URL}/api/visits/payments/${visit.id}`, {
 //         method: 'POST',
@@ -1378,18 +1378,18 @@
 //         if (text && text.trim() !== '') {
 //           try {
 //             result = JSON.parse(text);
-//             console.log('✅ Payment successful:', result);
+//             //console.log('✅ Payment successful:', result);
 //           } catch (parseErr) {
-//             console.warn('⚠️ Response was not valid JSON:', text);
+//             //console.warn('⚠️ Response was not valid JSON:', text);
 //             result = { message: 'Payment processed successfully', raw: text };
 //           }
 //         } else {
-//           console.log('✅ Payment successful (empty response)');
+//           //console.log('✅ Payment successful (empty response)');
 //           result = { message: 'Payment processed successfully' };
 //         }
 //       } else {
 //         const text = await res.text();
-//         console.log('✅ Payment successful (non-JSON response):', text);
+//         //console.log('✅ Payment successful (non-JSON response):', text);
 //         result = { message: text || 'Payment processed successfully' };
 //       }
 
@@ -1411,7 +1411,7 @@
 //       }
 //       onClose();
 //     } catch (err) {
-//       console.error('❌ Payment error:', err);
+//       //console.error('❌ Payment error:', err);
 //       setError(err.message || 'Payment failed. Please try again.');
 //     } finally {
 //       setLoading(false);
@@ -1845,7 +1845,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
           else if (data.classC) setInsuranceClass('C');
         })
         .catch(err => {
-          console.error('Failed to load insurance data:', err);
+          //console.error('Failed to load insurance data:', err);
         });
     }
   }, [paymentType, visit.patientId]);
@@ -1959,7 +1959,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         payments: payments
       };
 
-      console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
+      //console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
 
       const res = await fetch(`${BASE_URL}/api/visits/payments/${visit.id}`, {
         method: 'POST',
@@ -1995,18 +1995,18 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         if (text && text.trim() !== '') {
           try {
             result = JSON.parse(text);
-            console.log('✅ Payment successful:', result);
+            //console.log('✅ Payment successful:', result);
           } catch (parseErr) {
-            console.warn('⚠️ Response was not valid JSON:', text);
+            //console.warn('⚠️ Response was not valid JSON:', text);
             result = { message: 'Payment processed successfully', raw: text };
           }
         } else {
-          console.log('✅ Payment successful (empty response)');
+          //console.log('✅ Payment successful (empty response)');
           result = { message: 'Payment processed successfully' };
         }
       } else {
         const text = await res.text();
-        console.log('✅ Payment successful (non-JSON response):', text);
+        //console.log('✅ Payment successful (non-JSON response):', text);
         result = { message: text || 'Payment processed successfully' };
       }
 
@@ -2028,7 +2028,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
       }
       onClose();
     } catch (err) {
-      console.error('❌ Payment error:', err);
+      //console.error('❌ Payment error:', err);
       setError(err.message || 'Payment failed. Please try again.');
     } finally {
       setLoading(false);

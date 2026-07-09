@@ -503,7 +503,7 @@ const LogsMonitorScreen = ({ loggedUser, lang = 'en', onClose }) => {
         url += `?${params.toString()}`;
       }
 
-      console.log('📤 Fetching logs:', url);
+      //console.log('📤 Fetching logs:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -525,7 +525,7 @@ const LogsMonitorScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.loaded} (${parsedLogs.length} ${t.status.logs})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatus(t.status.error, 'error');
       alert(t.alert.loadError);
       setLogs([]);
@@ -565,7 +565,7 @@ const LogsMonitorScreen = ({ loggedUser, lang = 'en', onClose }) => {
       alert(t.alert.exportSuccess);
 
     } catch (err) {
-      console.error('🚨 Export error:', err);
+      //console.error('🚨 Export error:', err);
       setStatus(t.status.error, 'error');
       alert(t.alert.exportError);
     }

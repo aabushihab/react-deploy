@@ -743,7 +743,7 @@
 
 //     try {
 //       const url = `${BASE_URL}/api/sections`;
-//       console.log('📤 Fetching sections:', url);
+//       //console.log('📤 Fetching sections:', url);
       
 //       const response = await fetch(url);
 //       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -767,7 +767,7 @@
 //       setStatus(`${t.status.ready} (${total} ${t.label.records})`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Load error:', err);
+//       //console.error('🚨 Load error:', err);
 //       setStatus(t.alert.errorLoading, 'error');
 //       setSections([]);
 //       setFilteredSections([]);
@@ -802,7 +802,7 @@
 //         setStatus(message || t.status.added, "success");
 
 //     } catch (err) {
-//         console.error(err);
+//         //console.error(err);
 //         setStatus(err.message || t.alert.errorCreating, "error");
 //     }
 // }, [loadSections, t]);
@@ -811,7 +811,7 @@
 // const updateSection = useCallback(async (id, name) => {
 //     try {
 //       const url = `${BASE_URL}/api/sections/${id}`;
-//       console.log('📤 Updating section:', url);
+//       //console.log('📤 Updating section:', url);
       
 //       const response = await fetch(url, {
 //         method: 'PUT',
@@ -839,7 +839,7 @@
 //       setStatus(`✅ ${t.status.updated}`, 'success');
       
 //     } catch (err) {
-//       console.error('🚨 Update error:', err);
+//       //console.error('🚨 Update error:', err);
 //       alert(t.alert.errorUpdating);
 //     }
 //   }, [loadSections, t]);
@@ -847,7 +847,7 @@
 //   // const deleteSection = useCallback(async (id) => {
 //   //   try {
 //   //     const url = `${BASE_URL}/api/sections/${id}`;
-//   //     console.log('📤 Deleting section:', url);
+//   //     //console.log('📤 Deleting section:', url);
       
 //   //     const response = await fetch(url, {
 //   //       method: 'DELETE'
@@ -870,7 +870,7 @@
 //   //     setStatus(`🗑️ ${t.status.deleted}`, 'success');
       
 //   //   } catch (err) {
-//   //     console.error('🚨 Delete error:', err);
+//   //     //console.error('🚨 Delete error:', err);
 //   //     alert(t.alert.errorDeleting);
 //   //   }
 //   // }, [loadSections, t]);
@@ -880,7 +880,7 @@
 // const deleteSection = useCallback(async (id) => {
 //   try {
 //     const url = `${BASE_URL}/api/sections/${id}`;
-//     console.log('📤 Deleting section:', url);
+//     //console.log('📤 Deleting section:', url);
     
 //     const response = await fetch(url, {
 //       method: 'DELETE'
@@ -902,7 +902,7 @@
 //     setStatus(`🗑️ ${t.status.deleted}`, 'success');
     
 //   } catch (err) {
-//     console.error('🚨 Delete error:', err);
+//     //console.error('🚨 Delete error:', err);
 //     setStatus(err.message || t.alert.errorDeleting, 'error');
 //     // Close the modal even on error
 //     setShowDeleteModal(false);
@@ -2270,7 +2270,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
     try {
       const url = `${BASE_URL}/api/sections`;
-      console.log('📤 Fetching sections:', url);
+      //console.log('📤 Fetching sections:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2294,7 +2294,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       setStatus(`${t.status.ready} (${total} ${t.label.records})`, 'success');
       
     } catch (err) {
-      console.error('🚨 Load error:', err);
+      //console.error('🚨 Load error:', err);
       setStatus(t.alert.errorLoading, 'error');
       setSections([]);
       setFilteredSections([]);
@@ -2330,7 +2330,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(message || t.status.added, 'success');
 
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       showToast(err.message || t.alert.errorCreating, 'error');
     }
   }, [loadSections, t, showToast]);
@@ -2338,7 +2338,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const updateSection = useCallback(async (id, name) => {
     try {
       const url = `${BASE_URL}/api/sections/${id}`;
-      console.log('📤 Updating section:', url);
+      //console.log('📤 Updating section:', url);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -2360,7 +2360,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(`✅ ${t.status.updated}`, 'success');
       
     } catch (err) {
-      console.error('🚨 Update error:', err);
+      //console.error('🚨 Update error:', err);
       showToast(err.message || t.alert.errorUpdating, 'error');
     }
   }, [loadSections, t, showToast]);
@@ -2368,7 +2368,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const deleteSection = useCallback(async (id) => {
     try {
       const url = `${BASE_URL}/api/sections/${id}`;
-      console.log('📤 Deleting section:', url);
+      //console.log('📤 Deleting section:', url);
       
       const response = await fetch(url, {
         method: 'DELETE'
@@ -2389,7 +2389,7 @@ const SectionManagementScreen = ({ loggedUser, lang = 'en', onClose }) => {
       showToast(`🗑️ ${t.status.deleted}`, 'success');
       
     } catch (err) {
-      console.error('🚨 Delete error:', err);
+      //console.error('🚨 Delete error:', err);
       showToast(err.message || t.alert.errorDeleting, 'error');
       setShowDeleteModal(false);
       setSelectedSection(null);
