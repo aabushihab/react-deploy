@@ -23593,130 +23593,6 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
               border-top: 2px dashed #e0e0e0;
               margin: 20px 0;
             }
-/* Add these responsive card styles */
-@media (max-width: 768px) {
-  /* Fix card grid for mobile */
-  .card-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-    padding: 0 5px !important;
-  }
-  
-  .card-grid .visit-card {
-    width: 100% !important;
-    min-width: 0 !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .visit-card-body {
-    flex-direction: column !important;
-    text-align: center !important;
-    padding: 12px !important;
-  }
-  
-  .visit-actions {
-    flex-direction: row !important;
-    justify-content: center !important;
-    width: 100% !important;
-    flex-wrap: wrap !important;
-  }
-  
-  .visit-actions button {
-    flex: 1 !important;
-    min-width: 80px !important;
-    max-width: 150px !important;
-  }
-  
-  .visit-info {
-    width: 100% !important;
-    text-align: center !important;
-  }
-  
-  .patient-avatar {
-    width: 50px !important;
-    height: 50px !important;
-  }
-  
-  /* Fix card container */
-  .card-container {
-    padding: 5px 0 !important;
-    width: 100% !important;
-    overflow: hidden !important;
-  }
-  
-  .card-scroll-container {
-    width: 100% !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* Fix filter bar on mobile */
-  .filters-bar {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 8px !important;
-  }
-  
-  .filter-buttons {
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-  }
-  
-  .filter-actions {
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-  }
-  
-  .filter-actions .search-input {
-    width: 100% !important;
-  }
-  
-  .filter-action-btn {
-    flex: 1 !important;
-    min-width: 60px !important;
-    text-align: center !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-  
-  .visit-card {
-    border-radius: 10px !important;
-  }
-  
-  .visit-card-header {
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-  }
-  
-  .visit-card-body {
-    padding: 10px !important;
-  }
-  
-  .visit-name {
-    font-size: 14px !important;
-  }
-  
-  .visit-details {
-    font-size: 12px !important;
-  }
-  
-  .patient-avatar {
-    width: 40px !important;
-    height: 40px !important;
-  }
-  
-  .visit-actions button {
-    font-size: 11px !important;
-    padding: 6px 12px !important;
-    min-width: 60px !important;
-    min-height: 32px !important;
-  }
-}
-
           </style>
         </head>
         <body>
@@ -24460,6 +24336,25 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
     };
   }, [loadDoctorVisits, loadSummaryCards, checkNotifications, currentFilter]);
 
+
+
+// ==================== RESIZE HANDLER FOR MOBILE ====================
+useEffect(() => {
+  const handleResize = () => {
+    // Force re-render on resize
+    if (window.innerWidth <= 768) {
+      // Ensure single column on mobile
+      if (cardsPerRowPattern[cardsPerRowIndex] !== 1) {
+        // Optionally force single column
+        // You can add logic here if needed
+      }
+    }
+  };
+  
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, [cardsPerRowPattern, cardsPerRowIndex]);
+
   // ==================== INITIALIZATION ====================
   useEffect(() => {
     let isMounted = true;
@@ -24645,101 +24540,52 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   };
 
   // Visit Card Component
-//   const VisitCard = ({ visit, onOpen, onDetails }) => {
-//     const patient = visit.patient || {};
-//     const status = visit.visitStatus || 'CREATED';
-//     const bgColor = getStatusBgColor(status);
-//     const gender = patient.gender || 'Unknown';
-//     const fullName = buildFullName(patient);
+  const VisitCard = ({ visit, onOpen, onDetails }) => {
+    const patient = visit.patient || {};
+    const status = visit.visitStatus || 'CREATED';
+    const bgColor = getStatusBgColor(status);
+    const gender = patient.gender || 'Unknown';
+    const fullName = buildFullName(patient);
     
-//     return (
-//       <div className="visit-card" style={{ backgroundColor: bgColor }}>
-//         <div className="visit-card-header">
-//           <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-//           <span className="visit-header-spacer" />
-//           <StatusBadge status={status} />
-//         </div>
-//         <div className="visit-card-body">
-//           <PatientAvatar gender={gender} name={fullName} size={60} />
-//           <div className="visit-info">
-//             <div className="visit-name">👤 {fullName}</div>
-//             <div className="visit-details">
-//               📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
-//             </div>
-//             <div className="visit-details">
-//               📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
-//             </div>
-//           </div>
-//           <div className="visit-actions">
-//             <button 
-//               type="button"
-//               className="btn-open"
-//               onClick={() => onOpen(visit.id, status)}
-//             >
-//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-//             </button>
-//             <button 
-//               type="button"
-//               className="btn-details"
-//               onClick={() => onDetails(visit.id)}
-//             >
-//               {t('doctor.visit.details')}
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   };
-// Visit Card Component - Updated for mobile
-const VisitCard = ({ visit, onOpen, onDetails }) => {
-  const patient = visit.patient || {};
-  const status = visit.visitStatus || 'CREATED';
-  const bgColor = getStatusBgColor(status);
-  const gender = patient.gender || 'Unknown';
-  const fullName = buildFullName(patient);
-  
-  return (
-    <div className="visit-card" style={{ 
-      backgroundColor: bgColor,
-      width: '100%',
-      minWidth: 0,
-    }}>
-      <div className="visit-card-header">
-        <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-        <span className="visit-header-spacer" />
-        <StatusBadge status={status} />
-      </div>
-      <div className="visit-card-body">
-        <PatientAvatar gender={gender} name={fullName} size={60} />
-        <div className="visit-info">
-          <div className="visit-name">👤 {fullName}</div>
-          <div className="visit-details">
-            📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+    return (
+      <div className="visit-card" style={{ backgroundColor: bgColor }}>
+        <div className="visit-card-header">
+          <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+          <span className="visit-header-spacer" />
+          <StatusBadge status={status} />
+        </div>
+        <div className="visit-card-body">
+          <PatientAvatar gender={gender} name={fullName} size={60} />
+          <div className="visit-info">
+            <div className="visit-name">👤 {fullName}</div>
+            <div className="visit-details">
+              📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+            </div>
+            <div className="visit-details">
+              📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+            </div>
           </div>
-          <div className="visit-details">
-            📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+          <div className="visit-actions">
+            <button 
+              type="button"
+              className="btn-open"
+              onClick={() => onOpen(visit.id, status)}
+            >
+              {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+            </button>
+            <button 
+              type="button"
+              className="btn-details"
+              onClick={() => onDetails(visit.id)}
+            >
+              {t('doctor.visit.details')}
+            </button>
           </div>
         </div>
-        <div className="visit-actions">
-          <button 
-            type="button"
-            className="btn-open"
-            onClick={() => onOpen(visit.id, status)}
-          >
-            {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-          </button>
-          <button 
-            type="button"
-            className="btn-details"
-            onClick={() => onDetails(visit.id)}
-          >
-            {t('doctor.visit.details')}
-          </button>
-        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+
   // ==================== VISIT POPUP COMPONENT ====================
   const VisitPopup = ({ visit, onClose, onOpen, onDetails }) => {
     if (!visit) return null;
@@ -25449,6 +25295,9 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           display: flex;
           flex-direction: column;
           gap: 15px;
+           height: 100vh; /* Force full height */
+  min-height: 0; /* Allow flex item to shrink */
+ 
         }
 
         /* Welcome Section */
@@ -25759,20 +25608,29 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           object-fit: cover;
         }
 
-        /* Visit Cards */
-        .card-scroll-container {
-          flex: 1;
-          overflow-y: auto;
-          padding: 0;
-        }
+       /* Update the card container styles */
+.card-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  min-height: 200px; /* Minimum height to ensure visibility */
+  height: 100%; /* Take full available height */
+}
+
+
+
 
         .card-container {
           padding: 5px 0;
+            height: 100%;
+
         }
 
         .card-grid {
           display: grid;
           gap: 15px;
+            padding-bottom: 20px;
+
         }
 
         .card-list {
@@ -25781,14 +25639,19 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           gap: 12px;
         }
 
-        .visit-card {
-          border-radius: 15px;
-          border: 1px solid #e9ecef;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-          cursor: pointer;
-          transition: transform 0.15s, box-shadow 0.15s;
-          overflow: hidden;
-        }
+       /* Ensure cards are visible on mobile */
+.visit-card {
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+  background-color: white; /* Ensure background is visible */
+  min-height: 120px; /* Minimum height for visibility */
+  display: flex;
+  flex-direction: column;
+}
 
         .visit-card:hover {
           transform: translateY(-5px);
@@ -26661,6 +26524,171 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           flex-direction: row-reverse;
         }
 
+        /* Mobile-specific fixes */
+@media (max-width: 768px) {
+  .doctor-home {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .main-content {
+    height: 100vh;
+    padding: 10px;
+    gap: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .card-scroll-container {
+    flex: 1;
+    min-height: 300px;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .card-container {
+    padding-bottom: 80px; /* Space for pagination */
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr !important; /* Force single column on mobile */
+    gap: 12px;
+  }
+  
+  .visit-card {
+    min-height: 100px;
+    margin-bottom: 5px;
+    display: block !important; /* Force display */
+    opacity: 1 !important; /* Ensure visibility */
+    visibility: visible !important;
+  }
+  
+  .visit-card-body {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px;
+  }
+  
+  .visit-info {
+    flex: 1;
+    min-width: 0; /* Allow text to wrap */
+  }
+  
+  .visit-actions {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    margin-top: 8px;
+    gap: 8px;
+  }
+  
+  .visit-actions button {
+    min-width: 70px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .summary-card {
+    padding: 10px;
+  }
+  
+  .summary-card-value {
+    font-size: 24px;
+  }
+  
+  .welcome-section {
+    padding: 8px 12px;
+  }
+  
+  .welcome-greeting {
+    font-size: 18px;
+  }
+  
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .filter-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .filter-button {
+    padding: 6px 12px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+  
+  .filter-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .filter-action-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .pagination {
+    padding: 8px;
+    gap: 4px;
+  }
+  
+  .pagination button {
+    padding: 4px 10px;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  
+  .pagination-info {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .summary-card-value {
+    font-size: 20px;
+  }
+  
+  .visit-card-body {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+  
+  .visit-info {
+    text-align: center;
+  }
+  
+  .visit-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .visit-actions button {
+    width: 100%;
+  }
+}
         /* Responsive */
         @media (max-width: 768px) {
           .sidebar {
@@ -27358,54 +27386,39 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           </div>
 
           {/* Card Container */}
-          <div className="card-scroll-container" ref={scrollPaneRef}>
-            <div className="card-container">
-              {filteredVisits.length === 0 ? (
-                <div className="empty-state">
-                  📭 {t('doctor.filter.noResults')}
-                </div>
-              ) : isGridLayout ? (
-                <div 
-                  className="card-grid"
-                  style={{ 
-                    gridTemplateColumns: `repeat(${cardsPerRowPattern[cardsPerRowIndex]}, 1fr)`
-                  }}
-                >
-                  {filteredVisits.map((visit) => (
-                    <VisitCard
-                      key={visit.id}
-                      visit={visit}
-                      onOpen={(id, status) => {
-                        if (status === 'CLOSED') {
-                          reopenVisit(id);
-                        } else {
-                          openVisitScreen(id, status);
-                        }
-                      }}
-                      onDetails={showVisitDetails}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="card-list">
-                  {filteredVisits.map((visit) => (
-                    <VisitCard
-                      key={visit.id}
-                      visit={visit}
-                      onOpen={(id, status) => {
-                        if (status === 'CLOSED') {
-                          reopenVisit(id);
-                        } else {
-                          openVisitScreen(id, status);
-                        }
-                      }}
-                      onDetails={showVisitDetails}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+<div className="card-scroll-container" ref={scrollPaneRef}>
+  <div className="card-container">
+    {filteredVisits.length === 0 ? (
+      <div className="empty-state">
+        📭 {t('doctor.filter.noResults')}
+      </div>
+    ) : (
+      <div 
+        className="card-grid"
+        style={{ 
+          gridTemplateColumns: isGridLayout 
+            ? `repeat(${cardsPerRowPattern[cardsPerRowIndex]}, 1fr)` 
+            : '1fr'
+        }}
+      >
+        {filteredVisits.map((visit) => (
+          <VisitCard
+            key={visit.id}
+            visit={visit}
+            onOpen={(id, status) => {
+              if (status === 'CLOSED') {
+                reopenVisit(id);
+              } else {
+                openVisitScreen(id, status);
+              }
+            }}
+            onDetails={showVisitDetails}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</div>
 
           {/* Pagination */}
           {totalPages > 1 && <Pagination />}
