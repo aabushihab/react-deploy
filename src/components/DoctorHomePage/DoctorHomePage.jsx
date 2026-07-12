@@ -23593,6 +23593,130 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
               border-top: 2px dashed #e0e0e0;
               margin: 20px 0;
             }
+/* Add these responsive card styles */
+@media (max-width: 768px) {
+  /* Fix card grid for mobile */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    padding: 0 5px !important;
+  }
+  
+  .card-grid .visit-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .visit-card-body {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 12px !important;
+  }
+  
+  .visit-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .visit-actions button {
+    flex: 1 !important;
+    min-width: 80px !important;
+    max-width: 150px !important;
+  }
+  
+  .visit-info {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  
+  .patient-avatar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  /* Fix card container */
+  .card-container {
+    padding: 5px 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+  
+  .card-scroll-container {
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Fix filter bar on mobile */
+  .filters-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  
+  .filter-buttons {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .filter-actions {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .filter-actions .search-input {
+    width: 100% !important;
+  }
+  
+  .filter-action-btn {
+    flex: 1 !important;
+    min-width: 60px !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  
+  .visit-card {
+    border-radius: 10px !important;
+  }
+  
+  .visit-card-header {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+  
+  .visit-card-body {
+    padding: 10px !important;
+  }
+  
+  .visit-name {
+    font-size: 14px !important;
+  }
+  
+  .visit-details {
+    font-size: 12px !important;
+  }
+  
+  .patient-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .visit-actions button {
+    font-size: 11px !important;
+    padding: 6px 12px !important;
+    min-width: 60px !important;
+    min-height: 32px !important;
+  }
+}
+
           </style>
         </head>
         <body>
@@ -24521,52 +24645,101 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   };
 
   // Visit Card Component
-  const VisitCard = ({ visit, onOpen, onDetails }) => {
-    const patient = visit.patient || {};
-    const status = visit.visitStatus || 'CREATED';
-    const bgColor = getStatusBgColor(status);
-    const gender = patient.gender || 'Unknown';
-    const fullName = buildFullName(patient);
+//   const VisitCard = ({ visit, onOpen, onDetails }) => {
+//     const patient = visit.patient || {};
+//     const status = visit.visitStatus || 'CREATED';
+//     const bgColor = getStatusBgColor(status);
+//     const gender = patient.gender || 'Unknown';
+//     const fullName = buildFullName(patient);
     
-    return (
-      <div className="visit-card" style={{ backgroundColor: bgColor }}>
-        <div className="visit-card-header">
-          <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-          <span className="visit-header-spacer" />
-          <StatusBadge status={status} />
+//     return (
+//       <div className="visit-card" style={{ backgroundColor: bgColor }}>
+//         <div className="visit-card-header">
+//           <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+//           <span className="visit-header-spacer" />
+//           <StatusBadge status={status} />
+//         </div>
+//         <div className="visit-card-body">
+//           <PatientAvatar gender={gender} name={fullName} size={60} />
+//           <div className="visit-info">
+//             <div className="visit-name">👤 {fullName}</div>
+//             <div className="visit-details">
+//               📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+//             </div>
+//             <div className="visit-details">
+//               📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+//             </div>
+//           </div>
+//           <div className="visit-actions">
+//             <button 
+//               type="button"
+//               className="btn-open"
+//               onClick={() => onOpen(visit.id, status)}
+//             >
+//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+//             </button>
+//             <button 
+//               type="button"
+//               className="btn-details"
+//               onClick={() => onDetails(visit.id)}
+//             >
+//               {t('doctor.visit.details')}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
+// Visit Card Component - Updated for mobile
+const VisitCard = ({ visit, onOpen, onDetails }) => {
+  const patient = visit.patient || {};
+  const status = visit.visitStatus || 'CREATED';
+  const bgColor = getStatusBgColor(status);
+  const gender = patient.gender || 'Unknown';
+  const fullName = buildFullName(patient);
+  
+  return (
+    <div className="visit-card" style={{ 
+      backgroundColor: bgColor,
+      width: '100%',
+      minWidth: 0,
+    }}>
+      <div className="visit-card-header">
+        <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+        <span className="visit-header-spacer" />
+        <StatusBadge status={status} />
+      </div>
+      <div className="visit-card-body">
+        <PatientAvatar gender={gender} name={fullName} size={60} />
+        <div className="visit-info">
+          <div className="visit-name">👤 {fullName}</div>
+          <div className="visit-details">
+            📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+          </div>
+          <div className="visit-details">
+            📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+          </div>
         </div>
-        <div className="visit-card-body">
-          <PatientAvatar gender={gender} name={fullName} size={60} />
-          <div className="visit-info">
-            <div className="visit-name">👤 {fullName}</div>
-            <div className="visit-details">
-              📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
-            </div>
-            <div className="visit-details">
-              📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
-            </div>
-          </div>
-          <div className="visit-actions">
-            <button 
-              type="button"
-              className="btn-open"
-              onClick={() => onOpen(visit.id, status)}
-            >
-              {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-            </button>
-            <button 
-              type="button"
-              className="btn-details"
-              onClick={() => onDetails(visit.id)}
-            >
-              {t('doctor.visit.details')}
-            </button>
-          </div>
+        <div className="visit-actions">
+          <button 
+            type="button"
+            className="btn-open"
+            onClick={() => onOpen(visit.id, status)}
+          >
+            {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+          </button>
+          <button 
+            type="button"
+            className="btn-details"
+            onClick={() => onDetails(visit.id)}
+          >
+            {t('doctor.visit.details')}
+          </button>
         </div>
       </div>
-    );
-  };
-
+    </div>
+  );
+};
   // ==================== VISIT POPUP COMPONENT ====================
   const VisitPopup = ({ visit, onClose, onOpen, onDetails }) => {
     if (!visit) return null;
