@@ -26689,6 +26689,26 @@ useEffect(() => {
     width: 100%;
   }
 }
+
+/* Force cards to be visible on mobile */
+@media (max-width: 768px) {
+  .visit-card {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    min-height: 80px !important;
+  }
+  
+  .card-grid {
+    display: grid !important;
+    gap: 12px !important;
+  }
+  
+  .card-scroll-container {
+    min-height: 200px !important;
+    overflow-y: auto !important;
+  }
+}
         /* Responsive */
         @media (max-width: 768px) {
           .sidebar {
