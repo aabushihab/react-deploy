@@ -16047,7 +16047,7 @@ const fetchScheduleFromApi = async (date) => {
 // -------------------- Main Component --------------------
 const AdminHomePage = () => {
   // ---------- Language ----------
-  const lang = localStorage.getItem('lang') || 'en';
+  const lang = sessionStorage.getItem('lang') || 'en';
   const t = adminTranslations[lang];
   const isRTL = lang === 'ar';
 
@@ -16441,10 +16441,10 @@ const AdminHomePage = () => {
                     <span className="label">{item.label}</span>
                   </button>
                 ))}
-                <button onClick={openGuide} style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                {/* <button onClick={openGuide} style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                   <span>🗺️</span>
                   <span className="label">Patient Guide</span>
-                </button>
+                </button> */}
               </div>
               <div className="logout">
                 <button onClick={handleLogout}>

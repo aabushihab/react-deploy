@@ -1,6 +1,192 @@
+// // ChangePasswordScreen.jsx
+// import React, { useState } from 'react';
+// import './ChangePasswordScreen.css';
+
+// const ChangePasswordScreen = ({ 
+//   isOpen, 
+//   onClose, 
+//   onChangePassword, 
+//   username, 
+//   t,
+//   isRTL = false 
+// }) => {
+//   const [oldPassword, setOldPassword] = useState('');
+//   const [newPassword, setNewPassword] = useState('');
+//   const [confirmPassword, setConfirmPassword] = useState('');
+//   const [showPasswords, setShowPasswords] = useState(false);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setError('');
+
+//     // Validation
+//     if (!oldPassword || !newPassword || !confirmPassword) {
+//       setError(t('doctor.password.fillAll') || 'Please fill all fields');
+//       return;
+//     }
+
+//     if (newPassword !== confirmPassword) {
+//       setError(t('doctor.password.notMatch') || 'New passwords do not match');
+//       return;
+//     }
+
+//     if (newPassword.length < 6) {
+//       setError('Password must be at least 6 characters long');
+//       return;
+//     }
+
+//     setLoading(true);
+//     const success = await onChangePassword(oldPassword, newPassword);
+//     setLoading(false);
+
+//     if (success) {
+//       // Clear form and close
+//       setOldPassword('');
+//       setNewPassword('');
+//       setConfirmPassword('');
+//       setError('');
+//       onClose();
+//     }
+//   };
+
+//   const handleKeyPress = (e) => {
+//     if (e.key === 'Enter') {
+//       handleSubmit(e);
+//     }
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className={`change-password-overlay ${isRTL ? 'rtl' : ''}`} onClick={onClose}>
+//       <div 
+//         className="change-password-modal" 
+//         onClick={(e) => e.stopPropagation()}
+//         dir={isRTL ? 'rtl' : 'ltr'}
+//       >
+//         <div className="change-password-header">
+//           <button className="change-password-close" onClick={onClose}>
+//             ✖
+//           </button>
+//           <div className="change-password-title">
+//             <span className="change-password-icon">🔒</span>
+//             <h2>{t('doctor.password.title') || 'Change Password'}</h2>
+//           </div>
+//         </div>
+
+//         <form onSubmit={handleSubmit} className="change-password-form">
+//           {error && (
+//             <div className="change-password-error">
+//               ⚠️ {error}
+//             </div>
+//           )}
+
+//           <div className="change-password-field">
+//             <label htmlFor="oldPassword" className="change-password-label">
+//               {t('doctor.password.old') || 'Old Password'}
+//             </label>
+//             <div className="change-password-input-wrapper">
+//               <input
+//                 id="oldPassword"
+//                 type={showPasswords ? 'text' : 'password'}
+//                 className="change-password-input"
+//                 value={oldPassword}
+//                 onChange={(e) => setOldPassword(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//                 placeholder={t('doctor.password.old') || 'Enter old password'}
+//                 autoFocus
+//                 disabled={loading}
+//               />
+//               <span className="change-password-input-icon">🔑</span>
+//             </div>
+//           </div>
+
+//           <div className="change-password-field">
+//             <label htmlFor="newPassword" className="change-password-label">
+//               {t('doctor.password.new') || 'New Password'}
+//             </label>
+//             <div className="change-password-input-wrapper">
+//               <input
+//                 id="newPassword"
+//                 type={showPasswords ? 'text' : 'password'}
+//                 className="change-password-input"
+//                 value={newPassword}
+//                 onChange={(e) => setNewPassword(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//                 placeholder={t('doctor.password.new') || 'Enter new password'}
+//                 disabled={loading}
+//               />
+//               <span className="change-password-input-icon">🔐</span>
+//             </div>
+//           </div>
+
+//           <div className="change-password-field">
+//             <label htmlFor="confirmPassword" className="change-password-label">
+//               {t('doctor.password.confirm') || 'Confirm Password'}
+//             </label>
+//             <div className="change-password-input-wrapper">
+//               <input
+//                 id="confirmPassword"
+//                 type={showPasswords ? 'text' : 'password'}
+//                 className="change-password-input"
+//                 value={confirmPassword}
+//                 onChange={(e) => setConfirmPassword(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//                 placeholder={t('doctor.password.confirm') || 'Confirm new password'}
+//                 disabled={loading}
+//               />
+//               <span className="change-password-input-icon">🔐</span>
+//             </div>
+//           </div>
+
+//           <div className="change-password-toggle">
+//             <label className="change-password-toggle-label">
+//               <input
+//                 type="checkbox"
+//                 checked={showPasswords}
+//                 onChange={(e) => setShowPasswords(e.target.checked)}
+//                 disabled={loading}
+//               />
+//               <span className="change-password-toggle-text">👁️ Show passwords</span>
+//             </label>
+//           </div>
+
+//           <div className="change-password-actions">
+//             <button 
+//               type="button" 
+//               className="change-password-btn cancel" 
+//               onClick={onClose}
+//               disabled={loading}
+//             >
+//               {t('doctor.dialog.close') || 'Close'}
+//             </button>
+//             <button 
+//               type="submit" 
+//               className="change-password-btn submit" 
+//               disabled={loading}
+//             >
+//               {loading ? (
+//                 <>
+//                   <span className="change-password-spinner"></span>
+//                   {t('doctor.loading') || 'Loading...'}
+//                 </>
+//               ) : (
+//                 t('doctor.password.save') || 'Save'
+//               )}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ChangePasswordScreen;  11072026  11:20 pm
+
 // ChangePasswordScreen.jsx
-import React, { useState } from 'react';
-import './ChangePasswordScreen.css';
+import React, { useState, useEffect } from 'react';
 
 const ChangePasswordScreen = ({ 
   isOpen, 
@@ -16,6 +202,28 @@ const ChangePasswordScreen = ({
   const [showPasswords, setShowPasswords] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Reset form when modal opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setError('');
+      setShowPasswords(false);
+    }
+  }, [isOpen]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,148 +246,782 @@ const ChangePasswordScreen = ({
     }
 
     setLoading(true);
-    const success = await onChangePassword(oldPassword, newPassword);
-    setLoading(false);
+    try {
+      const success = await onChangePassword(oldPassword, newPassword);
+      setLoading(false);
 
-    if (success) {
-      // Clear form and close
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setError('');
-      onClose();
+      if (success) {
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setError('');
+        onClose();
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.message || 'An error occurred');
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !loading) {
       handleSubmit(e);
+    }
+  };
+
+  const handleClose = () => {
+    if (!loading) {
+      onClose();
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={`change-password-overlay ${isRTL ? 'rtl' : ''}`} onClick={onClose}>
+    <>
+      <style>{`
+        /* Base Styles */
+        .change-password-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          animation: fadeIn 0.3s ease;
+          padding: 20px;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes slideUpMobile {
+          from {
+            opacity: 0;
+            transform: translateY(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-8px); }
+          75% { transform: translateX(8px); }
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .change-password-modal {
+          background: #ffffff;
+          border-radius: 20px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          width: 100%;
+          max-width: 450px;
+          padding: 30px;
+          animation: slideUp 0.3s ease;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+        }
+
+        .change-password-header {
+          position: relative;
+          margin-bottom: 25px;
+          padding-bottom: 15px;
+          border-bottom: 2px solid #f0f0f0;
+        }
+
+        .change-password-close {
+          position: absolute;
+          top: -15px;
+          right: -15px;
+          width: 35px;
+          height: 35px;
+          border: none;
+          background: #f0f0f0;
+          border-radius: 50%;
+          font-size: 18px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 35px;
+          min-height: 35px;
+          color: #333;
+        }
+
+        .change-password-close:hover {
+          background: #e74c3c;
+          color: white;
+          transform: rotate(90deg);
+        }
+
+        .change-password-close:active {
+          transform: rotate(90deg) scale(0.9);
+        }
+
+        .change-password-title {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .change-password-icon {
+          font-size: 32px;
+        }
+
+        .change-password-title h2 {
+          margin: 0;
+          color: #2C3E50;
+          font-size: 24px;
+          font-weight: 700;
+        }
+
+        .change-password-form {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .change-password-error {
+          background: #fff5f5;
+          border: 1px solid #f5c6cb;
+          color: #721c24;
+          padding: 12px 15px;
+          border-radius: 10px;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          animation: shake 0.5s ease;
+        }
+
+        .change-password-field {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .change-password-label {
+          font-weight: 600;
+          color: #555;
+          font-size: 14px;
+        }
+
+        .change-password-input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .change-password-input {
+          width: 100%;
+          padding: 12px 45px 12px 15px;
+          border: 2px solid #e0e0e0;
+          border-radius: 12px;
+          font-size: 16px;
+          transition: all 0.3s ease;
+          background: #fafafa;
+          color: #333;
+          min-height: 48px;
+        }
+
+        .change-password-input:focus {
+          outline: none;
+          border-color: #1E90FF;
+          background: white;
+          box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.1);
+        }
+
+        .change-password-input:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .change-password-input::placeholder {
+          color: #bbb;
+        }
+
+        .change-password-input-icon {
+          position: absolute;
+          right: 15px;
+          font-size: 18px;
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        .change-password-toggle {
+          margin-top: 5px;
+        }
+
+        .change-password-toggle-label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          color: #666;
+          font-size: 14px;
+          user-select: none;
+        }
+
+        .change-password-toggle-label input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+          accent-color: #1E90FF;
+          min-width: 18px;
+          min-height: 18px;
+        }
+
+        .change-password-toggle-label input[type="checkbox"]:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .change-password-toggle-text {
+          transition: color 0.3s ease;
+        }
+
+        .change-password-toggle-label:hover .change-password-toggle-text {
+          color: #333;
+        }
+
+        .change-password-actions {
+          display: flex;
+          gap: 12px;
+          justify-content: flex-end;
+          padding-top: 20px;
+          border-top: 1px solid #f0f0f0;
+          margin-top: 10px;
+        }
+
+        .change-password-btn {
+          padding: 12px 30px;
+          border: none;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          min-width: 100px;
+          justify-content: center;
+          min-height: 48px;
+        }
+
+        .change-password-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+
+        .change-password-btn:active:not(:disabled) {
+          transform: scale(0.95);
+        }
+
+        .change-password-btn.cancel {
+          background: #f0f0f0;
+          color: #666;
+        }
+
+        .change-password-btn.cancel:hover:not(:disabled) {
+          background: #e0e0e0;
+        }
+
+        .change-password-btn.submit {
+          background: #1E90FF;
+          color: white;
+          box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+        }
+
+        .change-password-btn.submit:hover:not(:disabled) {
+          background: #0077CC;
+          box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+        }
+
+        .change-password-btn.submit:disabled {
+          background: #87CEEB;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .change-password-btn.cancel:disabled {
+          cursor: not-allowed;
+          opacity: 0.7;
+        }
+
+        .change-password-spinner {
+          display: inline-block;
+          width: 18px;
+          height: 18px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top: 2px solid #ffffff;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
+        /* RTL Support */
+        .change-password-overlay.rtl .change-password-modal {
+          direction: rtl;
+        }
+
+        .change-password-overlay.rtl .change-password-close {
+          right: auto;
+          left: -15px;
+        }
+
+        .change-password-overlay.rtl .change-password-title {
+          flex-direction: row-reverse;
+        }
+
+        .change-password-overlay.rtl .change-password-input {
+          padding: 12px 15px 12px 45px;
+        }
+
+        .change-password-overlay.rtl .change-password-input-icon {
+          right: auto;
+          left: 15px;
+        }
+
+        .change-password-overlay.rtl .change-password-actions {
+          flex-direction: row-reverse;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .change-password-overlay {
+            padding: 10px;
+            align-items: flex-end;
+          }
+
+          .change-password-modal {
+            padding: 24px 20px;
+            border-radius: 16px 16px 0 0;
+            max-height: 95vh;
+            animation: slideUpMobile 0.3s ease;
+          }
+
+          .change-password-title h2 {
+            font-size: 20px;
+          }
+
+          .change-password-icon {
+            font-size: 28px;
+          }
+
+          .change-password-close {
+            top: -10px;
+            right: -10px;
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+            min-width: 32px;
+            min-height: 32px;
+          }
+
+          .change-password-overlay.rtl .change-password-close {
+            right: auto;
+            left: -10px;
+          }
+
+          .change-password-input {
+            font-size: 16px;
+            padding: 10px 40px 10px 14px;
+            min-height: 44px;
+          }
+
+          .change-password-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            min-width: 80px;
+            min-height: 44px;
+          }
+
+          .change-password-actions {
+            gap: 10px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .change-password-overlay {
+            padding: 6px;
+          }
+
+          .change-password-modal {
+            padding: 18px 14px;
+            border-radius: 12px 12px 0 0;
+          }
+
+          .change-password-title h2 {
+            font-size: 17px;
+          }
+
+          .change-password-icon {
+            font-size: 24px;
+          }
+
+          .change-password-close {
+            top: -8px;
+            right: -8px;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            min-width: 28px;
+            min-height: 28px;
+          }
+
+          .change-password-overlay.rtl .change-password-close {
+            right: auto;
+            left: -8px;
+          }
+
+          .change-password-header {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+          }
+
+          .change-password-form {
+            gap: 14px;
+          }
+
+          .change-password-label {
+            font-size: 13px;
+          }
+
+          .change-password-input {
+            font-size: 15px;
+            padding: 8px 36px 8px 12px;
+            min-height: 40px;
+            border-radius: 10px;
+          }
+
+          .change-password-input-icon {
+            font-size: 16px;
+            right: 12px;
+          }
+
+          .change-password-overlay.rtl .change-password-input {
+            padding: 8px 12px 8px 36px;
+          }
+
+          .change-password-overlay.rtl .change-password-input-icon {
+            right: auto;
+            left: 12px;
+          }
+
+          .change-password-error {
+            font-size: 13px;
+            padding: 10px 12px;
+          }
+
+          .change-password-toggle-label {
+            font-size: 13px;
+          }
+
+          .change-password-toggle-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            min-height: 16px;
+          }
+
+          .change-password-actions {
+            flex-direction: column-reverse;
+            gap: 8px;
+            padding-top: 16px;
+          }
+
+          .change-password-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            min-width: 100%;
+            min-height: 44px;
+            border-radius: 10px;
+          }
+
+          .change-password-overlay.rtl .change-password-actions {
+            flex-direction: column-reverse;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .change-password-modal {
+            padding: 14px 10px;
+          }
+
+          .change-password-title h2 {
+            font-size: 15px;
+          }
+
+          .change-password-icon {
+            font-size: 20px;
+          }
+
+          .change-password-input {
+            font-size: 14px;
+            padding: 6px 32px 6px 10px;
+            min-height: 36px;
+            border-radius: 8px;
+          }
+
+          .change-password-btn {
+            font-size: 13px;
+            padding: 8px 12px;
+            min-height: 38px;
+          }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .change-password-modal {
+            max-width: 420px;
+            padding: 28px;
+          }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+          .change-password-modal {
+            background: #1a1a2e;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          }
+
+          .change-password-title h2 {
+            color: #ecf0f1;
+          }
+
+          .change-password-header {
+            border-bottom-color: #2d2d44;
+          }
+
+          .change-password-close {
+            background: #2d2d44;
+            color: #ecf0f1;
+          }
+
+          .change-password-close:hover {
+            background: #e74c3c;
+          }
+
+          .change-password-label {
+            color: #b0b0b0;
+          }
+
+          .change-password-input {
+            background: #2d2d44;
+            border-color: #3d3d5c;
+            color: #ecf0f1;
+          }
+
+          .change-password-input:focus {
+            border-color: #1E90FF;
+            background: #2d2d44;
+            box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.2);
+          }
+
+          .change-password-input::placeholder {
+            color: #666;
+          }
+
+          .change-password-toggle-label {
+            color: #b0b0b0;
+          }
+
+          .change-password-toggle-label:hover .change-password-toggle-text {
+            color: #ecf0f1;
+          }
+
+          .change-password-btn.cancel {
+            background: #2d2d44;
+            color: #b0b0b0;
+          }
+
+          .change-password-btn.cancel:hover:not(:disabled) {
+            background: #3d3d5c;
+          }
+
+          .change-password-btn.submit {
+            background: #1E90FF;
+          }
+
+          .change-password-btn.submit:hover:not(:disabled) {
+            background: #0077CC;
+          }
+
+          .change-password-btn.submit:disabled {
+            background: #2d4a6a;
+          }
+
+          .change-password-error {
+            background: #2d1a1a;
+            border-color: #4a1a1a;
+            color: #ff6b6b;
+          }
+
+          .change-password-actions {
+            border-top-color: #2d2d44;
+          }
+        }
+      `}</style>
+
       <div 
-        className="change-password-modal" 
-        onClick={(e) => e.stopPropagation()}
-        dir={isRTL ? 'rtl' : 'ltr'}
+        className={`change-password-overlay ${isRTL ? 'rtl' : ''}`} 
+        onClick={handleClose}
       >
-        <div className="change-password-header">
-          <button className="change-password-close" onClick={onClose}>
-            ✖
-          </button>
-          <div className="change-password-title">
-            <span className="change-password-icon">🔒</span>
-            <h2>{t('doctor.password.title') || 'Change Password'}</h2>
+        <div 
+          className="change-password-modal" 
+          onClick={(e) => e.stopPropagation()}
+          dir={isRTL ? 'rtl' : 'ltr'}
+        >
+          <div className="change-password-header">
+            <button 
+              className="change-password-close" 
+              onClick={handleClose}
+              disabled={loading}
+              aria-label="Close"
+            >
+              ✖
+            </button>
+            <div className="change-password-title">
+              <span className="change-password-icon">🔒</span>
+              <h2>{t('doctor.password.title') || 'Change Password'}</h2>
+            </div>
           </div>
+
+          <form onSubmit={handleSubmit} className="change-password-form">
+            {error && (
+              <div className="change-password-error">
+                ⚠️ {error}
+              </div>
+            )}
+
+            <div className="change-password-field">
+              <label htmlFor="oldPassword" className="change-password-label">
+                {t('doctor.password.old') || 'Old Password'}
+              </label>
+              <div className="change-password-input-wrapper">
+                <input
+                  id="oldPassword"
+                  type={showPasswords ? 'text' : 'password'}
+                  className="change-password-input"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={t('doctor.password.old') || 'Enter old password'}
+                  autoFocus
+                  disabled={loading}
+                  autoComplete="current-password"
+                />
+                <span className="change-password-input-icon">🔑</span>
+              </div>
+            </div>
+
+            <div className="change-password-field">
+              <label htmlFor="newPassword" className="change-password-label">
+                {t('doctor.password.new') || 'New Password'}
+              </label>
+              <div className="change-password-input-wrapper">
+                <input
+                  id="newPassword"
+                  type={showPasswords ? 'text' : 'password'}
+                  className="change-password-input"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={t('doctor.password.new') || 'Enter new password'}
+                  disabled={loading}
+                  autoComplete="new-password"
+                />
+                <span className="change-password-input-icon">🔐</span>
+              </div>
+            </div>
+
+            <div className="change-password-field">
+              <label htmlFor="confirmPassword" className="change-password-label">
+                {t('doctor.password.confirm') || 'Confirm Password'}
+              </label>
+              <div className="change-password-input-wrapper">
+                <input
+                  id="confirmPassword"
+                  type={showPasswords ? 'text' : 'password'}
+                  className="change-password-input"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={t('doctor.password.confirm') || 'Confirm new password'}
+                  disabled={loading}
+                  autoComplete="new-password"
+                />
+                <span className="change-password-input-icon">🔐</span>
+              </div>
+            </div>
+
+            <div className="change-password-toggle">
+              <label className="change-password-toggle-label">
+                <input
+                  type="checkbox"
+                  checked={showPasswords}
+                  onChange={(e) => setShowPasswords(e.target.checked)}
+                  disabled={loading}
+                />
+                <span className="change-password-toggle-text">👁️ {t('doctor.password.show') || 'Show passwords'}</span>
+              </label>
+            </div>
+
+            <div className="change-password-actions">
+              <button 
+                type="button" 
+                className="change-password-btn cancel" 
+                onClick={handleClose}
+                disabled={loading}
+              >
+                {t('doctor.dialog.close') || 'Close'}
+              </button>
+              <button 
+                type="submit" 
+                className="change-password-btn submit" 
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="change-password-spinner"></span>
+                    {t('doctor.loading') || 'Loading...'}
+                  </>
+                ) : (
+                  t('doctor.password.save') || 'Save'
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form onSubmit={handleSubmit} className="change-password-form">
-          {error && (
-            <div className="change-password-error">
-              ⚠️ {error}
-            </div>
-          )}
-
-          <div className="change-password-field">
-            <label htmlFor="oldPassword" className="change-password-label">
-              {t('doctor.password.old') || 'Old Password'}
-            </label>
-            <div className="change-password-input-wrapper">
-              <input
-                id="oldPassword"
-                type={showPasswords ? 'text' : 'password'}
-                className="change-password-input"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t('doctor.password.old') || 'Enter old password'}
-                autoFocus
-                disabled={loading}
-              />
-              <span className="change-password-input-icon">🔑</span>
-            </div>
-          </div>
-
-          <div className="change-password-field">
-            <label htmlFor="newPassword" className="change-password-label">
-              {t('doctor.password.new') || 'New Password'}
-            </label>
-            <div className="change-password-input-wrapper">
-              <input
-                id="newPassword"
-                type={showPasswords ? 'text' : 'password'}
-                className="change-password-input"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t('doctor.password.new') || 'Enter new password'}
-                disabled={loading}
-              />
-              <span className="change-password-input-icon">🔐</span>
-            </div>
-          </div>
-
-          <div className="change-password-field">
-            <label htmlFor="confirmPassword" className="change-password-label">
-              {t('doctor.password.confirm') || 'Confirm Password'}
-            </label>
-            <div className="change-password-input-wrapper">
-              <input
-                id="confirmPassword"
-                type={showPasswords ? 'text' : 'password'}
-                className="change-password-input"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t('doctor.password.confirm') || 'Confirm new password'}
-                disabled={loading}
-              />
-              <span className="change-password-input-icon">🔐</span>
-            </div>
-          </div>
-
-          <div className="change-password-toggle">
-            <label className="change-password-toggle-label">
-              <input
-                type="checkbox"
-                checked={showPasswords}
-                onChange={(e) => setShowPasswords(e.target.checked)}
-                disabled={loading}
-              />
-              <span className="change-password-toggle-text">👁️ Show passwords</span>
-            </label>
-          </div>
-
-          <div className="change-password-actions">
-            <button 
-              type="button" 
-              className="change-password-btn cancel" 
-              onClick={onClose}
-              disabled={loading}
-            >
-              {t('doctor.dialog.close') || 'Close'}
-            </button>
-            <button 
-              type="submit" 
-              className="change-password-btn submit" 
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="change-password-spinner"></span>
-                  {t('doctor.loading') || 'Loading...'}
-                </>
-              ) : (
-                t('doctor.password.save') || 'Save'
-              )}
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+    </>
   );
 };
 
