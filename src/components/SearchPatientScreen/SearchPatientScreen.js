@@ -7206,41 +7206,94 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
   .search-patient-card-body .detail {
     margin-bottom: 4px;
   }
+/* Pagination - Enhanced for Mobile */
+.search-patient-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  flex-wrap: wrap;
+}
 
-  /* Pagination */
+.search-patient-pagination .pagination-btn {
+  padding: 8px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 40px;
+  min-width: 44px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-patient-pagination .pagination-btn:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #4299e1;
+}
+
+.search-patient-pagination .pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.search-patient-pagination .pagination-info {
+  font-size: 15px;
+  color: #4a5568;
+  font-weight: 500;
+  padding: 0 10px;
+}
+
+/* Mobile pagination styles */
+@media (max-width: 768px) {
   .search-patient-pagination {
-    display: flex;
-    justify-content: center;
     gap: 10px;
-    margin-top: 15px;
-    align-items: center;
+    padding: 10px 12px;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .search-patient-pagination button {
+  .search-patient-pagination .pagination-btn {
     padding: 6px 14px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-height: 34px;
-  }
-
-  .search-patient-pagination button:hover:not(:disabled) {
-    background: #f7fafc;
-  }
-
-  .search-patient-pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .search-patient-pagination span {
+    min-height: 36px;
+    min-width: 38px;
     font-size: 14px;
-    color: #4a5568;
   }
 
+  .search-patient-pagination .pagination-info {
+    font-size: 13px;
+    padding: 0 5px;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-patient-pagination {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .search-patient-pagination .pagination-btn {
+    padding: 4px 10px;
+    min-height: 32px;
+    min-width: 32px;
+    font-size: 12px;
+  }
+
+  .search-patient-pagination .pagination-info {
+    font-size: 12px;
+    padding: 4px 0;
+  }
+}
   /* Modal Overlay */
   .modal-overlay {
     position: fixed;
@@ -8024,13 +8077,28 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="search-patient-pagination">
-            <button disabled={currentPage === 0} onClick={() => setCurrentPage(p => p - 1)}>&lt;</button>
-            <span>{`${t.label.showing} ${currentPage + 1} / ${totalPages}`}</span>
-            <button disabled={currentPage >= totalPages - 1} onClick={() => setCurrentPage(p => p + 1)}>&gt;</button>
-          </div>
-        )}
+       {/* Pagination */}
+{totalPages > 1 && (
+  <div className="search-patient-pagination">
+    <button 
+      disabled={currentPage === 0} 
+      onClick={() => setCurrentPage(p => p - 1)}
+      className="pagination-btn"
+    >
+      ◀
+    </button>
+    <span className="pagination-info">
+      {`${t.label.showing} ${currentPage + 1} / ${totalPages}`}
+    </span>
+    <button 
+      disabled={currentPage >= totalPages - 1} 
+      onClick={() => setCurrentPage(p => p + 1)}
+      className="pagination-btn"
+    >
+      ▶
+    </button>
+  </div>
+)}
 
         {/* ---------- MODALS ---------- */}
         {showAppointmentsAdmin && (
