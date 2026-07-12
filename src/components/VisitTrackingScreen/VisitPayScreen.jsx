@@ -3031,7 +3031,6 @@
 
 // export default VisitPayScreen; 12072026 4:00 pm
 
-
 import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../utils/api';
 
@@ -3048,7 +3047,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
     terminalId: 'Terminal ID',
     posNo: 'POS Payment No',
     cardType: 'Card Type',
-    approval: 'Approval Code',
+    approvalCode: 'Approval Code',
     insuranceProvider: 'Insurance Provider',
     insuranceClass: 'Insurance Class',
     insuranceType: 'Insurance Type',
@@ -3087,12 +3086,17 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   useEffect(() => {
     if (remaining > 0) {
       setOriginalAmount(remaining);
+    } else if (visit.amount > 0) {
+      setOriginalAmount(visit.amount);
     }
-  }, [remaining]);
+  }, [remaining, visit.amount]);
 
   // Calculate paying now and remaining
   const payingNow = (parseFloat(cashAmount) || 0) + (parseFloat(posAmount) || 0);
   const remainingAfterPayment = Math.max(0, originalAmount - payingNow);
+
+  // Check if total payment exceeds original amount
+  const isTotalExceedingOriginal = payingNow > originalAmount;
 
   // Load insurance data when payment type is INSURANCE
   useEffect(() => {
@@ -3124,15 +3128,28 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
     const posValue = parseFloat(posAmount) || 0;
     const totalPayment = cashValue + posValue;
 
-    // Validation
+    // Validation - make sure there's an amount to pay
     if (paymentType !== 'FREE' && paymentType !== 'INSURANCE' && totalPayment <= 0) {
       setError('Please enter a payment amount');
       return;
     }
 
-    if (paymentType === 'POS' || paymentType === 'CASH + POS') {
-      if (posValue > 0 && (!terminalId || !posNo || !cardType || !approvalCode)) {
-        setError('All POS fields are required');
+    // Make sure originalAmount is greater than 0
+    if (originalAmount <= 0) {
+      setError('Original amount must be greater than 0');
+      return;
+    }
+
+    // Check if total payment exceeds original amount
+    if (totalPayment > originalAmount) {
+      setError(`Total payment (${totalPayment.toFixed(2)}) cannot exceed original amount (${originalAmount.toFixed(2)})`);
+      return;
+    }
+
+    // Only validate POS fields if POS amount is greater than 0
+    if ((paymentType === 'POS' || paymentType === 'CASH + POS') && posValue > 0) {
+      if (!terminalId || !posNo || !cardType || !approvalCode) {
+        setError('All POS fields are required for POS payment');
         return;
       }
     }
@@ -3162,6 +3179,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
     setLoading(true);
 
     try {
+      // Build payments array based on payment type
       const payments = [];
 
       // CASH payment
@@ -3174,29 +3192,29 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
 
       // POS payment
       if (posValue > 0) {
-        const posPayment = {
+        payments.push({
           paymentMethod: 'POS',
           cashAmount: posValue,
-          terminalId: terminalId,
-          posPaymentNo: posNo,
-          cardType: cardType,
-          approvalCode: approvalCode
-        };
-        payments.push(posPayment);
+          terminalId: terminalId || '',
+          posPaymentNo: posNo || '',
+          cardType: cardType || '',
+          approvalCode: approvalCode || ''
+        });
       }
 
-      // INSURANCE payment
+      // INSURANCE payment (if selected)
       if (paymentType === 'INSURANCE') {
+        const insuranceAmount = originalAmount - (cashValue || 0);
         const insurancePayment = {
           paymentMethod: 'INSURANCE',
           originalAmount: originalAmount,
-          cashAmount: cashValue,
-          insuranceAmount: originalAmount - cashValue,
-          insuranceProvider: insuranceProvider,
-          insuranceClass: insuranceClass,
-          insuranceType: insuranceType,
-          coveragePercent: coveragePercent,
-          insuranceAcceptNumber: insuranceAcceptNo
+          cashAmount: cashValue || 0,
+          insuranceAmount: insuranceAmount,
+          insuranceProvider: insuranceProvider || '',
+          insuranceClass: insuranceClass || '',
+          insuranceType: insuranceType || 'BENEFICIARY',
+          coveragePercent: coveragePercent || 0,
+          insuranceAcceptNumber: insuranceAcceptNo || ''
         };
         
         if (cardId.trim()) {
@@ -3217,11 +3235,14 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         });
       }
 
+      // Build the final payload
       const payload = {
         originalAmount: originalAmount,
-        currency: currency,
+        currency: currency || 'JOD',
         payments: payments
       };
+
+      console.log('📤 Sending payment payload:', JSON.stringify(payload, null, 2));
 
       const res = await fetch(`${BASE_URL}/api/visits/payments/${visit.id}`, {
         method: 'POST',
@@ -3232,6 +3253,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         body: JSON.stringify(payload),
       });
 
+      // Handle error response
       if (!res.ok) {
         let errorText = '';
         try {
@@ -3244,9 +3266,11 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             errorText = `HTTP ${res.status}: ${res.statusText}`;
           }
         }
+        console.error('❌ Payment error response:', errorText);
         throw new Error(`HTTP ${res.status}: ${errorText}`);
       }
 
+      // Check if there's content to parse
       const contentType = res.headers.get('content-type');
       let result;
       
@@ -3255,17 +3279,22 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         if (text && text.trim() !== '') {
           try {
             result = JSON.parse(text);
+            console.log('✅ Payment successful:', result);
           } catch (parseErr) {
+            console.warn('⚠️ Response was not valid JSON:', text);
             result = { message: 'Payment processed successfully', raw: text };
           }
         } else {
+          console.log('✅ Payment successful (empty response)');
           result = { message: 'Payment processed successfully' };
         }
       } else {
         const text = await res.text();
+        console.log('✅ Payment successful (non-JSON response):', text);
         result = { message: text || 'Payment processed successfully' };
       }
 
+      // Log the action
       try {
         await fetch(`${BASE_URL}/api/logs/add`, {
           method: 'POST',
@@ -3283,6 +3312,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
       }
       onClose();
     } catch (err) {
+      console.error('❌ Payment error:', err);
       setError(err.message || 'Payment failed. Please try again.');
     } finally {
       setLoading(false);
@@ -3292,7 +3322,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   // Determine if fields should be visible
   const showCashField = paymentType === 'CASH' || paymentType === 'CASH + POS' || paymentType === 'INSURANCE';
   const showPosField = paymentType === 'POS' || paymentType === 'CASH + POS';
-  const showPosDetails = paymentType === 'POS' || paymentType === 'CASH + POS';
+  const showPosDetails = (paymentType === 'POS' || paymentType === 'CASH + POS') && parseFloat(posAmount) > 0;
   const showInsuranceFields = paymentType === 'INSURANCE';
   const showFreeMessage = paymentType === 'FREE';
 
@@ -3307,7 +3337,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   return (
     <>
       <style>{`
-        /* ==================== VISIT PAY SCREEN STYLES ==================== */
         .visit-pay-overlay {
           position: fixed;
           top: 0;
@@ -3527,7 +3556,20 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
           min-width: 100px;
         }
 
-        /* Responsive */
+        .visit-pay-exceed-error {
+          color: #e53e3e;
+          font-size: 13px;
+          margin-top: 5px;
+          font-weight: bold;
+        }
+
+        .visit-pay-valid-message {
+          color: #48bb78;
+          font-size: 13px;
+          margin-top: 5px;
+          font-weight: bold;
+        }
+
         @media (max-width: 768px) {
           .visit-pay-modal {
             padding: 20px;
@@ -3621,7 +3663,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
           }
         }
 
-        /* Dark mode */
         @media (prefers-color-scheme: dark) {
           .visit-pay-overlay {
             background: rgba(0, 0, 0, 0.7);
@@ -3760,6 +3801,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
                   value={originalAmount}
                   onChange={(e) => setOriginalAmount(parseFloat(e.target.value) || 0)}
                   placeholder="Enter amount"
+                  min="0"
                 />
                 {remaining > 0 && (
                   <div className="visit-pay-hint">
@@ -3790,6 +3832,10 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
                 if (e.target.value === 'FREE') {
                   setCashAmount('');
                   setPosAmount('');
+                  setTerminalId('');
+                  setPosNo('');
+                  setCardType('');
+                  setApprovalCode('');
                 }
               }}
             >
@@ -3801,14 +3847,12 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </select>
           </div>
 
-          {/* FREE Payment Message */}
           {showFreeMessage && (
             <div className="visit-pay-free-message">
               🎉 FREE Payment - No amount will be charged
             </div>
           )}
 
-          {/* Cash Amount */}
           {showCashField && (
             <div className="visit-pay-form-group">
               <label>{t.cash}</label>
@@ -3822,7 +3866,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </div>
           )}
 
-          {/* POS Amount */}
           {showPosField && (
             <div className="visit-pay-form-group">
               <label>{t.pos}</label>
@@ -3836,7 +3879,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </div>
           )}
 
-          {/* POS Details */}
           {showPosDetails && (
             <>
               <div className="visit-pay-form-group">
@@ -3873,7 +3915,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
                 </select>
               </div>
               <div className="visit-pay-form-group">
-                <label>{t.approval}</label>
+                <label>{t.approvalCode}</label>
                 <input
                   type="text"
                   className="visit-pay-input"
@@ -3885,7 +3927,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </>
           )}
 
-          {/* Insurance Fields */}
           {showInsuranceFields && (
             <>
               <div className="visit-pay-form-group">
@@ -3966,7 +4007,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </>
           )}
 
-          {/* Summary */}
           <div className="visit-pay-summary">
             <div className="visit-pay-summary-row">
               <span>{t.payingNow}:</span>
@@ -3982,23 +4022,42 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
             </div>
           </div>
 
-          {error && <div className="visit-pay-error">{error}</div>}
-        </div>
+          {isTotalExceedingOriginal && (
+            <div className="visit-pay-exceed-error">
+              ⚠️ Total payment ({payingNow.toFixed(2)}) exceeds original amount ({originalAmount.toFixed(2)})
+            </div>
+          )}
 
-        <div className="visit-pay-actions">
-          <button
-            className="visit-pay-btn visit-pay-btn-cancel"
-            onClick={onClose}
-          >
-            {t.cancel}
-          </button>
-          <button
-            className="visit-pay-btn visit-pay-btn-pay"
-            onClick={handlePay}
-            disabled={loading}
-          >
-            {loading ? '⏳ Processing...' : '💰 Pay'}
-          </button>
+          {!isTotalExceedingOriginal && payingNow > 0 && payingNow < originalAmount && (
+            <div className="visit-pay-valid-message">
+              ✅ Partial payment of {payingNow.toFixed(2)} - Remaining: {remainingAfterPayment.toFixed(2)}
+            </div>
+          )}
+
+          {!isTotalExceedingOriginal && payingNow > 0 && payingNow === originalAmount && (
+            <div className="visit-pay-valid-message">
+              ✅ Full payment of {payingNow.toFixed(2)} - Visit will be fully paid
+            </div>
+          )}
+
+          {error && <div className="visit-pay-error">{error}</div>}
+
+          <div className="visit-pay-actions">
+            <button
+              className="visit-pay-btn visit-pay-btn-cancel"
+              onClick={onClose}
+              disabled={loading}
+            >
+              {t.cancel}
+            </button>
+            <button
+              className="visit-pay-btn visit-pay-btn-pay"
+              onClick={handlePay}
+              disabled={loading || originalAmount <= 0 || isTotalExceedingOriginal || payingNow <= 0}
+            >
+              {loading ? '⏳ Processing...' : '💰 Pay'}
+            </button>
+          </div>
         </div>
       </div>
     </>
