@@ -5130,27 +5130,44 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
           cursor: pointer;
         }
 
-        /* Mobile action buttons fix */
-        @media (max-width: 768px) {
-          .visit-tracking-actions {
-            position: sticky;
-            bottom: 0;
-            background: white;
-            padding: 12px;
-            margin: 0 -12px -12px -12px;
-            border-top: 1px solid #e2e8f0;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            z-index: 10;
-            flex-direction: row !important;
-            gap: 8px;
-          }
+       /* Update the mobile styles section - replace the .visit-tracking-actions part */
 
-          .visit-tracking-actions button {
-            flex: 1;
-            min-height: 48px;
-            font-size: 14px;
-            padding: 12px 8px;
-          }
+@media (max-width: 768px) {
+  .visit-tracking-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 12px;
+    margin: 0 -12px -12px -12px;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+    flex-direction: row !important;
+    gap: 8px;
+    /* Add these lines to ensure visibility */
+    display: flex !important;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .visit-tracking-actions button {
+    flex: 1;
+    min-height: 48px;
+    font-size: 14px;
+    padding: 12px 8px;
+    min-width: 80px; /* Add minimum width */
+  }
+  
+  /* Add this to ensure the wrapper doesn't hide the buttons */
+  .visit-tracking-actions-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+      min-height: 80px; /* Reserve space for actions */
+
+  }
+}
 
           .visit-tracking-container {
             padding: 12px;
