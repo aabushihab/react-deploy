@@ -534,3 +534,564 @@ select{
     }
 
 }
+
+
+
+
+
+
+/* ================= CLINIC BRANDING/LOGO FEATURES ================= */
+
+.clinic-branding-container {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: min(1200px, 95%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.clinic-branding-container > * {
+  pointer-events: auto;
+}
+
+/* ================= CLINIC LOGO AREA ================= */
+
+.clinic-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  padding: 20px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  animation: fadeInDown 0.6s ease;
+}
+
+.clinic-logo-icon {
+  font-size: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  animation: pulseIcon 3s ease-in-out infinite;
+}
+
+.clinic-logo-text {
+  flex: 1;
+}
+
+.clinic-logo-text h1 {
+  color: white;
+  margin: 0;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: bold;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.clinic-logo-text p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 5px 0 0 0;
+  font-size: clamp(14px, 1.5vw, 18px);
+}
+
+@keyframes pulseIcon {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= BRANDING BADGES ================= */
+
+.clinic-branding-badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.branding-badge {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 15px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease;
+  animation-fill-mode: both;
+}
+
+.branding-badge:nth-child(1) { animation-delay: 0.1s; }
+.branding-badge:nth-child(2) { animation-delay: 0.2s; }
+.branding-badge:nth-child(3) { animation-delay: 0.3s; }
+.branding-badge:nth-child(4) { animation-delay: 0.4s; }
+
+.branding-badge:hover {
+  transform: translateY(-3px) scale(1.02);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.badge-icon {
+  font-size: 28px;
+}
+
+.badge-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.badge-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.clinic-quick-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quick-action-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  flex: 1;
+  min-width: 150px;
+  max-width: 250px;
+  animation: fadeInUp 0.8s ease;
+  animation-delay: 0.5s;
+  animation-fill-mode: both;
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+}
+
+.quick-action-btn.secondary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.quick-action-btn.secondary:hover {
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+/* ================= QUICK APPOINTMENT MODAL ================= */
+
+.quick-appointment-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+.quick-modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: min(450px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: popup 0.3s ease;
+}
+
+.quick-modal-content h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 22px;
+  text-align: center;
+}
+
+.quick-modal-content input,
+.quick-modal-content textarea,
+.quick-modal-content select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.quick-modal-content input:focus,
+.quick-modal-content textarea:focus,
+.quick-modal-content select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.quick-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quick-modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-modal-actions button[type="submit"] {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+}
+
+.quick-modal-actions button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.quick-modal-actions .close-modal {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.quick-modal-actions .close-modal:hover {
+  background: #cbd5e0;
+}
+
+/* ================= QUICK APPOINTMENT LIST ================= */
+
+.quick-appts-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.quick-appt-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 3px solid #3498db;
+}
+
+.quick-appt-item strong {
+  color: #2c3e50;
+}
+
+.quick-appt-item .status-badge {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* ================= TIMELINE ================= */
+
+.clinic-timeline {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInUp 0.8s ease;
+  animation-delay: 0.6s;
+  animation-fill-mode: both;
+}
+
+.timeline-title {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  animation: slideInRight 0.5s ease;
+  animation-fill-mode: both;
+}
+
+.timeline-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.timeline-time {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.timeline-patient {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0 15px;
+}
+
+.timeline-name {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.timeline-doctor {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.timeline-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.timeline-status.scheduled {
+  background: rgba(243, 156, 18, 0.8);
+  color: white;
+}
+
+.timeline-status.confirmed {
+  background: rgba(52, 152, 219, 0.8);
+  color: white;
+}
+
+.timeline-status.completed {
+  background: rgba(46, 204, 113, 0.8);
+  color: white;
+}
+
+.timeline-status.cancelled {
+  background: rgba(231, 76, 60, 0.8);
+  color: white;
+}
+
+.timeline-empty {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1200px) {
+  .clinic-branding-container {
+    width: 98%;
+    top: 85px;
+    gap: 15px;
+  }
+  
+  .clinic-branding-badges {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .clinic-branding-container {
+    top: 80px;
+    padding: 10px;
+    gap: 12px;
+  }
+  
+  .clinic-logo-area {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 20px;
+  }
+  
+  .clinic-logo-icon {
+    font-size: 36px;
+    padding: 12px;
+  }
+  
+  .clinic-logo-text h1 {
+    font-size: 20px;
+  }
+  
+  .clinic-branding-badges {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .branding-badge {
+    padding: 12px 15px;
+  }
+  
+  .badge-icon {
+    font-size: 22px;
+  }
+  
+  .badge-number {
+    font-size: 20px;
+  }
+  
+  .clinic-quick-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .quick-action-btn {
+    max-width: 100%;
+    min-width: 0;
+    padding: 14px;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .timeline-time {
+    min-width: auto;
+  }
+  
+  .timeline-patient {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .quick-modal-content {
+    padding: 20px;
+    width: 98vw;
+  }
+  
+  .quick-modal-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .clinic-branding-container {
+    top: 70px;
+    padding: 8px;
+  }
+  
+  .clinic-logo-area {
+    padding: 12px 15px;
+  }
+  
+  .clinic-logo-icon {
+    font-size: 30px;
+    padding: 10px;
+  }
+  
+  .clinic-logo-text h1 {
+    font-size: 18px;
+  }
+  
+  .clinic-logo-text p {
+    font-size: 12px;
+  }
+  
+  .clinic-branding-badges {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .branding-badge {
+    padding: 10px 12px;
+  }
+  
+  .badge-number {
+    font-size: 18px;
+  }
+  
+  .badge-label {
+    font-size: 10px;
+  }
+  
+  .quick-action-btn {
+    font-size: 13px;
+    padding: 12px;
+  }
+}

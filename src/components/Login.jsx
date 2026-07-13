@@ -2029,6 +2029,15 @@ const Login = () => {
 
   // ================= LOGIN =================
   const handleLogin = useCallback(async () => {
+
+     // Clear previous login information
+  sessionStorage.removeItem("adminToken");
+  sessionStorage.removeItem("doctorId");
+  sessionStorage.removeItem("userRole");
+  sessionStorage.removeItem("userType");
+  sessionStorage.removeItem("username");
+
+
     const user = username.trim();
     const pass = password.trim();
 
@@ -2086,7 +2095,7 @@ const Login = () => {
             return;
           }
 
-          // Store assistant data in localStorage
+          // Store assistant data in 
           sessionStorage.setItem('adminToken', assistantData?.token || 'assistant-token');
           sessionStorage.setItem('username', assistantData?.username || user);
           sessionStorage.setItem('userRole', assistantData?.role || 'ASSISTANT');
@@ -2105,7 +2114,7 @@ const Login = () => {
           // Don't throw here, try doctor login next
         }
       } catch (assistantErr) {
-        //console.warn('⚠️ Assistant login error:', assistantErr.message);
+        console.warn('⚠️ Assistant login error:', assistantErr.message);
         // Continue to doctor login
       }
 
@@ -2296,7 +2305,7 @@ const Login = () => {
             <div className="welcome-premium" style={{
               textAlign: 'center',
               fontSize: '16px',
-              color: '#4a5568',
+              color: '#fbfbfbff',
               marginBottom: '20px'
             }}>
               Welcome to <span style={{ fontWeight: 'bold', color: '#2c3e50' }}>Clinic Management System</span>
