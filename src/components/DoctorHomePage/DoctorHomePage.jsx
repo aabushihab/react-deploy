@@ -23196,47 +23196,95 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   const detailsModalRef = useRef(null);
 
   // ==================== API CALLS WITH ERROR HANDLING ====================
-  const apiFetch = useCallback(async (endpoint, options = {}) => {
-    const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const fullUrl = `${API_BASE_URL}${url}`;
+//   const apiFetch = useCallback(async (endpoint, options = {}) => {
+//     const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+//     const fullUrl = `${API_BASE_URL}${url}`;
+    
+//     try {
+//       const response = await fetch(fullUrl, {
+//         ...options,
+//         headers: {
+//           'Content-Type': 'application/json',
+//           ...(options.headers || {})
+//         }
+//       });
+      
+//       if (!response.ok) {
+//         const errorText = await response.text();
+//         let errorMessage;
+//         try {
+//           const errorJson = JSON.parse(errorText);
+//           errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
+//         } catch {
+//           errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+//         }
+//         throw new Error(errorMessage);
+//       }
+      
+//       const text = await response.text();
+//       if (!text || text.trim() === '') {
+//         throw new Error('Empty response');
+//       }
+      
+//       try {
+//         const json = JSON.parse(text);
+//         return json;
+//       } catch (e) {
+//         throw new Error('Invalid JSON response');
+//       }
+//     } catch (error) {
+//       throw error;
+//     }
+//   }, [API_BASE_URL]);
+
+
+// Modified apiFetch function to handle empty responses
+const apiFetch = useCallback(async (endpoint, options = {}) => {
+  const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const fullUrl = `${API_BASE_URL}${url}`;
+  
+  try {
+    const response = await fetch(fullUrl, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      }
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorMessage;
+      try {
+        const errorJson = JSON.parse(errorText);
+        errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
+      } catch {
+        errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    // Check if response has content
+    const text = await response.text();
+    
+    // If response is empty, return null or a success indicator
+    if (!text || text.trim() === '') {
+      console.log('Empty response from endpoint:', endpoint);
+      return { success: true };
+    }
     
     try {
-      const response = await fetch(fullUrl, {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(options.headers || {})
-        }
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorMessage;
-        try {
-          const errorJson = JSON.parse(errorText);
-          errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
-        } catch {
-          errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
-        }
-        throw new Error(errorMessage);
-      }
-      
-      const text = await response.text();
-      if (!text || text.trim() === '') {
-        throw new Error('Empty response');
-      }
-      
-      try {
-        const json = JSON.parse(text);
-        return json;
-      } catch (e) {
-        throw new Error('Invalid JSON response');
-      }
-    } catch (error) {
-      throw error;
+      const json = JSON.parse(text);
+      return json;
+    } catch (e) {
+      console.warn('Invalid JSON response, returning text:', text);
+      // Return the text instead of throwing
+      return { success: true, message: text };
     }
-  }, [API_BASE_URL]);
-
+  } catch (error) {
+    throw error;
+  }
+}, [API_BASE_URL]);
   // ==================== UTILITY FUNCTIONS ====================
   const buildFullName = useCallback((patient) => {
     if (!patient) return '';
@@ -24196,30 +24244,43 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
 
 const reopenVisit = useCallback(async (visitId) => {
   try {
-    // Step 1: Fetch current visit data first
+    // Add confirmation dialog
+    if (!window.confirm('Are you sure you want to reopen this visit? All data will be preserved.')) {
+      return;
+    }
+    
+    // Step 1: Fetch current visit data first (this works)
+    console.log('Fetching visit data for ID:', visitId);
     const currentVisit = await apiFetch(`/api/visits/${visitId}`);
+    console.log('Current visit data:', currentVisit);
     
-    // Log the data we're trying to preserve (for debugging)
-    console.log('Preserving visit data:', {
-      chiefComplaint: currentVisit.chiefComplaint,
-      history: currentVisit.history,
-      medications: currentVisit.medications,
-      allergies: currentVisit.allergies,
-      doctorNotes: currentVisit.doctorNotes,
-      visitDrugs: currentVisit.visitDrugs,
-      procedures: currentVisit.procedures
-    });
-    
-    // Step 2: First reopen the visit (change status only)
+    // Step 2: Try to reopen the visit with proper error handling
+    console.log('Attempting to reopen visit:', visitId);
     const reopenEndpoint = `/api/visits/${visitId}/reopen`;
-    await apiFetch(reopenEndpoint, { 
+    
+    // Use a separate fetch call that doesn't expect JSON response
+    const reopenResponse = await fetch(`${API_BASE_URL}${reopenEndpoint}`, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ 
-        visitStatus: 'IN_PROGRESS' // Explicitly set the status
+        visitStatus: 'IN_PROGRESS'
       })
     });
     
-    // Step 3: Immediately update with ALL preserved data
+    if (!reopenResponse.ok) {
+      const errorText = await reopenResponse.text();
+      throw new Error(errorText || `HTTP ${reopenResponse.status}: ${reopenResponse.statusText}`);
+    }
+    
+    // Note: Don't try to parse the response as JSON if it might be empty
+    // Just check if the response was successful (2xx status code)
+    
+    console.log('Visit reopened successfully');
+    
+    // Step 3: Update with ALL preserved data
+    console.log('Updating visit with preserved data...');
     const updateEndpoint = `/api/visits/${visitId}`;
     const updateData = {
       chiefComplaint: currentVisit.chiefComplaint || '',
@@ -24229,7 +24290,6 @@ const reopenVisit = useCallback(async (visitId) => {
       doctorNotes: currentVisit.doctorNotes || '',
       visitDrugs: currentVisit.visitDrugs || [],
       procedures: currentVisit.procedures || [],
-      // Also preserve these fields
       visitType: currentVisit.visitType || 'APPOINTMENT',
       visitDate: currentVisit.visitDate,
       paid: currentVisit.paid || false,
@@ -24237,8 +24297,9 @@ const reopenVisit = useCallback(async (visitId) => {
       currency: currentVisit.currency || 'JOD'
     };
     
-    console.log('Updating visit with data:', updateData);
+    console.log('Update data:', updateData);
     
+    // Use the regular apiFetch for the update endpoint (which should return JSON)
     await apiFetch(updateEndpoint, {
       method: 'PUT',
       body: JSON.stringify(updateData)
@@ -24256,9 +24317,7 @@ const reopenVisit = useCallback(async (visitId) => {
     console.error('Error reopening visit:', error);
     alert(t('doctor.visit.reopenError') + ': ' + error.message);
   }
-}, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
-
-
+}, [t, currentFilter, loadDoctorVisits, loadSummaryCards, API_BASE_URL]);
 
   const changePassword = useCallback(async (oldPassword, newPassword) => {
     const endpoint = '/api/doctors/change-password';
