@@ -2308,14 +2308,14 @@ const Login = () => {
               color: '#fbfbfbff',
               marginBottom: '20px'
             }}>
-              Welcome to <span style={{ fontWeight: 'bold', color: '#2c3e50' }}>Clinic Management System</span>
+              Welcome to <span style={{ fontWeight: 'bold', color: '#fcfcfcff' }}>Clinic Management System</span>
             </div>
 
             <h2 style={{
               textAlign: 'center',
               marginBottom: '25px',
               fontSize: '28px',
-              color: '#2c3e50'
+              color: '#fdfdfdff'
             }}>
               {t.title.login}
             </h2>
@@ -2325,7 +2325,7 @@ const Login = () => {
                 display: 'block', 
                 marginBottom: '5px', 
                 fontWeight: 'bold',
-                color: '#34495e',
+                color: '#f8fbfeff',
                 fontSize: '14px'
               }}>
                 {t.prompt.username}
@@ -2366,7 +2366,7 @@ const Login = () => {
                 display: 'block', 
                 marginBottom: '5px', 
                 fontWeight: 'bold',
-                color: '#34495e',
+                color: '#f4f4f4ff',
                 fontSize: '14px'
               }}>
                 {t.prompt.password}
