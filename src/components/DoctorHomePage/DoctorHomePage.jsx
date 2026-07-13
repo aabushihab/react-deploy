@@ -22845,6 +22845,8 @@
 
 // export default DoctorHomePage; 11072026 11:20 pm
 
+
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BASE_URL } from '../../utils/api';
 import DoctorVisitScreen from '../DoctorHomePage/DoctorVisitScreen';
@@ -24192,43 +24194,72 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
 //   }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
 
 
-
 const reopenVisit = useCallback(async (visitId) => {
   try {
-    // Fetch current visit data
+    // Step 1: Fetch current visit data first
     const currentVisit = await apiFetch(`/api/visits/${visitId}`);
     
-    // Step 1: Reopen the visit (change status only)
+    // Log the data we're trying to preserve (for debugging)
+    console.log('Preserving visit data:', {
+      chiefComplaint: currentVisit.chiefComplaint,
+      history: currentVisit.history,
+      medications: currentVisit.medications,
+      allergies: currentVisit.allergies,
+      doctorNotes: currentVisit.doctorNotes,
+      visitDrugs: currentVisit.visitDrugs,
+      procedures: currentVisit.procedures
+    });
+    
+    // Step 2: First reopen the visit (change status only)
     const reopenEndpoint = `/api/visits/${visitId}/reopen`;
     await apiFetch(reopenEndpoint, { 
       method: 'PUT',
-      body: JSON.stringify({ visitStatus: 'IN_PROGRESS' })
-    });
-    
-    // Step 2: Update the visit with ALL preserved data
-    const updateEndpoint = `/api/visits/${visitId}`;
-    await apiFetch(updateEndpoint, {
-      method: 'PUT',
-      body: JSON.stringify({
-        chiefComplaint: currentVisit.chiefComplaint || '',
-        history: currentVisit.history || '',
-        medications: currentVisit.medications || '',
-        allergies: currentVisit.allergies || '',
-        doctorNotes: currentVisit.doctorNotes || '',
-        visitDrugs: currentVisit.visitDrugs || [],
-        procedures: currentVisit.procedures || []
+      body: JSON.stringify({ 
+        visitStatus: 'IN_PROGRESS' // Explicitly set the status
       })
     });
     
+    // Step 3: Immediately update with ALL preserved data
+    const updateEndpoint = `/api/visits/${visitId}`;
+    const updateData = {
+      chiefComplaint: currentVisit.chiefComplaint || '',
+      history: currentVisit.history || '',
+      medications: currentVisit.medications || '',
+      allergies: currentVisit.allergies || '',
+      doctorNotes: currentVisit.doctorNotes || '',
+      visitDrugs: currentVisit.visitDrugs || [],
+      procedures: currentVisit.procedures || [],
+      // Also preserve these fields
+      visitType: currentVisit.visitType || 'APPOINTMENT',
+      visitDate: currentVisit.visitDate,
+      paid: currentVisit.paid || false,
+      originalAmount: currentVisit.originalAmount || 0,
+      currency: currentVisit.currency || 'JOD'
+    };
+    
+    console.log('Updating visit with data:', updateData);
+    
+    await apiFetch(updateEndpoint, {
+      method: 'PUT',
+      body: JSON.stringify(updateData)
+    });
+    
     alert(t('doctor.visit.reopened'));
+    
+    // Refresh the UI
     loadDoctorVisits(currentFilter, false);
     loadSummaryCards();
     setShowVisitPopup(false);
     setPopupVisit(null);
+    
   } catch (error) {
+    console.error('Error reopening visit:', error);
     alert(t('doctor.visit.reopenError') + ': ' + error.message);
   }
 }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+
+
+
   const changePassword = useCallback(async (oldPassword, newPassword) => {
     const endpoint = '/api/doctors/change-password';
     await apiFetch(endpoint, {
