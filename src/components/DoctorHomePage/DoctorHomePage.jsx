@@ -24195,17 +24195,19 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
 
 const reopenVisit = useCallback(async (visitId) => {
   try {
-    // First, fetch the current visit data to preserve all details
+    // First, fetch the current visit to get all existing data
     const currentVisit = await apiFetch(`/api/visits/${visitId}`);
     
-    // Prepare the payload with all existing data preserved
+    // Prepare the payload with ALL existing data preserved
     const reopenPayload = {
-      visitStatus: 'IN_PROGRESS', // or 'CREATED' depending on your business logic
+      visitStatus: 'IN_PROGRESS', // Change status to reopen
+      // Preserve ALL medical data
       chiefComplaint: currentVisit.chiefComplaint || '',
       history: currentVisit.history || '',
       medications: currentVisit.medications || '',
       allergies: currentVisit.allergies || '',
       doctorNotes: currentVisit.doctorNotes || '',
+      // Preserve drugs and procedures
       visitDrugs: currentVisit.visitDrugs || [],
       procedures: currentVisit.procedures || []
     };
