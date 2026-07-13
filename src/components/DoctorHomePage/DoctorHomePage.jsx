@@ -24195,28 +24195,29 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
 
 const reopenVisit = useCallback(async (visitId) => {
   try {
-    // First, fetch the current visit to get all existing data
+    // Fetch current visit data
     const currentVisit = await apiFetch(`/api/visits/${visitId}`);
     
-    // Prepare the payload with ALL existing data preserved
-    const reopenPayload = {
-      visitStatus: 'IN_PROGRESS', // Change status to reopen
-      // Preserve ALL medical data
-      chiefComplaint: currentVisit.chiefComplaint || '',
-      history: currentVisit.history || '',
-      medications: currentVisit.medications || '',
-      allergies: currentVisit.allergies || '',
-      doctorNotes: currentVisit.doctorNotes || '',
-      // Preserve drugs and procedures
-      visitDrugs: currentVisit.visitDrugs || [],
-      procedures: currentVisit.procedures || []
-    };
-    
-    // Reopen the visit with all data preserved
-    const endpoint = `/api/visits/${visitId}/reopen`;
-    await apiFetch(endpoint, { 
+    // Step 1: Reopen the visit (change status only)
+    const reopenEndpoint = `/api/visits/${visitId}/reopen`;
+    await apiFetch(reopenEndpoint, { 
       method: 'PUT',
-      body: JSON.stringify(reopenPayload)
+      body: JSON.stringify({ visitStatus: 'IN_PROGRESS' })
+    });
+    
+    // Step 2: Update the visit with ALL preserved data
+    const updateEndpoint = `/api/visits/${visitId}`;
+    await apiFetch(updateEndpoint, {
+      method: 'PUT',
+      body: JSON.stringify({
+        chiefComplaint: currentVisit.chiefComplaint || '',
+        history: currentVisit.history || '',
+        medications: currentVisit.medications || '',
+        allergies: currentVisit.allergies || '',
+        doctorNotes: currentVisit.doctorNotes || '',
+        visitDrugs: currentVisit.visitDrugs || [],
+        procedures: currentVisit.procedures || []
+      })
     });
     
     alert(t('doctor.visit.reopened'));

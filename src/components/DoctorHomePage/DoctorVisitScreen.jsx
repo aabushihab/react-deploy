@@ -6430,8 +6430,11 @@
 
 // export default DoctorVisitScreen;  11072026 11:20 pm
 
+
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { BASE_URL } from '../../utils/api';
+import './DoctorVisitScreen.css';  // <-- ADD THIS LINE
 
 // Constants
 const DISCHARGE_STATUSES = ['NOT_DISCHARGED', 'DISCHARGED', 'FOLLOW_UP_REQUIRED', 'REFERRED'];
@@ -8032,7 +8035,39 @@ const DoctorVisitScreen = ({ doctorId, visitId, initialStatus = 'NEW', username,
             border-color: #4a1a1a;
             color: #ff6b6b;
           }
+        /* ==================== FORCE HIDE BROWSER CLEAR BUTTON ==================== */
+        /* This targets the red X that appears inside textareas and inputs */
+        input::-webkit-clear-button,
+        input::-webkit-search-cancel-button,
+        textarea::-webkit-clear-button,
+        textarea::-webkit-search-cancel-button {
+          display: none !important;
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          width: 0 !important;
+          height: 0 !important;
+          pointer-events: none !important;
+        }
 
+        /* Extra safety for all input types */
+        input[type="text"]::-webkit-clear-button,
+        input[type="search"]::-webkit-clear-button,
+        input[type="text"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-cancel-button {
+          display: none !important;
+        }
+
+        /* Hide the textarea resize handle if it's causing issues */
+        textarea::-webkit-resizer {
+          display: none;
+        }
+
+        /* Hide the red X from the error banner (if any) */
+        .error-banner button {
+          display: none !important;
+        }
           .error-banner button {
             color: #ff6b6b;
           }
@@ -8040,12 +8075,7 @@ const DoctorVisitScreen = ({ doctorId, visitId, initialStatus = 'NEW', username,
       `}</style>
 
       <div className={`doctor-visit-screen ${isRTL ? 'rtl' : ''}`}>
-        {error && (
-          <div className="error-banner">
-            ⚠️ {error}
-            <button onClick={() => setError(null)}>✖</button>
-          </div>
-        )}
+      
         
         <div className="visit-header">
           <h2>🩺 {t('doctor.visit.title').replace('{0}', visitId)}</h2>
