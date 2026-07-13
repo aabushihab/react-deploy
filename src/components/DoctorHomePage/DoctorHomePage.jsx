@@ -24177,20 +24177,55 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
     generatePDF(`${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.proceduresReport')}`, content, `Visit_${visit.id}_Patient_Procedures`);
   }, [detailsVisitData, detailsVisitProcedures, buildFullName, formatDateTime, generatePDF, t]);
 
-  const reopenVisit = useCallback(async (visitId) => {
-    try {
-      const endpoint = `/api/visits/${visitId}/reopen`;
-      await apiFetch(endpoint, { method: 'PUT' });
-      alert(t('doctor.visit.reopened'));
-      loadDoctorVisits(currentFilter, false);
-      loadSummaryCards();
-      setShowVisitPopup(false);
-      setPopupVisit(null);
-    } catch (error) {
-      alert(t('doctor.visit.reopenError') + ': ' + error.message);
-    }
-  }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+//   const reopenVisit = useCallback(async (visitId) => {
+//     try {
+//       const endpoint = `/api/visits/${visitId}/reopen`;
+//       await apiFetch(endpoint, { method: 'PUT' });
+//       alert(t('doctor.visit.reopened'));
+//       loadDoctorVisits(currentFilter, false);
+//       loadSummaryCards();
+//       setShowVisitPopup(false);
+//       setPopupVisit(null);
+//     } catch (error) {
+//       alert(t('doctor.visit.reopenError') + ': ' + error.message);
+//     }
+//   }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
 
+
+
+const reopenVisit = useCallback(async (visitId) => {
+  try {
+    // First, fetch the current visit data to preserve all details
+    const currentVisit = await apiFetch(`/api/visits/${visitId}`);
+    
+    // Prepare the payload with all existing data preserved
+    const reopenPayload = {
+      visitStatus: 'IN_PROGRESS', // or 'CREATED' depending on your business logic
+      chiefComplaint: currentVisit.chiefComplaint || '',
+      history: currentVisit.history || '',
+      medications: currentVisit.medications || '',
+      allergies: currentVisit.allergies || '',
+      doctorNotes: currentVisit.doctorNotes || '',
+      visitDrugs: currentVisit.visitDrugs || [],
+      procedures: currentVisit.procedures || []
+    };
+    
+    // Reopen the visit with all data preserved
+    const endpoint = `/api/visits/${visitId}/reopen`;
+    await apiFetch(endpoint, { 
+      method: 'PUT',
+      body: JSON.stringify(reopenPayload)
+    });
+    
+    alert(t('doctor.visit.reopened'));
+    loadDoctorVisits(currentFilter, false);
+    loadSummaryCards();
+    setShowVisitPopup(false);
+    setPopupVisit(null);
+  } catch (error) {
+    alert(t('doctor.visit.reopenError') + ': ' + error.message);
+  }
+}, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
   const changePassword = useCallback(async (oldPassword, newPassword) => {
     const endpoint = '/api/doctors/change-password';
     await apiFetch(endpoint, {
