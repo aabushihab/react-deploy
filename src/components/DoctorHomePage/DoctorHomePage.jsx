@@ -22845,8 +22845,6 @@
 
 // export default DoctorHomePage; 11072026 11:20 pm
 
-
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BASE_URL } from '../../utils/api';
 import DoctorVisitScreen from '../DoctorHomePage/DoctorVisitScreen';
@@ -23196,95 +23194,47 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   const detailsModalRef = useRef(null);
 
   // ==================== API CALLS WITH ERROR HANDLING ====================
-//   const apiFetch = useCallback(async (endpoint, options = {}) => {
-//     const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-//     const fullUrl = `${API_BASE_URL}${url}`;
-    
-//     try {
-//       const response = await fetch(fullUrl, {
-//         ...options,
-//         headers: {
-//           'Content-Type': 'application/json',
-//           ...(options.headers || {})
-//         }
-//       });
-      
-//       if (!response.ok) {
-//         const errorText = await response.text();
-//         let errorMessage;
-//         try {
-//           const errorJson = JSON.parse(errorText);
-//           errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
-//         } catch {
-//           errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
-//         }
-//         throw new Error(errorMessage);
-//       }
-      
-//       const text = await response.text();
-//       if (!text || text.trim() === '') {
-//         throw new Error('Empty response');
-//       }
-      
-//       try {
-//         const json = JSON.parse(text);
-//         return json;
-//       } catch (e) {
-//         throw new Error('Invalid JSON response');
-//       }
-//     } catch (error) {
-//       throw error;
-//     }
-//   }, [API_BASE_URL]);
-
-
-// Modified apiFetch function to handle empty responses
-const apiFetch = useCallback(async (endpoint, options = {}) => {
-  const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  const fullUrl = `${API_BASE_URL}${url}`;
-  
-  try {
-    const response = await fetch(fullUrl, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {})
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorMessage;
-      try {
-        const errorJson = JSON.parse(errorText);
-        errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
-      } catch {
-        errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
-      }
-      throw new Error(errorMessage);
-    }
-    
-    // Check if response has content
-    const text = await response.text();
-    
-    // If response is empty, return null or a success indicator
-    if (!text || text.trim() === '') {
-      console.log('Empty response from endpoint:', endpoint);
-      return { success: true };
-    }
+  const apiFetch = useCallback(async (endpoint, options = {}) => {
+    const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const fullUrl = `${API_BASE_URL}${url}`;
     
     try {
-      const json = JSON.parse(text);
-      return json;
-    } catch (e) {
-      console.warn('Invalid JSON response, returning text:', text);
-      // Return the text instead of throwing
-      return { success: true, message: text };
+      const response = await fetch(fullUrl, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorMessage;
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
+        } catch {
+          errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const text = await response.text();
+      if (!text || text.trim() === '') {
+        throw new Error('Empty response');
+      }
+      
+      try {
+        const json = JSON.parse(text);
+        return json;
+      } catch (e) {
+        throw new Error('Invalid JSON response');
+      }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    throw error;
-  }
-}, [API_BASE_URL]);
+  }, [API_BASE_URL]);
+
   // ==================== UTILITY FUNCTIONS ====================
   const buildFullName = useCallback((patient) => {
     if (!patient) return '';
@@ -24242,82 +24192,35 @@ const apiFetch = useCallback(async (endpoint, options = {}) => {
 //   }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
 
 
+
 const reopenVisit = useCallback(async (visitId) => {
+  // Show confirmation dialog with warning about data deletion
+  const confirmMessage = `⚠️ Are you sure you want to reopen this visit?\n\n` +
+    `This action will delete the following data:\n` +
+    `• Chief Complaint\n` +
+    `• Medical History\n` +
+    `• Medications\n` +
+    `• Allergies\n` +
+    `• Doctor Notes\n` +
+    `This action cannot be undone. Do you want to continue?`;
+  
+  if (!window.confirm(confirmMessage)) {
+    return; // User cancelled
+  }
+  
   try {
-    // Add confirmation dialog
-    if (!window.confirm('Are you sure you want to reopen this visit? All data will be preserved.')) {
-      return;
-    }
-    
-    // Step 1: Fetch current visit data first (this works)
-    console.log('Fetching visit data for ID:', visitId);
-    const currentVisit = await apiFetch(`/api/visits/${visitId}`);
-    console.log('Current visit data:', currentVisit);
-    
-    // Step 2: Try to reopen the visit with proper error handling
-    console.log('Attempting to reopen visit:', visitId);
-    const reopenEndpoint = `/api/visits/${visitId}/reopen`;
-    
-    // Use a separate fetch call that doesn't expect JSON response
-    const reopenResponse = await fetch(`${API_BASE_URL}${reopenEndpoint}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        visitStatus: 'IN_PROGRESS'
-      })
-    });
-    
-    if (!reopenResponse.ok) {
-      const errorText = await reopenResponse.text();
-      throw new Error(errorText || `HTTP ${reopenResponse.status}: ${reopenResponse.statusText}`);
-    }
-    
-    // Note: Don't try to parse the response as JSON if it might be empty
-    // Just check if the response was successful (2xx status code)
-    
-    console.log('Visit reopened successfully');
-    
-    // Step 3: Update with ALL preserved data
-    console.log('Updating visit with preserved data...');
-    const updateEndpoint = `/api/visits/${visitId}`;
-    const updateData = {
-      chiefComplaint: currentVisit.chiefComplaint || '',
-      history: currentVisit.history || '',
-      medications: currentVisit.medications || '',
-      allergies: currentVisit.allergies || '',
-      doctorNotes: currentVisit.doctorNotes || '',
-      visitDrugs: currentVisit.visitDrugs || [],
-      procedures: currentVisit.procedures || [],
-      visitType: currentVisit.visitType || 'APPOINTMENT',
-      visitDate: currentVisit.visitDate,
-      paid: currentVisit.paid || false,
-      originalAmount: currentVisit.originalAmount || 0,
-      currency: currentVisit.currency || 'JOD'
-    };
-    
-    console.log('Update data:', updateData);
-    
-    // Use the regular apiFetch for the update endpoint (which should return JSON)
-    await apiFetch(updateEndpoint, {
-      method: 'PUT',
-      body: JSON.stringify(updateData)
-    });
-    
+    const endpoint = `/api/visits/${visitId}/reopen`;
+    await apiFetch(endpoint, { method: 'PUT' });
     alert(t('doctor.visit.reopened'));
-    
-    // Refresh the UI
     loadDoctorVisits(currentFilter, false);
     loadSummaryCards();
     setShowVisitPopup(false);
     setPopupVisit(null);
-    
   } catch (error) {
-    console.error('Error reopening visit:', error);
     alert(t('doctor.visit.reopenError') + ': ' + error.message);
   }
-}, [t, currentFilter, loadDoctorVisits, loadSummaryCards, API_BASE_URL]);
+}, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+
 
   const changePassword = useCallback(async (oldPassword, newPassword) => {
     const endpoint = '/api/doctors/change-password';
