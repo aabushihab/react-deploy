@@ -24537,52 +24537,103 @@ useEffect(() => {
   };
 
   // Visit Card Component
-  const VisitCard = ({ visit, onOpen, onDetails }) => {
-    const patient = visit.patient || {};
-    const status = visit.visitStatus || 'CREATED';
-    const bgColor = getStatusBgColor(status);
-    const gender = patient.gender || 'Unknown';
-    const fullName = buildFullName(patient);
+//   const VisitCard = ({ visit, onOpen, onDetails }) => {
+//     const patient = visit.patient || {};
+//     const status = visit.visitStatus || 'CREATED';
+//     const bgColor = getStatusBgColor(status);
+//     const gender = patient.gender || 'Unknown';
+//     const fullName = buildFullName(patient);
     
-    return (
-      <div className="visit-card" style={{ backgroundColor: bgColor }}>
-        <div className="visit-card-header">
-          <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-          <span className="visit-header-spacer" />
-          <StatusBadge status={status} />
+//     return (
+//       <div className="visit-card" style={{ backgroundColor: bgColor }}>
+//         <div className="visit-card-header">
+//           <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+//           <span className="visit-header-spacer" />
+//           <StatusBadge status={status} />
+//         </div>
+//         <div className="visit-card-body">
+//           <PatientAvatar gender={gender} name={fullName} size={60} />
+//           <div className="visit-info">
+//             <div className="visit-name">👤 {fullName}</div>
+//             <div className="visit-details">
+//               📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+//             </div>
+//             <div className="visit-details">
+//               📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+//             </div>
+//           </div>
+//           <div className="visit-actions">
+//             <button 
+//               type="button"
+//               className="btn-open"
+//               onClick={() => onOpen(visit.id, status)}
+//             >
+//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+//             </button>
+//             <button 
+//               type="button"
+//               className="btn-details"
+//               onClick={() => onDetails(visit.id)}
+//             >
+//               {t('doctor.visit.details')}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
+// Visit Card Component
+const VisitCard = ({ visit, onOpen, onDetails }) => {
+  const patient = visit.patient || {};
+  const status = visit.visitStatus || 'CREATED';
+  const bgColor = getStatusBgColor(status);
+  const gender = patient.gender || 'Unknown';
+  const fullName = buildFullName(patient);
+  
+  return (
+    <div 
+      className="visit-card" 
+      style={{ 
+        backgroundColor: bgColor,
+        overflow: 'visible'  // Add this
+      }}
+    >
+      <div className="visit-card-header">
+        <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+        <span className="visit-header-spacer" />
+        <StatusBadge status={status} />
+      </div>
+      <div className="visit-card-body">
+        <PatientAvatar gender={gender} name={fullName} size={60} />
+        <div className="visit-info">
+          <div className="visit-name">👤 {fullName}</div>
+          <div className="visit-details">
+            📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+          </div>
+          <div className="visit-details">
+            📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+          </div>
         </div>
-        <div className="visit-card-body">
-          <PatientAvatar gender={gender} name={fullName} size={60} />
-          <div className="visit-info">
-            <div className="visit-name">👤 {fullName}</div>
-            <div className="visit-details">
-              📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
-            </div>
-            <div className="visit-details">
-              📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
-            </div>
-          </div>
-          <div className="visit-actions">
-            <button 
-              type="button"
-              className="btn-open"
-              onClick={() => onOpen(visit.id, status)}
-            >
-              {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-            </button>
-            <button 
-              type="button"
-              className="btn-details"
-              onClick={() => onDetails(visit.id)}
-            >
-              {t('doctor.visit.details')}
-            </button>
-          </div>
+        <div className="visit-actions">
+          <button 
+            type="button"
+            className="btn-open"
+            onClick={() => onOpen(visit.id, status)}
+          >
+            {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+          </button>
+          <button 
+            type="button"
+            className="btn-details"
+            onClick={() => onDetails(visit.id)}
+          >
+            {t('doctor.visit.details')}
+          </button>
         </div>
       </div>
-    );
-  };
-
+    </div>
+  );
+};
   // ==================== VISIT POPUP COMPONENT ====================
   const VisitPopup = ({ visit, onClose, onOpen, onDetails }) => {
     if (!visit) return null;
