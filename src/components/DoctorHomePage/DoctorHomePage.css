@@ -1944,3 +1944,606 @@
 .reports-modal-content .reports-container::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* Add these responsive rules at the end of your CSS file */
+
+/* ==================== MOBILE RESPONSIVE FIXES ==================== */
+
+/* Tablet (up to 1024px) */
+@media (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .main-content {
+    padding: 12px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Mobile Landscape (up to 768px) */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .visit-card-body {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .visit-info {
+    text-align: center;
+    padding: 0 5px;
+  }
+  
+  .visit-actions {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .visit-actions button {
+    flex: 1;
+    min-width: 60px;
+    max-width: 120px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .visit-card {
+    width: 100%;
+    min-width: 0;
+  }
+  
+  .patient-avatar {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+  }
+  
+  .welcome-greeting {
+    font-size: 20px;
+  }
+  
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .filter-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .filter-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .search-input {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .filter-button {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+  
+  .card-scroll-container {
+    max-height: calc(100vh - 350px);
+  }
+}
+
+/* Mobile Portrait (up to 480px) */
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  
+  .visit-card {
+    padding: 10px;
+  }
+  
+  .visit-card-header {
+    padding: 6px 10px;
+  }
+  
+  .visit-id {
+    font-size: 12px;
+  }
+  
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+  
+  .visit-card-body {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .patient-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .visit-name {
+    font-size: 14px;
+  }
+  
+  .visit-details {
+    font-size: 11px;
+  }
+  
+  .visit-actions button {
+    padding: 5px 10px;
+    font-size: 11px;
+    min-width: 50px;
+    min-height: 28px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .summary-card {
+    padding: 10px;
+  }
+  
+  .summary-card-title {
+    font-size: 11px;
+  }
+  
+  .summary-card-value {
+    font-size: 20px;
+  }
+  
+  .welcome-section {
+    padding: 8px 12px;
+  }
+  
+  .welcome-greeting {
+    font-size: 16px;
+  }
+  
+  .find-visit-input {
+    width: 80px;
+    font-size: 11px;
+    padding: 6px 10px;
+    min-height: 30px;
+  }
+  
+  .find-visit-btn {
+    padding: 6px 10px;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  
+  .notification-icon {
+    font-size: 18px;
+    padding: 3px 6px;
+  }
+  
+  .filter-button {
+    padding: 4px 10px;
+    font-size: 11px;
+    min-height: 26px;
+  }
+  
+  .filter-action-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 26px;
+  }
+  
+  .search-input {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 26px;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .performance-item {
+    padding: 6px 8px;
+  }
+  
+  .performance-icon {
+    font-size: 16px;
+  }
+  
+  .performance-value {
+    font-size: 14px;
+  }
+  
+  .card-scroll-container {
+    max-height: calc(100vh - 300px);
+  }
+  
+  .pagination {
+    gap: 3px;
+    padding: 8px 0;
+  }
+  
+  .pagination-page {
+    padding: 3px 6px;
+    min-width: 24px;
+    font-size: 11px;
+  }
+  
+  .pagination-prev,
+  .pagination-next {
+    padding: 3px 8px;
+    font-size: 11px;
+    min-height: 24px;
+  }
+  
+  .pagination-info {
+    font-size: 10px;
+  }
+}
+
+/* Small Mobile (up to 360px) */
+@media (max-width: 360px) {
+  .card-grid {
+    gap: 8px;
+  }
+  
+  .visit-card {
+    padding: 8px;
+  }
+  
+  .visit-card-header {
+    padding: 4px 8px;
+  }
+  
+  .visit-id {
+    font-size: 10px;
+  }
+  
+  .status-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+  
+  .visit-card-body {
+    padding: 8px;
+    gap: 6px;
+  }
+  
+  .patient-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .visit-name {
+    font-size: 12px;
+  }
+  
+  .visit-details {
+    font-size: 10px;
+  }
+  
+  .visit-actions button {
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: 40px;
+    min-height: 24px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  
+  .summary-card {
+    padding: 6px;
+  }
+  
+  .summary-card-title {
+    font-size: 9px;
+  }
+  
+  .summary-card-value {
+    font-size: 16px;
+  }
+  
+  .welcome-greeting {
+    font-size: 14px;
+  }
+  
+  .find-visit-input {
+    width: 60px;
+    font-size: 10px;
+    padding: 4px 6px;
+    min-height: 24px;
+  }
+  
+  .find-visit-btn {
+    padding: 4px 6px;
+    min-height: 24px;
+    font-size: 10px;
+  }
+  
+  .filter-button {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+  }
+  
+  .filter-action-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+  }
+  
+  .search-input {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+    min-width: 50px;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-scroll-container {
+    max-height: calc(100vh - 280px);
+  }
+}
+
+/* ==================== VISIT SCREEN MODAL MOBILE FIXES ==================== */
+@media (max-width: 768px) {
+  .visit-screen-modal-overlay {
+    padding: 10px;
+  }
+  
+  .visit-screen-modal-content {
+    height: 96vh;
+    max-height: none;
+    border-radius: 10px;
+  }
+  
+  .visit-screen-close-btn {
+    top: 8px;
+    right: 10px;
+    font-size: 20px;
+    width: 34px;
+    height: 34px;
+    padding: 6px 8px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-top: 15px;
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .visit-screen-modal-overlay {
+    padding: 5px;
+  }
+  
+  .visit-screen-modal-content {
+    height: 98vh;
+    border-radius: 8px;
+  }
+  
+  .visit-screen-close-btn {
+    top: 6px;
+    right: 8px;
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+    padding: 4px 6px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-top: 10px;
+    padding-right: 40px;
+  }
+}
+
+/* ==================== VISIT POPUP MOBILE FIXES ==================== */
+@media (max-width: 768px) {
+  .visit-popup-content {
+    padding: 20px;
+    max-width: 95%;
+    margin: 10px;
+  }
+  
+  .visit-popup-title {
+    font-size: 18px;
+  }
+  
+  .visit-popup-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .visit-popup-actions button {
+    width: 100%;
+    padding: 8px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .visit-popup-content {
+    padding: 15px;
+    max-width: 98%;
+  }
+  
+  .visit-popup-title {
+    font-size: 16px;
+  }
+  
+  .visit-popup-actions button {
+    font-size: 13px;
+    padding: 6px 15px;
+  }
+}
+
+/* ==================== RTL SUPPORT FOR MOBILE ==================== */
+.rtl .visit-screen-close-btn {
+  right: auto;
+  left: 10px;
+}
+
+.rtl .visit-screen-modal-content .doctor-visit-screen {
+  padding-right: 20px;
+  padding-left: 50px;
+}
+
+.rtl .visit-popup-close {
+  right: auto;
+  left: 15px;
+}
+
+@media (max-width: 480px) {
+  .rtl .visit-screen-close-btn {
+    right: auto;
+    left: 8px;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 10px;
+    padding-left: 40px;
+  }
+}
+
+/* ==================== FORCE SINGLE COLUMN ON MOBILE ==================== */
+/* This ensures cards always show as single column on mobile devices */
+@media (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==================== DETAILS MODAL MOBILE FIXES ==================== */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95%;
+    padding: 15px;
+    margin: 10px;
+    max-height: 95vh;
+  }
+  
+  .modal-content h2 {
+    font-size: 18px;
+    padding-right: 35px;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .pdf-buttons-container {
+    flex-direction: column;
+  }
+  
+  .btn-pdf {
+    width: 100%;
+    min-width: unset;
+    padding: 8px 15px;
+  }
+  
+  .drug-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-close {
+    top: 10px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 10px;
+    max-width: 98%;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content h2 {
+    font-size: 16px;
+    padding-right: 30px;
+  }
+  
+  .modal-close {
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+  
+  .details-section {
+    padding: 10px;
+    margin: 8px 0;
+  }
+  
+  .info-card {
+    padding: 8px 10px;
+  }
+  
+  .info-value {
+    font-size: 12px;
+  }
+  
+  .drug-card {
+    padding: 10px;
+  }
+  
+  .drug-name {
+    font-size: 13px;
+  }
+}
+
+/* ==================== REPORTS MODAL MOBILE FIXES ==================== */
+@media (max-width: 768px) {
+  .reports-modal-content {
+    width: 98% !important;
+    height: 98vh !important;
+    padding: 5px !important;
+    margin: 1vh auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .reports-modal-content {
+    width: 100% !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
