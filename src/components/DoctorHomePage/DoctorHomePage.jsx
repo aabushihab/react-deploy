@@ -25396,11 +25396,8 @@ useEffect(() => {
               </div>
             ) : isGridLayout ? (
               <div 
-                className="card-grid"
-                style={{ 
-                  gridTemplateColumns: `repeat(${cardsPerRowPattern[cardsPerRowIndex]}, 1fr)`
-                }}
-              >
+  className={`card-grid cols-${cardsPerRowPattern[cardsPerRowIndex]}`}
+>
                 {filteredVisits.map((visit) => (
                   <VisitCard
                     key={visit.id}
