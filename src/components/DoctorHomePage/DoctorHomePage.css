@@ -2674,3 +2674,251 @@
     overflow-y: visible !important;
   }
 }
+/* ==================== MOBILE CARD BUTTON FIXES ==================== */
+
+/* Fix for mobile - ensure all content is visible */
+@media (max-width: 768px) {
+  .visit-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .visit-card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 10px !important;
+    flex: 1 !important;
+  }
+  
+  .visit-info {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .visit-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 8px !important;
+    padding: 5px 0 !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .visit-actions button {
+    flex: 1 !important;
+    min-width: 80px !important;
+    max-width: 150px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+  }
+  
+  .btn-open,
+  .btn-details {
+    width: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .visit-card {
+    padding: 10px !important;
+  }
+  
+  .visit-card-header {
+    padding: 4px 8px !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+  
+  .visit-id {
+    font-size: 11px !important;
+  }
+  
+  .status-badge {
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+  }
+  
+  .patient-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .visit-name {
+    font-size: 13px !important;
+  }
+  
+  .visit-details {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .visit-actions {
+    gap: 5px !important;
+  }
+  
+  .visit-actions button {
+    min-width: 60px !important;
+    max-width: 120px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    min-height: 30px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .visit-card {
+    padding: 8px !important;
+  }
+  
+  .visit-card-header {
+    padding: 3px 6px !important;
+  }
+  
+  .visit-id {
+    font-size: 10px !important;
+  }
+  
+  .status-badge {
+    font-size: 9px !important;
+    padding: 1px 6px !important;
+  }
+  
+  .patient-avatar {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .visit-name {
+    font-size: 12px !important;
+  }
+  
+  .visit-details {
+    font-size: 10px !important;
+  }
+  
+  .visit-actions button {
+    min-width: 45px !important;
+    max-width: 80px !important;
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+    min-height: 26px !important;
+  }
+}
+
+/* ==================== FIX FOR OVERFLOW ISSUES ==================== */
+
+/* Ensure the card container doesn't clip content */
+.card-scroll-container {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+}
+
+.card-container {
+  width: 100% !important;
+  padding-bottom: 20px !important;
+}
+
+/* Make sure cards are properly contained */
+.card-grid {
+  width: 100% !important;
+  display: grid !important;
+  gap: 15px !important;
+}
+
+/* Ensure the main content doesn't clip */
+.main-content {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 15px !important;
+}
+
+/* ==================== EXTRA SAFETY FOR MOBILE ==================== */
+
+/* Force all card content to be visible */
+.visit-card * {
+  visibility: visible !important;
+}
+
+.visit-card-header,
+.visit-card-body,
+.visit-info,
+.visit-actions,
+.visit-actions button {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Mobile landscape specific */
+@media (max-width: 768px) and (orientation: landscape) {
+  .visit-card-body {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .visit-info {
+    flex: 1 !important;
+    text-align: left !important;
+  }
+  
+  .visit-actions {
+    width: auto !important;
+    flex-direction: row !important;
+  }
+}
+
+/* ==================== FIX FOR RTL ==================== */
+.rtl .visit-card-body {
+  direction: rtl !important;
+}
+
+.rtl .visit-actions {
+  flex-direction: row-reverse !important;
+}
+
+/* ==================== ADDITIONAL FIXES ==================== */
+
+/* Ensure buttons are clickable */
+.visit-actions button {
+  pointer-events: auto !important;
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+/* Prevent card from shrinking too much */
+.visit-card {
+  min-height: 120px !important;
+}
+
+/* Ensure the card body can expand */
+.visit-card-body {
+  flex: 1 1 auto !important;
+}
+
+/* Fix for very small screens */
+@media (max-width: 320px) {
+  .visit-actions {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .visit-actions button {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

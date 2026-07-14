@@ -25390,7 +25390,7 @@ useEffect(() => {
         {/* Card Container */}
         <div className="card-scroll-container" ref={scrollPaneRef}>
           <div className="card-container">
-            {/* {filteredVisits.length === 0 ? (
+            {filteredVisits.length === 0 ? (
               <div className="empty-state">
                 📭 {t('doctor.filter.noResults')}
               </div>
@@ -25412,50 +25412,7 @@ useEffect(() => {
                     onDetails={showVisitDetails}
                   />
                 ))}
-              </div> */}
-
-              // Replace the card grid rendering section (around line 1145-1150)
-{filteredVisits.length === 0 ? (
-  <div className="empty-state">
-    📭 {t('doctor.filter.noResults')}
-  </div>
-) : isGridLayout ? (
-  <div 
-    className={`card-grid cols-${cardsPerRowPattern[cardsPerRowIndex]}`}
-  >
-    {filteredVisits.map((visit) => (
-      <VisitCard
-        key={visit.id}
-        visit={visit}
-        onOpen={(id, status) => {
-          if (status === 'CLOSED') {
-            reopenVisit(id);
-          } else {
-            openVisitScreen(id, status);
-          }
-        }}
-        onDetails={showVisitDetails}
-      />
-    ))}
-  </div>
-) : (
-  <div className="card-list">
-    {filteredVisits.map((visit) => (
-      <VisitCard
-        key={visit.id}
-        visit={visit}
-        onOpen={(id, status) => {
-          if (status === 'CLOSED') {
-            reopenVisit(id);
-          } else {
-            openVisitScreen(id, status);
-          }
-        }}
-        onDetails={showVisitDetails}
-      />
-    ))}
-  </div>
-)}
+              </div>
             ) : (
               <div className="card-list">
                 {filteredVisits.map((visit) => (
