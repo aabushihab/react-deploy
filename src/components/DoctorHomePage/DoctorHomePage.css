@@ -150,11 +150,13 @@
 /* ==================== MAIN CONTENT ==================== */
 .main-content {
   flex: 1;
-  padding: 15px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  padding: 15px;
+  overflow-y: auto;
+  height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 80px;
 }
 
 /* ==================== WELCOME SECTION ==================== */
@@ -469,7 +471,10 @@
 .card-scroll-container {
   flex: 1;
   overflow-y: auto;
-  padding: 0;
+  width: 100%;
+  min-height: 0;
+  height: auto !important;
+  max-height: none !important;
 }
 
 .card-container {
@@ -479,6 +484,7 @@
 .card-grid {
   display: grid;
   gap: 15px;
+  width: 100%;
 }
 
 .card-list {
@@ -494,6 +500,12 @@
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
   overflow: hidden;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .visit-card:hover {
@@ -610,6 +622,9 @@
   justify-content: center;
   gap: 8px;
   padding: 10px;
+  flex-wrap: wrap;
+  background: #f0f2f5;
+  flex-shrink: 0;
 }
 
 .pagination button {
@@ -880,198 +895,6 @@
   }
 }
 
-/* ==================== RTL SUPPORT ==================== */
-.rtl .sidebar-button {
-  text-align: right;
-}
-
-.rtl .sidebar-button:hover {
-  border-left: none;
-  border-right: 3px solid var(--hover-color, #3498db);
-}
-
-.rtl .visit-card-body {
-  flex-direction: row-reverse;
-}
-
-.rtl .visit-actions {
-  align-items: flex-start;
-}
-
-.rtl .welcome-actions {
-  flex-direction: row-reverse;
-}
-
-.rtl .visit-screen-close-btn {
-  right: auto;
-  left: 20px;
-}
-
-.rtl .visit-screen-modal-content .doctor-visit-screen {
-  padding-right: 20px;
-  padding-left: 70px;
-}
-
-.rtl .visit-popup-close {
-  right: auto;
-  left: 15px;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 55px;
-    min-width: 55px;
-  }
-  
-  .sidebar.open {
-    width: 200px;
-    min-width: 200px;
-  }
-  
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .filters-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filter-buttons {
-    justify-content: center;
-  }
-  
-  .filter-actions {
-    justify-content: center;
-  }
-  
-  .search-input {
-    width: 100%;
-  }
-  
-  .visit-card-body {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .visit-actions {
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-  }
-  
-  .visit-actions button {
-    min-width: 80px;
-  }
-  
-  .welcome-greeting {
-    font-size: 20px;
-  }
-  
-  .find-visit-input {
-    width: 100px;
-  }
-  
-  .visit-screen-modal-overlay {
-    padding: 10px;
-  }
-  
-  .visit-screen-modal-content {
-    height: 96vh;
-    max-height: none;
-    border-radius: 10px;
-  }
-  
-  .visit-screen-close-btn {
-    top: 10px;
-    right: 12px;
-    font-size: 20px;
-    width: 36px;
-    height: 36px;
-    padding: 6px 10px;
-  }
-  
-  .visit-screen-modal-content .doctor-visit-screen {
-    padding-right: 50px;
-  }
-  
-  .rtl .visit-screen-close-btn {
-    right: auto;
-    left: 12px;
-  }
-  
-  .rtl .visit-screen-modal-content .doctor-visit-screen {
-    padding-right: 20px;
-    padding-left: 50px;
-  }
-
-  .visit-popup-content {
-    padding: 20px;
-    max-width: 95%;
-  }
-  
-  .visit-popup-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .visit-popup-actions button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .summary-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .performance-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .filter-buttons {
-    flex-wrap: wrap;
-  }
-  
-  .filter-button {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  
-  .visit-screen-modal-overlay {
-    padding: 5px;
-  }
-  
-  .visit-screen-modal-content {
-    border-radius: 8px;
-    height: 98vh;
-  }
-  
-  .visit-screen-close-btn {
-    top: 8px;
-    right: 8px;
-    font-size: 18px;
-    width: 32px;
-    height: 32px;
-    padding: 4px 8px;
-  }
-  
-  .visit-screen-modal-content .doctor-visit-screen {
-    padding-right: 40px;
-  }
-  
-  .rtl .visit-screen-close-btn {
-    right: auto;
-    left: 8px;
-  }
-  
-  .rtl .visit-screen-modal-content .doctor-visit-screen {
-    padding-right: 20px;
-    padding-left: 40px;
-  }
-}
-
 /* ==================== DETAILS MODAL ==================== */
 .modal-overlay {
   position: fixed;
@@ -1168,6 +991,17 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
+.btn-pdf:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-pdf:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
 .btn-pdf.patient {
   background: #2196F3;
 }
@@ -1198,6 +1032,22 @@
 
 .btn-pdf.procedures:hover {
   background: #F57C00;
+}
+
+.btn-pdf.full {
+  background: #1a237e;
+}
+
+.btn-pdf.full:hover {
+  background: #0d47a1;
+}
+
+.btn-pdf.combined {
+  background: #00695c;
+}
+
+.btn-pdf.combined:hover {
+  background: #004d40;
 }
 
 /* ==================== DETAILS SECTIONS ==================== */
@@ -1423,7 +1273,68 @@
   animation: spin 1s linear infinite;
 }
 
-/* ==================== RTL SUPPORT FOR DETAILS MODAL ==================== */
+/* ==================== DETAILS MODAL SCROLLABLE CONTENT ==================== */
+.details-scrollable {
+  max-height: calc(90vh - 200px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.details-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details-scrollable::-webkit-scrollbar-track {
+  background: #F0F2F5;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb {
+  background: #c1c7cd;
+  border-radius: 3px;
+}
+
+.details-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #a0a6ab;
+}
+
+/* ==================== RTL SUPPORT ==================== */
+.rtl .sidebar-button {
+  text-align: right;
+}
+
+.rtl .sidebar-button:hover {
+  border-left: none;
+  border-right: 3px solid var(--hover-color, #3498db);
+}
+
+.rtl .visit-card-body {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-actions {
+  align-items: flex-start;
+}
+
+.rtl .welcome-actions {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-screen-close-btn {
+  right: auto;
+  left: 20px;
+}
+
+.rtl .visit-screen-modal-content .doctor-visit-screen {
+  padding-right: 20px;
+  padding-left: 70px;
+}
+
+.rtl .visit-popup-close {
+  right: auto;
+  left: 15px;
+}
+
 .rtl .modal-close {
   right: auto;
   left: 20px;
@@ -1451,37 +1362,477 @@
   padding-left: 40px;
 }
 
-/* ==================== RESPONSIVE FOR DETAILS MODAL ==================== */
+.rtl .details-scrollable {
+  padding-right: 0;
+  padding-left: 5px;
+}
+
+.rtl .card-grid {
+  direction: rtl;
+}
+
+.rtl .filter-buttons {
+  flex-direction: row-reverse;
+}
+
+.rtl .filter-actions {
+  flex-direction: row-reverse;
+}
+
+.rtl .pagination {
+  flex-direction: row-reverse;
+}
+
+.rtl .summary-cards {
+  direction: rtl;
+}
+
+.rtl .sidebar {
+  direction: rtl;
+}
+
+.rtl .sidebar-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .sidebar-nav {
+  direction: rtl;
+}
+
+.rtl .sidebar-button {
+  flex-direction: row-reverse;
+}
+
+.rtl .sidebar.collapsed .sidebar-text {
+  display: none;
+}
+
+.rtl .main-content {
+  direction: rtl;
+}
+
+.rtl .welcome-section {
+  direction: rtl;
+}
+
+.rtl .welcome-text {
+  direction: rtl;
+}
+
+.rtl .filters-bar {
+  direction: rtl;
+}
+
+.rtl .card-container {
+  direction: rtl;
+}
+
+.rtl .card-scroll-container {
+  direction: rtl;
+}
+
+.rtl .visit-popup-overlay {
+  direction: rtl;
+}
+
+.rtl .visit-popup-content {
+  direction: rtl;
+}
+
+.rtl .visit-popup-card {
+  direction: rtl;
+}
+
+.rtl .visit-popup-card .visit-card-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-popup-card .visit-card-body {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-popup-card .visit-info {
+  text-align: right;
+}
+
+.rtl .details-section {
+  direction: rtl;
+}
+
+.rtl .details-section h3 {
+  text-align: right;
+}
+
+.rtl .info-icon {
+  margin-left: 12px;
+  margin-right: 0;
+}
+
+.rtl .medical-item {
+  direction: rtl;
+}
+
+.rtl .drug-card {
+  direction: rtl;
+}
+
+.rtl .procedure-item {
+  border-left: none !important;
+  border-right: 4px solid #3498DB !important;
+}
+
+.rtl .procedure-content {
+  text-align: right;
+}
+
+.rtl .pagination-prev {
+  transform: scaleX(-1);
+}
+
+.rtl .pagination-next {
+  transform: scaleX(-1);
+}
+
+.rtl .performance-widget {
+  direction: rtl;
+}
+
+.rtl .performance-widget summary {
+  text-align: right;
+}
+
+.rtl .performance-grid {
+  direction: rtl;
+}
+
+.rtl .performance-item {
+  flex-direction: row-reverse;
+}
+
+.rtl .summary-card {
+  direction: rtl;
+}
+
+.rtl .patient-avatar {
+  direction: rtl;
+}
+
+.rtl .visit-card {
+  direction: rtl;
+}
+
+.rtl .visit-card-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .visit-info {
+  text-align: right;
+}
+
+.rtl .status-badge {
+  direction: rtl;
+}
+
+.rtl .notification-icon {
+  direction: rtl;
+}
+
+.rtl .find-visit {
+  flex-direction: row-reverse;
+}
+
+.rtl .find-visit-input {
+  text-align: right;
+}
+
+.rtl .search-input {
+  text-align: right;
+}
+
+.rtl .password-form {
+  direction: rtl;
+}
+
+.rtl .password-form-group {
+  direction: rtl;
+}
+
+.rtl .password-label {
+  text-align: right;
+}
+
+.rtl .password-input {
+  text-align: right;
+}
+
+.rtl .password-dialog-footer {
+  flex-direction: row-reverse;
+}
+
+.rtl .reports-modal-content {
+  direction: rtl;
+}
+
+.rtl .reports-modal-content .reports-container {
+  direction: rtl;
+}
+
+.rtl .doctor-guide {
+  direction: rtl;
+}
+
+.rtl .doctor-guide-content {
+  text-align: right;
+}
+
+.rtl .confirmation-modal {
+  direction: rtl;
+}
+
+.rtl .confirmation-modal h2 {
+  flex-direction: row-reverse;
+}
+
+.rtl .confirmation-modal .modal-content {
+  direction: rtl;
+}
+
+.rtl .visit-screen-modal-content {
+  direction: rtl;
+}
+
+.rtl .visit-screen-modal-content .doctor-visit-screen {
+  direction: rtl;
+}
+
+.rtl .loading-spinner {
+  direction: rtl;
+}
+
+.rtl .error-message {
+  direction: rtl;
+}
+
+.rtl .error-message h2 {
+  text-align: right;
+}
+
+.rtl .error-message p {
+  text-align: right;
+}
+
+/* ==================== MOBILE RESPONSIVE (up to 1024px) ==================== */
+@media (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+}
+
+/* ==================== MOBILE RESPONSIVE (up to 768px) ==================== */
 @media (max-width: 768px) {
+  .doctor-home {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .main-content {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 80px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .card-scroll-container {
+    flex: 1;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  
+  .card-container {
+    padding-bottom: 20px;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .pagination {
+    position: sticky;
+    bottom: 0;
+    background: #f0f2f5;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-top: 1px solid #e0e0e0;
+    z-index: 10;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .filters-bar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 0;
+  }
+  
+  .filter-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .filter-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .performance-widget {
+    margin-bottom: 8px;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .welcome-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .welcome-greeting {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .welcome-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .find-visit {
+    width: 100%;
+  }
+  
+  .find-visit-input {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .visit-card-body {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .visit-info {
+    text-align: center !important;
+    padding: 0 !important;
+  }
+  
+  .visit-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  .visit-actions button {
+    flex: 1 !important;
+    min-width: 60px !important;
+    max-width: 120px !important;
+  }
+  
+  .visit-screen-modal-overlay {
+    padding: 10px;
+  }
+  
+  .visit-screen-modal-content {
+    height: 96vh;
+    max-height: none;
+    border-radius: 10px;
+  }
+  
+  .visit-screen-close-btn {
+    top: 8px;
+    right: 10px;
+    font-size: 20px;
+    width: 34px;
+    height: 34px;
+    padding: 6px 8px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-top: 15px;
+    padding-right: 50px;
+  }
+  
+  .visit-popup-content {
+    padding: 20px;
+    max-width: 95%;
+    margin: 10px;
+  }
+  
+  .visit-popup-title {
+    font-size: 18px;
+  }
+  
+  .visit-popup-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .visit-popup-actions button {
+    width: 100%;
+    padding: 8px 20px;
+  }
+  
+  .details-scrollable {
+    max-height: calc(90vh - 250px);
+  }
+  
+  .pdf-buttons-container {
+    flex-direction: column;
+  }
+  
+  .btn-pdf {
+    width: 100%;
+    min-width: unset;
+  }
+  
   .modal-content {
     max-width: 95%;
     padding: 15px;
     margin: 10px;
     max-height: 95vh;
   }
-
+  
   .modal-content h2 {
     font-size: 18px;
     padding-right: 35px;
   }
-
+  
   .info-grid {
     grid-template-columns: 1fr 1fr;
   }
-
-  .pdf-buttons-container {
-    flex-direction: column;
-  }
-
-  .btn-pdf {
-    width: 100%;
-    min-width: unset;
-  }
-
+  
   .drug-details {
     grid-template-columns: 1fr;
   }
-
+  
   .modal-close {
     top: 10px;
     right: 12px;
@@ -1490,37 +1841,265 @@
     font-size: 18px;
     padding: 6px 10px;
   }
-
-  .rtl .modal-close {
-    right: auto;
-    left: 12px;
+  
+  .reports-modal-content {
+    width: 98% !important;
+    height: 98vh !important;
+    padding: 5px !important;
+    margin: 1vh auto !important;
   }
-
+  
+  /* RTL Mobile overrides */
+  .rtl .welcome-section {
+    flex-direction: column;
+  }
+  
+  .rtl .welcome-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .rtl .find-visit {
+    flex-direction: row-reverse;
+  }
+  
+  .rtl .visit-card-body {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .rtl .visit-info {
+    text-align: center !important;
+  }
+  
+  .rtl .visit-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  .rtl .visit-screen-close-btn {
+    right: auto !important;
+    left: 10px !important;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 20px !important;
+    padding-left: 50px !important;
+  }
+  
+  .rtl .visit-popup-close {
+    right: auto !important;
+    left: 15px !important;
+  }
+  
+  .rtl .modal-close {
+    right: auto !important;
+    left: 12px !important;
+  }
+  
   .rtl .modal-content h2 {
-    padding-right: 0;
-    padding-left: 35px;
+    padding-right: 0 !important;
+    padding-left: 35px !important;
+  }
+  
+  .rtl .details-scrollable {
+    padding-right: 0 !important;
+    padding-left: 5px !important;
+  }
+  
+  .rtl .pdf-buttons-container {
+    flex-direction: column !important;
+  }
+  
+  .rtl .filter-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .rtl .filter-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .rtl .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .rtl .card-grid {
+    direction: rtl;
   }
 }
 
+/* ==================== SMALL MOBILE (up to 480px) ==================== */
 @media (max-width: 480px) {
-  .modal-content {
-    padding: 12px;
+  .main-content {
+    padding: 6px !important;
+    padding-bottom: 100px !important;
+  }
+  
+  .card-scroll-container {
+    overflow: visible !important;
+  }
+  
+  .pagination {
+    position: sticky !important;
+    bottom: 0 !important;
+    background: #f0f2f5 !important;
+    z-index: 10 !important;
+    border-top: 1px solid #e0e0e0 !important;
+    padding: 8px 10px !important;
+    gap: 3px !important;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  
+  .summary-card {
+    padding: 8px 6px;
+  }
+  
+  .summary-card-title {
+    font-size: 10px;
+  }
+  
+  .summary-card-value {
+    font-size: 18px;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-button {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .filter-action-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  
+  .search-input {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .pagination-page {
+    padding: 3px 6px;
+    min-width: 24px;
+    font-size: 10px;
+  }
+  
+  .pagination-prev,
+  .pagination-next {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  
+  .pagination-info {
+    font-size: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .visit-card {
+    padding: 8px;
+  }
+  
+  .visit-card-header {
+    padding: 4px 8px;
+  }
+  
+  .visit-id {
+    font-size: 11px;
+  }
+  
+  .status-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+  
+  .visit-card-body {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .patient-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .visit-name {
+    font-size: 13px;
+  }
+  
+  .visit-details {
+    font-size: 10px;
+  }
+  
+  .visit-actions button {
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: 40px;
+    min-height: 24px;
+  }
+  
+  .visit-screen-modal-overlay {
+    padding: 5px;
+  }
+  
+  .visit-screen-modal-content {
+    height: 98vh;
+    border-radius: 8px;
+  }
+  
+  .visit-screen-close-btn {
+    top: 6px;
+    right: 8px;
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+    padding: 4px 6px;
+  }
+  
+  .visit-screen-modal-content .doctor-visit-screen {
+    padding-top: 10px;
+    padding-right: 40px;
+  }
+  
+  .visit-popup-content {
+    padding: 15px;
     max-width: 98%;
   }
-
+  
+  .visit-popup-title {
+    font-size: 16px;
+  }
+  
+  .visit-popup-actions button {
+    font-size: 13px;
+    padding: 6px 15px;
+  }
+  
+  .modal-content {
+    padding: 10px;
+    max-width: 98%;
+  }
+  
   .info-grid {
     grid-template-columns: 1fr;
   }
-
-  .drug-details {
-    grid-template-columns: 1fr;
-  }
-
+  
   .modal-content h2 {
     font-size: 16px;
     padding-right: 30px;
   }
-
+  
   .modal-close {
     top: 8px;
     right: 8px;
@@ -1529,24 +2108,249 @@
     font-size: 16px;
     padding: 4px 8px;
   }
-
-  .rtl .modal-content h2 {
-    padding-right: 0;
-    padding-left: 30px;
-  }
-
-  .rtl .modal-close {
-    right: auto;
-    left: 8px;
-  }
-
+  
   .details-section {
     padding: 10px;
-    margin: 10px 0;
+    margin: 8px 0;
   }
-
+  
   .info-card {
-    padding: 10px 12px;
+    padding: 8px 10px;
+  }
+  
+  .info-value {
+    font-size: 12px;
+  }
+  
+  .drug-card {
+    padding: 10px;
+  }
+  
+  .drug-name {
+    font-size: 13px;
+  }
+  
+  .reports-modal-content {
+    width: 100% !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .details-scrollable {
+    max-height: calc(90vh - 280px);
+  }
+  
+  /* RTL Small Mobile overrides */
+  .rtl .visit-screen-close-btn {
+    right: auto !important;
+    left: 8px !important;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 10px !important;
+    padding-left: 40px !important;
+  }
+  
+  .rtl .modal-close {
+    right: auto !important;
+    left: 8px !important;
+  }
+  
+  .rtl .modal-content h2 {
+    padding-right: 0 !important;
+    padding-left: 30px !important;
+  }
+  
+  .rtl .details-scrollable {
+    padding-right: 0 !important;
+    padding-left: 3px !important;
+  }
+  
+  .rtl .filter-buttons {
+    gap: 4px;
+  }
+  
+  .rtl .filter-actions {
+    gap: 4px;
+  }
+  
+  .rtl .pagination {
+    gap: 3px;
+    padding: 8px 10px;
+  }
+  
+  .rtl .summary-cards {
+    direction: rtl;
+  }
+  
+  .rtl .visit-card-body {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .rtl .visit-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+  
+  .rtl .performance-grid {
+    direction: rtl;
+  }
+}
+
+/* ==================== EXTRA SMALL MOBILE (up to 360px) ==================== */
+@media (max-width: 360px) {
+  .card-grid {
+    gap: 8px;
+  }
+  
+  .visit-card {
+    padding: 8px;
+  }
+  
+  .visit-card-header {
+    padding: 4px 8px;
+  }
+  
+  .visit-id {
+    font-size: 10px;
+  }
+  
+  .status-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+  
+  .visit-card-body {
+    padding: 8px;
+    gap: 6px;
+  }
+  
+  .patient-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .visit-name {
+    font-size: 12px;
+  }
+  
+  .visit-details {
+    font-size: 10px;
+  }
+  
+  .visit-actions button {
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: 40px;
+    min-height: 24px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  
+  .summary-card {
+    padding: 6px;
+  }
+  
+  .summary-card-title {
+    font-size: 9px;
+  }
+  
+  .summary-card-value {
+    font-size: 16px;
+  }
+  
+  .welcome-greeting {
+    font-size: 14px;
+  }
+  
+  .find-visit-input {
+    width: 60px;
+    font-size: 10px;
+    padding: 4px 6px;
+    min-height: 24px;
+  }
+  
+  .find-visit-btn {
+    padding: 4px 6px;
+    min-height: 24px;
+    font-size: 10px;
+  }
+  
+  .filter-button {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+  }
+  
+  .filter-action-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+  }
+  
+  .search-input {
+    padding: 3px 6px;
+    font-size: 10px;
+    min-height: 22px;
+    min-width: 50px;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-scroll-container {
+    max-height: none !important;
+  }
+  
+  /* RTL Extra Small Mobile overrides */
+  .rtl .modal-content h2 {
+    padding-right: 0 !important;
+    padding-left: 25px !important;
+  }
+  
+  .rtl .modal-close {
+    right: auto !important;
+    left: 6px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 14px !important;
+    padding: 3px 6px !important;
+  }
+  
+  .rtl .visit-screen-close-btn {
+    right: auto !important;
+    left: 6px !important;
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 14px !important;
+    padding: 3px 6px !important;
+  }
+  
+  .rtl .visit-screen-modal-content .doctor-visit-screen {
+    padding-right: 8px !important;
+    padding-left: 30px !important;
+  }
+  
+  .rtl .pagination {
+    gap: 2px;
+  }
+  
+  .rtl .filter-button {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  
+  .rtl .filter-action-btn {
+    padding: 3px 6px;
+    font-size: 10px;
   }
 }
 
@@ -1568,14 +2372,6 @@
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: #a0a6ab;
 }
-/* Add to DoctorHomePage.css */
-
-/* ==================== DETAILS MODAL SCROLLABLE CONTENT ==================== */
-.details-scrollable {
-  max-height: calc(90vh - 200px);
-  overflow-y: auto;
-  padding-right: 5px;
-}
 
 .details-scrollable::-webkit-scrollbar {
   width: 6px;
@@ -1595,152 +2391,25 @@
   background: #a0a6ab;
 }
 
-/* ==================== PDF BUTTONS UPDATED ==================== */
-.btn-pdf.visit {
-  background: #1a237e;
-}
-
-.btn-pdf.visit:hover {
-  background: #0d47a1;
-}
-
-.btn-pdf:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.btn-pdf:disabled:hover {
-  transform: none !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* ==================== RTL SUPPORT ==================== */
-.rtl .details-scrollable {
-  padding-right: 0;
-  padding-left: 5px;
-}
-
-.rtl .modal-close {
-  right: auto;
-  left: 20px;
-}
-
-.rtl .pdf-buttons-container {
-  flex-direction: row-reverse;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .details-scrollable {
-    max-height: calc(90vh - 250px);
-  }
-  
-  .pdf-buttons-container {
-    flex-direction: column;
-  }
-  
-  .btn-pdf {
-    width: 100%;
-    min-width: unset;
-  }
-}
-
-@media (max-width: 480px) {
-  .details-scrollable {
-    max-height: calc(90vh - 280px);
-  }
-}
-/* ==================== DETAILS MODAL SCROLLABLE CONTENT ==================== */
-.details-scrollable {
-  max-height: calc(90vh - 280px);
-  overflow-y: auto;
-  padding-right: 5px;
-}
-
-.details-scrollable::-webkit-scrollbar {
+.rtl .details-scrollable::-webkit-scrollbar {
   width: 6px;
 }
 
-.details-scrollable::-webkit-scrollbar-track {
+.rtl .details-scrollable::-webkit-scrollbar-track {
   background: #F0F2F5;
   border-radius: 3px;
 }
 
-.details-scrollable::-webkit-scrollbar-thumb {
+.rtl .details-scrollable::-webkit-scrollbar-thumb {
   background: #c1c7cd;
   border-radius: 3px;
 }
 
-.details-scrollable::-webkit-scrollbar-thumb:hover {
+.rtl .details-scrollable::-webkit-scrollbar-thumb:hover {
   background: #a0a6ab;
 }
 
-/* ==================== PDF BUTTONS UPDATED ==================== */
-.btn-pdf.full {
-  background: #1a237e;
-}
-
-.btn-pdf.full:hover {
-  background: #0d47a1;
-}
-
-.btn-pdf.combined {
-  background: #00695c;
-}
-
-.btn-pdf.combined:hover {
-  background: #004d40;
-}
-
-.btn-pdf:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.btn-pdf:disabled:hover {
-  transform: none !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* ==================== RTL SUPPORT ==================== */
-.rtl .details-scrollable {
-  padding-right: 0;
-  padding-left: 5px;
-}
-
-.rtl .modal-close {
-  right: auto;
-  left: 20px;
-}
-
-.rtl .pdf-buttons-container {
-  flex-direction: row-reverse;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .details-scrollable {
-    max-height: calc(90vh - 350px);
-  }
-  
-  .pdf-buttons-container {
-    flex-direction: column;
-  }
-  
-  .btn-pdf {
-    width: 100%;
-    min-width: unset;
-  }
-}
-
-@media (max-width: 480px) {
-  .details-scrollable {
-    max-height: calc(90vh - 380px);
-  }
-}
-/* Password Dialog Styles */
+/* ==================== PASSWORD DIALOG STYLES ==================== */
 .password-dialog {
   max-width: 450px !important;
   padding: 30px !important;
@@ -1894,24 +2563,7 @@
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* RTL Support for Password Dialog */
-.rtl .password-dialog-header {
-  flex-direction: row-reverse;
-}
-
-.rtl .password-dialog-footer {
-  flex-direction: row-reverse;
-}
-
-.rtl .toggle-label {
-  flex-direction: row-reverse;
-}
-/* Reports Modal Styles */
+/* ==================== REPORTS MODAL STYLES ==================== */
 .reports-modal-content {
   width: 95% !important;
   max-width: 1400px !important;
@@ -1945,732 +2597,42 @@
   background: #a8a8a8;
 }
 
-/* Add these responsive rules at the end of your CSS file */
-
-/* ==================== MOBILE RESPONSIVE FIXES ==================== */
-
-/* Tablet (up to 1024px) */
-@media (max-width: 1024px) {
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  
-  .main-content {
-    padding: 12px;
-  }
-  
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
+/* ==================== REOPEN CONFIRMATION MODAL ==================== */
+.confirmation-modal {
+  max-width: 450px !important;
+  padding: 30px !important;
+  text-align: center;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Mobile Landscape (up to 768px) */
-@media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .visit-card-body {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-  
-  .visit-info {
-    text-align: center;
-    padding: 0 5px;
-  }
-  
-  .visit-actions {
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    gap: 8px;
-  }
-  
-  .visit-actions button {
-    flex: 1;
-    min-width: 60px;
-    max-width: 120px;
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  
-  .visit-card {
-    width: 100%;
-    min-width: 0;
-  }
-  
-  .patient-avatar {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto;
-  }
-  
-  .welcome-greeting {
-    font-size: 20px;
-  }
-  
-  .filters-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  
-  .filter-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .filter-actions {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .search-input {
-    width: 100%;
-    min-width: unset;
-  }
-  
-  .filter-button {
-    padding: 6px 14px;
-    font-size: 12px;
-  }
-  
-  .card-scroll-container {
-    max-height: calc(100vh - 350px);
-  }
+.confirmation-modal h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-/* Mobile Portrait (up to 480px) */
-@media (max-width: 480px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px;
-  }
-  
-  .visit-card {
-    padding: 10px;
-  }
-  
-  .visit-card-header {
-    padding: 6px 10px;
-  }
-  
-  .visit-id {
-    font-size: 12px;
-  }
-  
-  .status-badge {
-    font-size: 10px;
-    padding: 2px 8px;
-  }
-  
-  .visit-card-body {
-    padding: 10px;
-    gap: 10px;
-  }
-  
-  .patient-avatar {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .visit-name {
-    font-size: 14px;
-  }
-  
-  .visit-details {
-    font-size: 11px;
-  }
-  
-  .visit-actions button {
-    padding: 5px 10px;
-    font-size: 11px;
-    min-width: 50px;
-    min-height: 28px;
-  }
-  
-  .summary-cards {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  
-  .summary-card {
-    padding: 10px;
-  }
-  
-  .summary-card-title {
-    font-size: 11px;
-  }
-  
-  .summary-card-value {
-    font-size: 20px;
-  }
-  
-  .welcome-section {
-    padding: 8px 12px;
-  }
-  
-  .welcome-greeting {
-    font-size: 16px;
-  }
-  
-  .find-visit-input {
-    width: 80px;
-    font-size: 11px;
-    padding: 6px 10px;
-    min-height: 30px;
-  }
-  
-  .find-visit-btn {
-    padding: 6px 10px;
-    min-height: 30px;
-    font-size: 12px;
-  }
-  
-  .notification-icon {
-    font-size: 18px;
-    padding: 3px 6px;
-  }
-  
-  .filter-button {
-    padding: 4px 10px;
-    font-size: 11px;
-    min-height: 26px;
-  }
-  
-  .filter-action-btn {
-    padding: 4px 8px;
-    font-size: 11px;
-    min-height: 26px;
-  }
-  
-  .search-input {
-    padding: 4px 8px;
-    font-size: 11px;
-    min-height: 26px;
-  }
-  
-  .performance-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  
-  .performance-item {
-    padding: 6px 8px;
-  }
-  
-  .performance-icon {
-    font-size: 16px;
-  }
-  
-  .performance-value {
-    font-size: 14px;
-  }
-  
-  .card-scroll-container {
-    max-height: calc(100vh - 300px);
-  }
-  
-  .pagination {
-    gap: 3px;
-    padding: 8px 0;
-  }
-  
-  .pagination-page {
-    padding: 3px 6px;
-    min-width: 24px;
-    font-size: 11px;
-  }
-  
-  .pagination-prev,
-  .pagination-next {
-    padding: 3px 8px;
-    font-size: 11px;
-    min-height: 24px;
-  }
-  
-  .pagination-info {
-    font-size: 10px;
-  }
+.confirmation-modal p {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
-/* Small Mobile (up to 360px) */
-@media (max-width: 360px) {
-  .card-grid {
-    gap: 8px;
-  }
-  
-  .visit-card {
-    padding: 8px;
-  }
-  
-  .visit-card-header {
-    padding: 4px 8px;
-  }
-  
-  .visit-id {
-    font-size: 10px;
-  }
-  
-  .status-badge {
-    font-size: 9px;
-    padding: 1px 6px;
-  }
-  
-  .visit-card-body {
-    padding: 8px;
-    gap: 6px;
-  }
-  
-  .patient-avatar {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .visit-name {
-    font-size: 12px;
-  }
-  
-  .visit-details {
-    font-size: 10px;
-  }
-  
-  .visit-actions button {
-    padding: 4px 8px;
-    font-size: 10px;
-    min-width: 40px;
-    min-height: 24px;
-  }
-  
-  .summary-cards {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  
-  .summary-card {
-    padding: 6px;
-  }
-  
-  .summary-card-title {
-    font-size: 9px;
-  }
-  
-  .summary-card-value {
-    font-size: 16px;
-  }
-  
-  .welcome-greeting {
-    font-size: 14px;
-  }
-  
-  .find-visit-input {
-    width: 60px;
-    font-size: 10px;
-    padding: 4px 6px;
-    min-height: 24px;
-  }
-  
-  .find-visit-btn {
-    padding: 4px 6px;
-    min-height: 24px;
-    font-size: 10px;
-  }
-  
-  .filter-button {
-    padding: 3px 6px;
-    font-size: 10px;
-    min-height: 22px;
-  }
-  
-  .filter-action-btn {
-    padding: 3px 6px;
-    font-size: 10px;
-    min-height: 22px;
-  }
-  
-  .search-input {
-    padding: 3px 6px;
-    font-size: 10px;
-    min-height: 22px;
-    min-width: 50px;
-  }
-  
-  .performance-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .card-scroll-container {
-    max-height: calc(100vh - 280px);
-  }
+.confirmation-modal button {
+  min-width: 120px;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ==================== VISIT SCREEN MODAL MOBILE FIXES ==================== */
-@media (max-width: 768px) {
-  .visit-screen-modal-overlay {
-    padding: 10px;
-  }
-  
-  .visit-screen-modal-content {
-    height: 96vh;
-    max-height: none;
-    border-radius: 10px;
-  }
-  
-  .visit-screen-close-btn {
-    top: 8px;
-    right: 10px;
-    font-size: 20px;
-    width: 34px;
-    height: 34px;
-    padding: 6px 8px;
-  }
-  
-  .visit-screen-modal-content .doctor-visit-screen {
-    padding-top: 15px;
-    padding-right: 50px;
-  }
+.confirmation-modal button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 480px) {
-  .visit-screen-modal-overlay {
-    padding: 5px;
-  }
-  
-  .visit-screen-modal-content {
-    height: 98vh;
-    border-radius: 8px;
-  }
-  
-  .visit-screen-close-btn {
-    top: 6px;
-    right: 8px;
-    font-size: 16px;
-    width: 28px;
-    height: 28px;
-    padding: 4px 6px;
-  }
-  
-  .visit-screen-modal-content .doctor-visit-screen {
-    padding-top: 10px;
-    padding-right: 40px;
-  }
-}
-
-/* ==================== VISIT POPUP MOBILE FIXES ==================== */
-@media (max-width: 768px) {
-  .visit-popup-content {
-    padding: 20px;
-    max-width: 95%;
-    margin: 10px;
-  }
-  
-  .visit-popup-title {
-    font-size: 18px;
-  }
-  
-  .visit-popup-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .visit-popup-actions button {
-    width: 100%;
-    padding: 8px 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .visit-popup-content {
-    padding: 15px;
-    max-width: 98%;
-  }
-  
-  .visit-popup-title {
-    font-size: 16px;
-  }
-  
-  .visit-popup-actions button {
-    font-size: 13px;
-    padding: 6px 15px;
-  }
-}
-
-/* ==================== RTL SUPPORT FOR MOBILE ==================== */
-.rtl .visit-screen-close-btn {
-  right: auto;
-  left: 10px;
-}
-
-.rtl .visit-screen-modal-content .doctor-visit-screen {
-  padding-right: 20px;
-  padding-left: 50px;
-}
-
-.rtl .visit-popup-close {
-  right: auto;
-  left: 15px;
-}
-
-@media (max-width: 480px) {
-  .rtl .visit-screen-close-btn {
-    right: auto;
-    left: 8px;
-  }
-  
-  .rtl .visit-screen-modal-content .doctor-visit-screen {
-    padding-right: 10px;
-    padding-left: 40px;
-  }
-}
-
-/* ==================== FORCE SINGLE COLUMN ON MOBILE ==================== */
-/* This ensures cards always show as single column on mobile devices */
-@media (max-width: 1024px) {
-  .card-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* ==================== DETAILS MODAL MOBILE FIXES ==================== */
-@media (max-width: 768px) {
-  .modal-content {
-    max-width: 95%;
-    padding: 15px;
-    margin: 10px;
-    max-height: 95vh;
-  }
-  
-  .modal-content h2 {
-    font-size: 18px;
-    padding-right: 35px;
-  }
-  
-  .info-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .pdf-buttons-container {
-    flex-direction: column;
-  }
-  
-  .btn-pdf {
-    width: 100%;
-    min-width: unset;
-    padding: 8px 15px;
-  }
-  
-  .drug-details {
-    grid-template-columns: 1fr;
-  }
-  
-  .modal-close {
-    top: 10px;
-    right: 12px;
-    width: 34px;
-    height: 34px;
-    font-size: 18px;
-    padding: 6px 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-content {
-    padding: 10px;
-    max-width: 98%;
-  }
-  
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .modal-content h2 {
-    font-size: 16px;
-    padding-right: 30px;
-  }
-  
-  .modal-close {
-    top: 8px;
-    right: 8px;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    padding: 4px 8px;
-  }
-  
-  .details-section {
-    padding: 10px;
-    margin: 8px 0;
-  }
-  
-  .info-card {
-    padding: 8px 10px;
-  }
-  
-  .info-value {
-    font-size: 12px;
-  }
-  
-  .drug-card {
-    padding: 10px;
-  }
-  
-  .drug-name {
-    font-size: 13px;
-  }
-}
-
-/* ==================== REPORTS MODAL MOBILE FIXES ==================== */
-@media (max-width: 768px) {
-  .reports-modal-content {
-    width: 98% !important;
-    height: 98vh !important;
-    padding: 5px !important;
-    margin: 1vh auto !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .reports-modal-content {
-    width: 100% !important;
-    height: 100vh !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-  }
-}
-
-/* ==================== CARD GRID OVERRIDES ==================== */
-/* These ensure proper display on all devices */
-
-/* Default - 3 columns for large screens */
-.card-grid.cols-3 {
-  grid-template-columns: repeat(3, 1fr) !important;
-}
-
-/* 2 columns for medium screens */
-.card-grid.cols-2 {
-  grid-template-columns: repeat(2, 1fr) !important;
-}
-
-/* 1 column for small screens */
-.card-grid.cols-1 {
-  grid-template-columns: 1fr !important;
-}
-
-/* ==================== MOBILE RESPONSIVE OVERRIDES ==================== */
-
-/* Force single column on all mobile devices */
-@media (max-width: 1024px) {
-  .card-grid {
-    grid-template-columns: 1fr !important;
-  }
-  
-  /* Override any inline styles */
-  .card-grid[style*="gridTemplateColumns"] {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* Ensure cards take full width */
-.visit-card {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-}
-
-/* ==================== CARD CONTAINER FIXES ==================== */
-.card-container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.card-grid {
-  width: 100%;
-  display: grid;
-  gap: 15px;
-}
-
-/* ==================== STRONG MOBILE OVERRIDES ==================== */
-
-/* Force 1 column on mobile regardless of inline styles */
-@media (max-width: 768px) {
-  .card-grid,
-  .card-grid.cols-1,
-  .card-grid.cols-2,
-  .card-grid.cols-3,
-  .card-grid[style*="gridTemplateColumns"] {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .visit-card {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-  
-  .card-container {
-    padding: 0 !important;
-  }
-}
-
-/* ==================== RTL SUPPORT ==================== */
-.rtl .card-grid {
-  direction: rtl;
-}
-
-/* ==================== ADDITIONAL FIXES FOR VISIBILITY ==================== */
-
-/* Ensure the card container doesn't overflow */
-.main-content {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
-}
-
-.card-scroll-container {
-  overflow-x: hidden !important;
-  width: 100% !important;
-}
-
-/* Make sure cards are visible */
-.visit-card {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* ==================== EXTRA SAFETY FOR MOBILE ==================== */
-@media (max-width: 480px) {
-  .card-grid,
-  .card-grid[style*="gridTemplateColumns"] {
-    grid-template-columns: 1fr !important;
-    display: grid !important;
-  }
-  
-  .visit-card-body {
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-  
-  .visit-info {
-    width: 100% !important;
-    text-align: center !important;
-  }
-  
-  .visit-actions {
-    width: 100% !important;
-    justify-content: center !important;
-  }
-  
-  .card-scroll-container {
-    max-height: none !important;
-    overflow-y: visible !important;
-  }
+.confirmation-modal button:active {
+  transform: translateY(0);
 }
