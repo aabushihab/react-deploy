@@ -22847,6 +22847,2770 @@
 
 
 
+// import React, { useState, useEffect, useRef, useCallback } from 'react';
+// import { BASE_URL } from '../../utils/api';
+// import DoctorVisitScreen from '../DoctorHomePage/DoctorVisitScreen';
+// import DoctorSearchPatientScreen from '../DoctorHomePage/DoctorSearchPatientScreen';
+// import './DoctorHomePage.css';
+// import ReportsScreen from '../ReportsScreen/ReportsScreen'; // Add this import
+// import DoctorGuide from '../DoctorGuide/DoctorGuide';
+
+
+// // Constants
+// const SIDEBAR_WIDTH = 250;
+// const SIDEBAR_COLLAPSED = 55;
+// const PAGE_SIZE = 40;
+// // ==================== REOPEN CONFIRMATION STATE ====================
+// const [showReopenConfirm, setShowReopenConfirm] = useState(false);
+// const [visitToReopen, setVisitToReopen] = useState(null);
+// // ==================== LOCALIZATION ====================
+// // English translations
+// const EN_BUNDLE = {
+//   'doctor.home.title': 'Doctor Dashboard',
+//   'doctor.home.welcome': 'Welcome, {0}',
+//   'doctor.sidebar.menu': 'Menu',
+//   'doctor.sidebar.searchPatient': 'Search Patient',
+//   'doctor.sidebar.reports': 'Reports',
+//   'doctor.sidebar.changePassword': 'Change Password',
+//   'doctor.sidebar.logout': 'Logout',
+//   'doctor.sidebar.logoutConfirm': 'Are you sure you want to logout?',
+//   'doctor.dashboard.todayVisits': "Today's Visits",
+//   'doctor.dashboard.totalVisits': 'Total Visits',
+//   'doctor.dashboard.newVisits': 'New Visits',
+//   'doctor.dashboard.closedVisits': 'Closed Visits',
+//   'doctor.performance.title': '📊 Performance Overview',
+//   'doctor.performance.patientsSeen': 'Patients Seen Today',
+//   'doctor.performance.openVisits': 'Open Visits',
+//   'doctor.performance.completedToday': 'Completed Today',
+//   'doctor.performance.completionRate': 'Completion Rate',
+//   'doctor.filter.today': 'Today',
+//   'doctor.filter.all': 'All',
+//   'doctor.filter.new': 'New',
+//   'doctor.filter.inProgress': 'In Progress',
+//   'doctor.filter.closed': 'Closed',
+//   'doctor.filter.searchPrompt': 'Search by name, phone or ID...',
+//   'doctor.filter.sortAsc': 'Sort Asc',
+//   'doctor.filter.sortDesc': 'Sort Desc',
+//   'doctor.filter.cardView1': '1 Column',
+//   'doctor.filter.cardView2': '2 Columns',
+//   'doctor.filter.cardView3': '3 Columns',
+//   'doctor.filter.cardDisplay': 'Layout',
+//   'doctor.filter.refresh': 'Refresh',
+//   'doctor.filter.noResults': 'No visits found',
+//   'doctor.visit.id': 'ID',
+//   'doctor.visit.age': 'Age',
+//   'doctor.visit.type': 'Type',
+//   'doctor.visit.open': 'Open',
+//   'doctor.visit.details': 'Details',
+//   'doctor.visit.reopen': 'Reopen',
+//   'doctor.visit.reopened': 'Visit reopened successfully',
+//   'doctor.visit.reopenFailed': 'Failed to reopen visit',
+//   'doctor.visit.reopenError': 'Error reopening visit',
+//   'doctor.visit.loadError': 'Failed to load visits',
+//   'doctor.findVisit.prompt': 'Enter Visit ID...',
+//   'doctor.findVisit.notFound': 'Visit #{0} not found',
+//   'doctor.findVisit.invalidAlert': 'Please enter a valid visit ID',
+//   'doctor.findVisit.emptyAlert': 'Please enter a visit ID',
+//   'doctor.findVisit.errorFetch': 'Error fetching visit',
+//   'doctor.notifications.title': 'Notifications',
+//   'doctor.notifications.noOpen': 'No open visits',
+//   'doctor.notifications.openVisits': 'Open Visits',
+//   'doctor.notifications.visitId': 'Visit ID',
+//   'doctor.notifications.patient': 'Patient',
+//   'doctor.notifications.status': 'Status',
+//   'doctor.password.title': 'Change Password',
+//   'doctor.password.old': 'Old Password',
+//   'doctor.password.new': 'New Password',
+//   'doctor.password.confirm': 'Confirm Password',
+//   'doctor.password.save': 'Save',
+//   'doctor.password.fillAll': 'Please fill all fields',
+//   'doctor.password.notMatch': 'New passwords do not match',
+//   'doctor.password.success': 'Password changed successfully',
+//   'doctor.password.error': 'Error changing password',
+//   'doctor.details.patientInfo': 'Patient Information',
+//   'doctor.details.medicalInfo': 'Medical Information',
+//   'doctor.details.prescribedDrugs': 'Prescribed Drugs',
+//   'doctor.details.noDrugs': 'No drugs prescribed',
+//   'doctor.details.procedures': 'Procedures',
+//   'doctor.details.noProcedures': 'No procedures performed',
+//   'doctor.details.patient': 'Patient',
+//   'doctor.details.chiefComplaint': 'Chief Complaint',
+//   'doctor.details.history': 'History',
+//   'doctor.details.medications': 'Medications',
+//   'doctor.details.allergies': 'Allergies',
+//   'doctor.details.notes': 'Doctor Notes',
+//   'doctor.visit.phone': 'Phone',
+//   'doctor.visit.gender': 'Gender',
+//   'doctor.visit.visitDate': 'Visit Date',
+//   'doctor.visit.status': 'Status',
+//   'doctor.dialog.close': 'Close',
+//   'doctor.pdf.patient': 'Patient Info',
+//   'doctor.pdf.medical': 'Medical Info',
+//   'doctor.pdf.drugs': 'Drugs Report',
+//   'doctor.pdf.procedures': 'Procedures Report',
+//   'doctor.pdf.visitReport': 'Visit Report',
+//   'doctor.pdf.patientLabel': 'Patient',
+//   'doctor.pdf.doctorLabel': 'Doctor',
+//   'doctor.pdf.dateLabel': 'Date',
+//   'doctor.pdf.patientInfo': 'Patient Information',
+//   'doctor.pdf.medicalInfo': 'Medical Information',
+//   'doctor.pdf.drugsReport': 'Drugs Report',
+//   'doctor.pdf.proceduresReport': 'Procedures Report',
+//   'doctor.filter.page': 'Page',
+//   'doctor.filter.of': 'of',
+//   'doctor.loading': 'Loading...',
+//   'doctor.error': 'Error',
+//   'doctor.retry': 'Retry',
+//   'doctor.reports.comingSoon': 'Reports feature coming soon',
+//   'doctor.details.visitReport': 'Visit Report',
+//   'doctor.details.dateLabel': 'Date',
+//   'doctor.details.patientLabel': 'Patient',
+//   'doctor.details.doctorLabel': 'Doctor',
+//   'doctor.pdf.generating': 'Generating PDF...',
+//   'doctor.pdf.downloading': 'Downloading PDF...',
+//   'doctor.pdf.success': 'PDF downloaded successfully',
+//   'doctor.pdf.error': 'Error generating PDF',
+//   'doctor.pdf.fullReport': 'Full Report',
+//   'doctor.pdf.patientDrugs': 'Patient + Drugs',
+//   'doctor.pdf.patientProcedures': 'Patient + Procedures',
+//     'doctor.reports.title': 'Reports Dashboard',
+//   'doctor.reports.close': 'Close Reports',
+// };
+
+// // Arabic translations
+// const AR_BUNDLE = {
+//   'doctor.home.title': 'لوحة تحكم الطبيب',
+//   'doctor.home.welcome': 'مرحباً, {0}',
+//   'doctor.sidebar.menu': 'القائمة',
+//   'doctor.sidebar.searchPatient': 'بحث عن مريض',
+//   'doctor.sidebar.reports': 'التقارير',
+//   'doctor.sidebar.changePassword': 'تغيير كلمة المرور',
+//   'doctor.sidebar.logout': 'تسجيل الخروج',
+//   'doctor.sidebar.logoutConfirm': 'هل أنت متأكد من تسجيل الخروج؟',
+//   'doctor.dashboard.todayVisits': 'زيارات اليوم',
+//   'doctor.dashboard.totalVisits': 'إجمالي الزيارات',
+//   'doctor.dashboard.newVisits': 'زيارات جديدة',
+//   'doctor.dashboard.closedVisits': 'زيارات مغلقة',
+//   'doctor.performance.title': '📊 نظرة عامة على الأداء',
+//   'doctor.performance.patientsSeen': 'المرضى اليوم',
+//   'doctor.performance.openVisits': 'زيارات مفتوحة',
+//   'doctor.performance.completedToday': 'مكتمل اليوم',
+//   'doctor.performance.completionRate': 'نسبة الإنجاز',
+//   'doctor.filter.today': 'اليوم',
+//   'doctor.filter.all': 'الكل',
+//   'doctor.filter.new': 'جديد',
+//   'doctor.filter.inProgress': 'قيد التنفيذ',
+//   'doctor.filter.closed': 'مغلق',
+//   'doctor.filter.searchPrompt': 'بحث بالاسم أو رقم الهاتف أو المعرف...',
+//   'doctor.filter.sortAsc': 'ترتيب تصاعدي',
+//   'doctor.filter.sortDesc': 'ترتيب تنازلي',
+//   'doctor.filter.cardView1': 'عمود واحد',
+//   'doctor.filter.cardView2': 'عمودان',
+//   'doctor.filter.cardView3': 'ثلاثة أعمدة',
+//   'doctor.filter.cardDisplay': 'تخطيط',
+//   'doctor.filter.refresh': 'تحديث',
+//   'doctor.filter.noResults': 'لا توجد زيارات',
+//   'doctor.visit.id': 'المعرف',
+//   'doctor.visit.age': 'العمر',
+//   'doctor.visit.type': 'النوع',
+//   'doctor.visit.open': 'فتح',
+//   'doctor.visit.details': 'تفاصيل',
+//   'doctor.visit.reopen': 'إعادة فتح',
+//   'doctor.visit.reopened': 'تم إعادة فتح الزيارة بنجاح',
+//   'doctor.visit.reopenFailed': 'فشل إعادة فتح الزيارة',
+//   'doctor.visit.reopenError': 'خطأ في إعادة فتح الزيارة',
+//   'doctor.visit.loadError': 'فشل تحميل الزيارات',
+//   'doctor.findVisit.prompt': 'أدخل معرف الزيارة...',
+//   'doctor.findVisit.notFound': 'الزيارة رقم {0} غير موجودة',
+//   'doctor.findVisit.invalidAlert': 'الرجاء إدخال معرف زيارة صحيح',
+//   'doctor.findVisit.emptyAlert': 'الرجاء إدخال معرف الزيارة',
+//   'doctor.findVisit.errorFetch': 'خطأ في جلب الزيارة',
+//   'doctor.notifications.title': 'الإشعارات',
+//   'doctor.notifications.noOpen': 'لا توجد زيارات مفتوحة',
+//   'doctor.notifications.openVisits': 'الزيارات المفتوحة',
+//   'doctor.notifications.visitId': 'معرف الزيارة',
+//   'doctor.notifications.patient': 'المريض',
+//   'doctor.notifications.status': 'الحالة',
+//   'doctor.password.title': 'تغيير كلمة المرور',
+//   'doctor.password.old': 'كلمة المرور القديمة',
+//   'doctor.password.new': 'كلمة المرور الجديدة',
+//   'doctor.password.confirm': 'تأكيد كلمة المرور',
+//   'doctor.password.save': 'حفظ',
+//   'doctor.password.fillAll': 'الرجاء ملء جميع الحقول',
+//   'doctor.password.notMatch': 'كلمات المرور غير متطابقة',
+//   'doctor.password.success': 'تم تغيير كلمة المرور بنجاح',
+//   'doctor.password.error': 'خطأ في تغيير كلمة المرور',
+//   'doctor.details.patientInfo': 'معلومات المريض',
+//   'doctor.details.medicalInfo': 'المعلومات الطبية',
+//   'doctor.details.prescribedDrugs': 'الأدوية الموصوفة',
+//   'doctor.details.noDrugs': 'لا توجد أدوية موصوفة',
+//   'doctor.details.procedures': 'الإجراءات',
+//   'doctor.details.noProcedures': 'لا توجد إجراءات',
+//   'doctor.details.patient': 'المريض',
+//   'doctor.details.chiefComplaint': 'الشكوى الرئيسية',
+//   'doctor.details.history': 'التاريخ الطبي',
+//   'doctor.details.medications': 'الأدوية',
+//   'doctor.details.allergies': 'الحساسية',
+//   'doctor.details.notes': 'ملاحظات الطبيب',
+//   'doctor.visit.phone': 'الهاتف',
+//   'doctor.visit.gender': 'الجنس',
+//   'doctor.visit.visitDate': 'تاريخ الزيارة',
+//   'doctor.visit.status': 'الحالة',
+//   'doctor.dialog.close': 'إغلاق',
+//   'doctor.pdf.patient': 'معلومات المريض',
+//   'doctor.pdf.medical': 'المعلومات الطبية',
+//   'doctor.pdf.drugs': 'تقرير الأدوية',
+//   'doctor.pdf.procedures': 'تقرير الإجراءات',
+//   'doctor.pdf.visitReport': 'تقرير الزيارة',
+//   'doctor.pdf.patientLabel': 'المريض',
+//   'doctor.pdf.doctorLabel': 'الطبيب',
+//   'doctor.pdf.dateLabel': 'التاريخ',
+//   'doctor.pdf.patientInfo': 'معلومات المريض',
+//   'doctor.pdf.medicalInfo': 'المعلومات الطبية',
+//   'doctor.pdf.drugsReport': 'تقرير الأدوية',
+//   'doctor.pdf.proceduresReport': 'تقرير الإجراءات',
+//   'doctor.filter.page': 'صفحة',
+//   'doctor.filter.of': 'من',
+//   'doctor.loading': 'جاري التحميل...',
+//   'doctor.error': 'خطأ',
+//   'doctor.retry': 'إعادة المحاولة',
+//   'doctor.reports.comingSoon': 'ميزة التقارير قريباً',
+//   'doctor.details.visitReport': 'تقرير الزيارة',
+//   'doctor.details.dateLabel': 'التاريخ',
+//   'doctor.details.patientLabel': 'المريض',
+//   'doctor.details.doctorLabel': 'الطبيب',
+//   'doctor.pdf.generating': 'جاري إنشاء PDF...',
+//   'doctor.pdf.downloading': 'جاري تحميل PDF...',
+//   'doctor.pdf.success': 'تم تحميل PDF بنجاح',
+//   'doctor.pdf.error': 'خطأ في إنشاء PDF',
+//   'doctor.pdf.fullReport': 'تقرير كامل',
+//   'doctor.pdf.patientDrugs': 'المريض + الأدوية',
+//   'doctor.pdf.patientProcedures': 'المريض + الإجراءات',
+//   'doctor.reports.title': 'لوحة التقارير',
+//   'doctor.reports.close': 'إغلاق التقارير',
+// };
+
+// const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
+//   // ==================== API BASE URL ====================
+//   const API_BASE_URL = BASE_URL;
+
+//   // ==================== GET LANGUAGE FROM LOCALSTORAGE ====================
+//   const getLanguage = () => {
+//     if (propLanguage) return propLanguage;
+//     const storedLang = localStorage.getItem('lang');
+//     if (storedLang) return storedLang;
+//     return 'en';
+//   };
+
+//   // ==================== STATE ====================
+//   const [showVisitPopup, setShowVisitPopup] = useState(false);
+//   const [popupVisit, setPopupVisit] = useState(null);
+//   const [sidebarOpen, setSidebarOpen] = useState(false);
+//   const [isGridLayout, setIsGridLayout] = useState(true);
+//   const [sortByDateAsc, setSortByDateAsc] = useState(true);
+//   const [currentPage, setCurrentPage] = useState(0);
+//   const [totalPages, setTotalPages] = useState(0);
+//   const [visitsCache, setVisitsCache] = useState([]);
+//   const [filteredVisits, setFilteredVisits] = useState([]);
+//   const [currentFilter, setCurrentFilter] = useState('TODAY');
+//   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
+//   const [notificationCount, setNotificationCount] = useState(0);
+//   const [lastNotificationCount, setLastNotificationCount] = useState(0);
+//   const [cardsPerRowIndex, setCardsPerRowIndex] = useState(2);
+//   const [cardsPerRowPattern] = useState([1, 2, 3]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [isInitialLoad, setIsInitialLoad] = useState(true);
+//   const [locale, setLocale] = useState(getLanguage());
+  
+
+//     // ==================== GUIDE STATE ====================
+//   const [showGuide, setShowGuide] = useState(false);
+//   // ==================== SEARCH PATIENT SCREEN STATE ====================
+//   const [showSearchPatient, setShowSearchPatient] = useState(false);
+  
+//   // ==================== DETAILS MODAL STATE ====================
+//   const [showDetailsModal, setShowDetailsModal] = useState(false);
+//   const [detailsVisitData, setDetailsVisitData] = useState(null);
+//   const [detailsVisitDrugs, setDetailsVisitDrugs] = useState([]);
+//   const [detailsVisitProcedures, setDetailsVisitProcedures] = useState([]);
+//   const [loadingDetails, setLoadingDetails] = useState(false);
+//   const [generatingPdf, setGeneratingPdf] = useState(false);
+  
+//   // ==================== PASSWORD MODAL STATE ====================
+//   const [showPasswordModal, setShowPasswordModal] = useState(false);
+//   const [passwordData, setPasswordData] = useState({
+//     oldPassword: '',
+//     newPassword: '',
+//     confirmPassword: ''
+//   });
+//   const [passwordError, setPasswordError] = useState('');
+//   const [changingPassword, setChangingPassword] = useState(false);
+//   // ==================== REPORTS SCREEN STATE ====================
+//   const [showReportsScreen, setShowReportsScreen] = useState(false);
+
+//   // ==================== LOCALIZATION ====================
+//   const getBundle = useCallback(() => {
+//     return locale === 'ar' ? AR_BUNDLE : EN_BUNDLE;
+//   }, [locale]);
+
+//   const t = useCallback((key) => {
+//     const bundle = getBundle();
+//     return bundle[key] || key;
+//   }, [getBundle]);
+
+//   const isRTL = locale === 'ar';
+
+//   // ==================== VISIT SCREEN STATE ====================
+//   const [showVisitScreen, setShowVisitScreen] = useState(false);
+//   const [selectedVisitId, setSelectedVisitId] = useState(null);
+//   const [selectedVisitStatus, setSelectedVisitStatus] = useState('NEW');
+  
+//   // Dashboard summary stats
+//   const [summaryStats, setSummaryStats] = useState({
+//     today: 0,
+//     total: 0,
+//     open: 0,
+//     closed: 0
+//   });
+  
+//   // Performance widget stats
+//   const [performanceStats, setPerformanceStats] = useState({
+//     patientsSeen: 0,
+//     openVisits: 0,
+//     completedToday: 0,
+//     completionRate: 0
+//   });
+
+//   // Filter counts
+//   const [filterCounts, setFilterCounts] = useState({
+//     TODAY: 0,
+//     ALL: 0,
+//     NEW: 0,
+//     IN_PROGRESS: 0,
+//     CLOSED: 0
+//   });
+
+//   // Refs
+//   const scrollPaneRef = useRef(null);
+//   const autoRefreshInterval = useRef(null);
+//   const notificationInterval = useRef(null);
+//   const mountedRef = useRef(true);
+//   const detailsModalRef = useRef(null);
+
+//   // ==================== API CALLS WITH ERROR HANDLING ====================
+// //   const apiFetch = useCallback(async (endpoint, options = {}) => {
+// //     const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+// //     const fullUrl = `${API_BASE_URL}${url}`;
+    
+// //     try {
+// //       const response = await fetch(fullUrl, {
+// //         ...options,
+// //         headers: {
+// //           'Content-Type': 'application/json',
+// //           ...(options.headers || {})
+// //         }
+// //       });
+      
+// //       if (!response.ok) {
+// //         const errorText = await response.text();
+// //         let errorMessage;
+// //         try {
+// //           const errorJson = JSON.parse(errorText);
+// //           errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
+// //         } catch {
+// //           errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+// //         }
+// //         throw new Error(errorMessage);
+// //       }
+      
+// //       const text = await response.text();
+// //       if (!text || text.trim() === '') {
+// //         throw new Error('Empty response');
+// //       }
+      
+// //       try {
+// //         const json = JSON.parse(text);
+// //         return json;
+// //       } catch (e) {
+// //         throw new Error('Invalid JSON response');
+// //       }
+// //     } catch (error) {
+// //       console.error('API Error:', error.message);
+// //       throw error;
+// //     }
+// //   }, [API_BASE_URL]);
+
+
+// const apiFetch = useCallback(async (endpoint, options = {}) => {
+//   const url = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+//   const fullUrl = `${API_BASE_URL}${url}`;
+  
+//   try {
+//     const response = await fetch(fullUrl, {
+//       ...options,
+//       headers: {
+//         'Content-Type': 'application/json',
+//         ...(options.headers || {})
+//       }
+//     });
+    
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       let errorMessage;
+//       try {
+//         const errorJson = JSON.parse(errorText);
+//         errorMessage = errorJson.message || errorJson.error || `HTTP ${response.status}`;
+//       } catch {
+//         errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+//       }
+//       throw new Error(errorMessage);
+//     }
+    
+//     // Check if response has content
+//     const text = await response.text();
+//     if (!text || text.trim() === '') {
+//       // Return null for empty responses (successful but no data)
+//       return null;
+//     }
+    
+//     try {
+//       const json = JSON.parse(text);
+//       return json;
+//     } catch (e) {
+//       throw new Error('Invalid JSON response');
+//     }
+//   } catch (error) {
+//     console.error('API Error:', error.message);
+//     throw error;
+//   }
+// }, [API_BASE_URL]);
+//   // ==================== UTILITY FUNCTIONS ====================
+//   const buildFullName = useCallback((patient) => {
+//     if (!patient) return '';
+//     return [patient.firstName, patient.middleName, patient.lastName]
+//       .filter(Boolean)
+//       .join(' ')
+//       .trim() || 'Unknown';
+//   }, []);
+
+//   const calculateAge = useCallback((dob) => {
+//     if (!dob) return '-';
+//     try {
+//       const birth = new Date(dob);
+//       const today = new Date();
+//       let age = today.getFullYear() - birth.getFullYear();
+//       const m = today.getMonth() - birth.getMonth();
+//       if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+//         age--;
+//       }
+//       return age > 0 ? age.toString() : '0';
+//     } catch (e) {
+//       return '-';
+//     }
+//   }, []);
+
+//   const formatDateTime = useCallback((iso) => {
+//     if (!iso) return '-';
+//     try {
+//       const date = new Date(iso);
+//       return date.toLocaleString(isRTL ? 'ar' : 'en-GB', {
+//         day: '2-digit',
+//         month: '2-digit',
+//         year: 'numeric',
+//         hour: '2-digit',
+//         minute: '2-digit'
+//       });
+//     } catch (e) {
+//       return '-';
+//     }
+//   }, [isRTL]);
+
+//   const getStatusColor = useCallback((status) => {
+//     switch (status) {
+//       case 'CREATED': return '#e74c3c';
+//       case 'IN_PROGRESS': return '#f39c12';
+//       case 'CLOSED': return '#27ae60';
+//       default: return '#3498db';
+//     }
+//   }, []);
+
+//   const getStatusBgColor = useCallback((status) => {
+//     switch (status) {
+//       case 'CREATED': return '#fff5f5';
+//       case 'IN_PROGRESS': return '#fffbf0';
+//       case 'CLOSED': return '#f0fff4';
+//       default: return 'white';
+//     }
+//   }, []);
+
+//   const mapDurationType = useCallback((type) => {
+//     if (!type) return '-';
+//     const map = {
+//       '1': 'Hour',
+//       '2': 'Day',
+//       '3': 'Week',
+//       '4': 'Month',
+//       '5': 'Year'
+//     };
+//     return map[type] || '-';
+//   }, []);
+
+//   const updateFilterCounts = useCallback((visits) => {
+//     const today = new Date().toDateString();
+//     let counts = { TODAY: 0, ALL: 0, NEW: 0, IN_PROGRESS: 0, CLOSED: 0 };
+    
+//     visits.forEach(visit => {
+//       counts.ALL++;
+//       const status = visit.visitStatus || 'CREATED';
+//       if (status === 'CREATED') counts.NEW++;
+//       else if (status === 'IN_PROGRESS') counts.IN_PROGRESS++;
+//       else if (status === 'CLOSED') counts.CLOSED++;
+      
+//       if (visit.visitDate && new Date(visit.visitDate).toDateString() === today) {
+//         counts.TODAY++;
+//       }
+//     });
+    
+//     setFilterCounts(counts);
+//   }, []);
+
+//   const updatePerformanceStats = useCallback((visits) => {
+//     const today = new Date().toDateString();
+//     let patientsSeen = 0;
+//     let openVisits = 0;
+//     let completedToday = 0;
+    
+//     visits.forEach(visit => {
+//       const status = visit.visitStatus || 'CREATED';
+//       const visitDate = visit.visitDate ? new Date(visit.visitDate).toDateString() : '';
+      
+//       if (visitDate === today) {
+//         patientsSeen++;
+//         if (status === 'CLOSED') completedToday++;
+//       }
+      
+//       if (status !== 'CLOSED') openVisits++;
+//     });
+    
+//     const completionRate = patientsSeen === 0 ? 0 : (completedToday / patientsSeen) * 100;
+    
+//     setPerformanceStats({
+//       patientsSeen,
+//       openVisits,
+//       completedToday,
+//       completionRate: Math.round(completionRate * 10) / 10
+//     });
+//   }, []);
+
+//   // ==================== FILTERING FUNCTION ====================
+//   const filterVisits = useCallback((visits, filter, searchQuery, sortAsc) => {
+//     const q = searchQuery.toLowerCase().trim();
+//     const today = new Date().toDateString();
+    
+//     let filtered = visits.filter(visit => {
+//       const patient = visit.patient || {};
+//       const name = buildFullName(patient).toLowerCase();
+//       const phone = (patient.phone || '').toLowerCase();
+//       const visitId = String(visit.id || '');
+      
+//       const matchesSearch = name.includes(q) || phone.includes(q) || visitId.includes(q);
+      
+//       const status = visit.visitStatus || 'CREATED';
+//       const visitDate = visit.visitDate ? new Date(visit.visitDate) : null;
+//       const isToday = visitDate && visitDate.toDateString() === today;
+      
+//       let statusMatches = true;
+//       switch (filter) {
+//         case 'TODAY':
+//           statusMatches = isToday;
+//           break;
+//         case 'NEW':
+//           statusMatches = status === 'CREATED';
+//           break;
+//         case 'IN_PROGRESS':
+//           statusMatches = status === 'IN_PROGRESS';
+//           break;
+//         case 'CLOSED':
+//           statusMatches = status === 'CLOSED';
+//           break;
+//         case 'ALL':
+//           statusMatches = true;
+//           break;
+//         default:
+//           statusMatches = true;
+//       }
+      
+//       return matchesSearch && statusMatches;
+//     });
+    
+//     filtered.sort((a, b) => {
+//       const dateA = a.visitDate ? new Date(a.visitDate) : new Date(0);
+//       const dateB = b.visitDate ? new Date(b.visitDate) : new Date(0);
+//       return sortAsc ? dateA - dateB : dateB - dateA;
+//     });
+    
+//     return filtered;
+//   }, [buildFullName]);
+
+//   // ==================== LOAD FUNCTIONS ====================
+//   const loadDoctorVisits = useCallback(async (filter, resetPage = true, pageOverride = null) => {
+//     if (resetPage) {
+//       setCurrentPage(0);
+//     }
+
+//     setCurrentFilter(filter);
+//     setCurrentSearchQuery('');
+//     setLoading(true);
+//     setError(null);
+
+//     try {
+//       const pageToUse = pageOverride !== null ? pageOverride : (resetPage ? 0 : currentPage);
+//       const endpoint = `/api/visits/doctor/${doctorId}?page=${pageToUse}&size=${PAGE_SIZE}`;
+
+//       const data = await apiFetch(endpoint);
+
+//       const visits = data.content || [];
+//       const total = data.totalPages || 1;
+
+//       setTotalPages(total);
+//       setVisitsCache(visits);
+
+//       updateFilterCounts(visits);
+//       updatePerformanceStats(visits);
+
+//       const filtered = filterVisits(visits, filter, '', sortByDateAsc);
+//       setFilteredVisits(filtered);
+
+//       if (scrollPaneRef.current) {
+//         scrollPaneRef.current.scrollTop = 0;
+//       }
+//     } catch (err) {
+//       setError(t('doctor.visit.loadError') || 'Failed to load visits');
+//       console.error('Error loading visits:', err);
+//     } finally {
+//       setLoading(false);
+//       setIsInitialLoad(false);
+//     }
+//   }, [doctorId, sortByDateAsc, t, apiFetch, filterVisits, updateFilterCounts, updatePerformanceStats]);
+
+//   const loadSummaryCards = useCallback(async () => {
+//     try {
+//       const endpoint = `/api/visits/doctor/${doctorId}/summary`;
+//       const data = await apiFetch(endpoint);
+//       setSummaryStats({
+//         today: data.totalToday || 0,
+//         total: data.totalVisits || 0,
+//         open: data.totalOpen || 0,
+//         closed: data.totalClosed || 0
+//       });
+//     } catch (error) {
+//       console.error('Error loading summary:', error);
+//     }
+//   }, [doctorId, apiFetch]);
+
+//   const findVisitById = useCallback(async (visitId) => {
+//     if (!visitId) {
+//       alert(t('doctor.findVisit.emptyAlert'));
+//       return;
+//     }
+    
+//     try {
+//       const endpoint = `/api/visits/find/${visitId}`;
+//       const visit = await apiFetch(endpoint);
+//       setPopupVisit(visit);
+//       setShowVisitPopup(true);
+//     } catch (error) {
+//       alert(t('doctor.findVisit.notFound').replace('{0}', visitId));
+//     }
+//   }, [t, apiFetch]);
+
+//   // ==================== PDF GENERATION FUNCTIONS ====================
+//   const createPdfHtml = useCallback((title, content, visitId) => {
+//     return `
+//       <!DOCTYPE html>
+//       <html>
+//         <head>
+//           <meta charset="UTF-8">
+//           <title>${title}</title>
+//           <style>
+//             body {
+//               font-family: Arial, Helvetica, sans-serif;
+//               padding: 40px;
+//               line-height: 1.6;
+//               color: #333;
+//             }
+//             .header {
+//               text-align: center;
+//               border-bottom: 2px solid #1E90FF;
+//               padding-bottom: 20px;
+//               margin-bottom: 30px;
+//             }
+//             .header h1 {
+//               color: #1E90FF;
+//               margin: 0;
+//               font-size: 24px;
+//             }
+//             .header p {
+//               color: #666;
+//               margin: 5px 0 0 0;
+//             }
+//             .section {
+//               margin-bottom: 25px;
+//               padding: 15px;
+//               border: 1px solid #e0e0e0;
+//               border-radius: 8px;
+//               background: #f9f9f9;
+//             }
+//             .section h2 {
+//               color: #2C3E50;
+//               border-bottom: 2px solid #e0e0e0;
+//               padding-bottom: 8px;
+//               margin-top: 0;
+//             }
+//             .info-row {
+//               display: flex;
+//               padding: 5px 0;
+//               border-bottom: 1px solid #f0f0f0;
+//             }
+//             .info-label {
+//               font-weight: bold;
+//               width: 150px;
+//               color: #555;
+//             }
+//             .info-value {
+//               flex: 1;
+//               color: #333;
+//             }
+//             .drug-item {
+//               background: white;
+//               padding: 12px;
+//               margin: 8px 0;
+//               border-radius: 6px;
+//               border: 1px solid #e0e0e0;
+//             }
+//             .drug-name {
+//               font-weight: bold;
+//               color: #2C3E50;
+//               font-size: 16px;
+//             }
+//             .drug-detail {
+//               display: flex;
+//               padding: 3px 0;
+//               font-size: 14px;
+//             }
+//             .drug-label {
+//               font-weight: bold;
+//               width: 120px;
+//               color: #666;
+//             }
+//             .procedure-item {
+//               padding: 8px 12px;
+//               margin: 5px 0;
+//               background: white;
+//               border-radius: 4px;
+//               border-left: 4px solid #3498DB;
+//             }
+//             .procedure-category {
+//               font-size: 12px;
+//               font-weight: bold;
+//               color: #3498DB;
+//             }
+//             .procedure-name {
+//               font-size: 14px;
+//               color: #333;
+//             }
+//             .footer {
+//               text-align: center;
+//               margin-top: 40px;
+//               padding-top: 20px;
+//               border-top: 1px solid #e0e0e0;
+//               color: #999;
+//               font-size: 12px;
+//             }
+//             .badge {
+//               display: inline-block;
+//               padding: 2px 12px;
+//               border-radius: 12px;
+//               color: white;
+//               font-weight: bold;
+//               font-size: 12px;
+//             }
+//             .badge-created { background: #e74c3c; }
+//             .badge-inprogress { background: #f39c12; }
+//             .badge-closed { background: #27ae60; }
+//             .badge-default { background: #3498db; }
+//             .section-divider {
+//               border-top: 2px dashed #e0e0e0;
+//               margin: 20px 0;
+//             }
+//           </style>
+//         </head>
+//         <body>
+//           ${content}
+//           <div class="footer">
+//             Generated on ${new Date().toLocaleString()}
+//           </div>
+//         </body>
+//       </html>
+//     `;
+//   }, []);
+
+//   const generatePDF = useCallback((title, content, filename) => {
+//     setGeneratingPdf(true);
+    
+//     try {
+//       const htmlContent = createPdfHtml(title, content, '');
+//       const blob = new Blob([htmlContent], { type: 'text/html' });
+//       const url = window.URL.createObjectURL(blob);
+      
+//       const link = document.createElement('a');
+//       link.href = url;
+//       link.download = `${filename}.html`;
+//       document.body.appendChild(link);
+//       link.click();
+//       document.body.removeChild(link);
+//       window.URL.revokeObjectURL(url);
+      
+//       alert(t('doctor.pdf.success'));
+//     } catch (error) {
+//       console.error('PDF generation error:', error);
+//       alert(t('doctor.pdf.error') + ': ' + error.message);
+//     } finally {
+//       setGeneratingPdf(false);
+//     }
+//   }, [createPdfHtml, t]);
+
+//   // ==================== SHOW VISIT DETAILS ====================
+//   const showVisitDetails = useCallback(async (visitId) => {
+//     setLoadingDetails(true);
+//     setShowDetailsModal(true);
+
+//     try {
+//       const visitData = await apiFetch(`/api/visits/${visitId}`);
+//       setDetailsVisitData(visitData);
+
+//       const visitDrugs = visitData.visitDrugs || [];
+//       setDetailsVisitDrugs(visitDrugs);
+
+//       const visitProcedures = visitData.procedures || [];
+//       setDetailsVisitProcedures(visitProcedures);
+
+//     } catch (error) {
+//       alert(t('doctor.visit.loadError') + ': ' + error.message);
+//       setShowDetailsModal(false);
+//     } finally {
+//       setLoadingDetails(false);
+//     }
+//   }, [apiFetch, t]);
+
+//   // ==================== PDF EXPORT FUNCTIONS ====================
+//   const exportFullVisitPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const patient = visit.patient || {};
+//     const statusColor = visit.visitStatus === 'CREATED' ? 'badge-created' : 
+//                         visit.visitStatus === 'IN_PROGRESS' ? 'badge-inprogress' : 
+//                         visit.visitStatus === 'CLOSED' ? 'badge-closed' : 'badge-default';
+    
+//     let drugsHtml = '';
+//     if (detailsVisitDrugs.length === 0) {
+//       drugsHtml = '<p style="color: #999; font-style: italic;">No drugs prescribed</p>';
+//     } else {
+//       detailsVisitDrugs.forEach((drug) => {
+//         const drugObj = drug.drug || {};
+//         drugsHtml += `
+//           <div class="drug-item">
+//             <div class="drug-name">💊 ${drugObj.tradeName || drug.tradeName || 'Unknown'}</div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Strength:</span>
+//               <span>${drugObj.strength || drug.strength || '-'} ${drugObj.unitType || drug.unitType || ''}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Dose:</span>
+//               <span>${drug.dose || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Frequency:</span>
+//               <span>${drug.frequency || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Duration:</span>
+//               <span>${drug.duration || '-'} ${mapDurationType(drug.durationType)}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Instructions:</span>
+//               <span>${drug.instructions || 'No instructions'}</span>
+//             </div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     let proceduresHtml = '';
+//     if (detailsVisitProcedures.length === 0) {
+//       proceduresHtml = '<p style="color: #999; font-style: italic;">No procedures performed</p>';
+//     } else {
+//       detailsVisitProcedures.forEach((proc) => {
+//         let icon = '🧪';
+//         let category = 'General';
+//         let color = '#3498DB';
+        
+//         if (proc.startsWith('[RADIOLOGY]')) {
+//           icon = '📡';
+//           category = 'Radiology';
+//           color = '#E74C3C';
+//         } else if (proc.startsWith('[LABORATORY]')) {
+//           icon = '🧫';
+//           category = 'Laboratory';
+//           color = '#2ECC71';
+//         } else if (proc.startsWith('[MEDICAL]')) {
+//           icon = '🩺';
+//           category = 'Medical';
+//           color = '#F39C12';
+//         }
+        
+//         const cleanProc = proc.replace(/\[.*?\]\s*/, '');
+        
+//         proceduresHtml += `
+//           <div class="procedure-item" style="border-left-color: ${color};">
+//             <div class="procedure-category" style="color: ${color};">${icon} ${category}</div>
+//             <div class="procedure-name">${cleanProc}</div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.details.visitReport')}</h1>
+//         <p>Complete Report - Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>👤 ${t('doctor.details.patientInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.id')}</span>
+//           <span class="info-value">${visit.id}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.patient')}</span>
+//           <span class="info-value">${buildFullName(patient)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.phone')}</span>
+//           <span class="info-value">${patient.phone || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.gender')}</span>
+//           <span class="info-value">${patient.gender || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.visitDate')}</span>
+//           <span class="info-value">${formatDateTime(visit.visitDate)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.status')}</span>
+//           <span class="info-value"><span class="badge ${statusColor}">${visit.visitStatus || 'N/A'}</span></span>
+//         </div>
+//       </div>
+
+//       <div class="section">
+//         <h2>🏥 ${t('doctor.details.medicalInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.chiefComplaint')}</span>
+//           <span class="info-value">${visit.chiefComplaint || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.history')}</span>
+//           <span class="info-value">${visit.history || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.medications')}</span>
+//           <span class="info-value">${visit.medications || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.allergies')}</span>
+//           <span class="info-value">${visit.allergies || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.notes')}</span>
+//           <span class="info-value">${visit.doctorNotes || '-'}</span>
+//         </div>
+//       </div>
+
+//       <div class="section">
+//         <h2>💊 ${t('doctor.details.prescribedDrugs')}</h2>
+//         ${drugsHtml}
+//       </div>
+
+//       <div class="section">
+//         <h2>🔬 ${t('doctor.details.procedures')}</h2>
+//         ${proceduresHtml}
+//       </div>
+//     `;
+
+//     generatePDF(t('doctor.details.visitReport'), content, `Visit_${visit.id}_Full_Report`);
+//   }, [detailsVisitData, detailsVisitDrugs, detailsVisitProcedures, buildFullName, formatDateTime, mapDurationType, generatePDF, t]);
+
+//   const exportPatientPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const patient = visit.patient || {};
+//     const statusColor = visit.visitStatus === 'CREATED' ? 'badge-created' : 
+//                         visit.visitStatus === 'IN_PROGRESS' ? 'badge-inprogress' : 
+//                         visit.visitStatus === 'CLOSED' ? 'badge-closed' : 'badge-default';
+    
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.patientInfo')}</h1>
+//         <p>${t('doctor.details.patientLabel')}: ${buildFullName(patient)}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>👤 ${t('doctor.details.patientInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.id')}</span>
+//           <span class="info-value">${visit.id}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.patient')}</span>
+//           <span class="info-value">${buildFullName(patient)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.phone')}</span>
+//           <span class="info-value">${patient.phone || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.gender')}</span>
+//           <span class="info-value">${patient.gender || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.visitDate')}</span>
+//           <span class="info-value">${formatDateTime(visit.visitDate)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.status')}</span>
+//           <span class="info-value"><span class="badge ${statusColor}">${visit.visitStatus || 'N/A'}</span></span>
+//         </div>
+//       </div>
+//     `;
+
+//     generatePDF(t('doctor.pdf.patientInfo'), content, `Patient_${visit.id}_Info`);
+//   }, [detailsVisitData, buildFullName, formatDateTime, generatePDF, t]);
+
+//   const exportMedicalPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+    
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.medicalInfo')}</h1>
+//         <p>Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>🏥 ${t('doctor.details.medicalInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.chiefComplaint')}</span>
+//           <span class="info-value">${visit.chiefComplaint || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.history')}</span>
+//           <span class="info-value">${visit.history || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.medications')}</span>
+//           <span class="info-value">${visit.medications || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.allergies')}</span>
+//           <span class="info-value">${visit.allergies || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.notes')}</span>
+//           <span class="info-value">${visit.doctorNotes || '-'}</span>
+//         </div>
+//       </div>
+//     `;
+
+//     generatePDF(t('doctor.pdf.medicalInfo'), content, `Visit_${visit.id}_Medical`);
+//   }, [detailsVisitData, generatePDF, t]);
+
+//   const exportDrugsPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const drugs = detailsVisitDrugs || [];
+    
+//     let drugsHtml = '';
+//     if (drugs.length === 0) {
+//       drugsHtml = '<p style="color: #999; font-style: italic;">No drugs prescribed</p>';
+//     } else {
+//       drugs.forEach((item) => {
+//         const drug = item.drug || {};
+//         drugsHtml += `
+//           <div class="drug-item">
+//             <div class="drug-name">💊 ${drug.tradeName || 'Unknown'}</div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Strength:</span>
+//               <span>${drug.strength || '-'} ${drug.unitType || ''}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Dose:</span>
+//               <span>${item.dose || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Frequency:</span>
+//               <span>${item.frequency || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Duration:</span>
+//               <span>${item.duration || '-'} ${mapDurationType(item.durationType)}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Instructions:</span>
+//               <span>${item.instructions || 'No instructions'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Package:</span>
+//               <span>${drug.packageSize || '-'} - ${drug.packageType || '-'}</span>
+//             </div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.drugsReport')}</h1>
+//         <p>Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>💊 ${t('doctor.details.prescribedDrugs')}</h2>
+//         ${drugsHtml}
+//       </div>
+//     `;
+
+//     generatePDF(t('doctor.pdf.drugsReport'), content, `Visit_${visit.id}_Drugs`);
+//   }, [detailsVisitData, detailsVisitDrugs, mapDurationType, generatePDF, t]);
+
+//   const exportProceduresPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const procedures = detailsVisitProcedures || [];
+    
+//     let proceduresHtml = '';
+//     if (procedures.length === 0) {
+//       proceduresHtml = '<p style="color: #999; font-style: italic;">No procedures performed</p>';
+//     } else {
+//       procedures.forEach((proc) => {
+//         let icon = '🧪';
+//         let category = 'General';
+//         let color = '#3498DB';
+        
+//         const upperProc = proc.toUpperCase();
+//         if (upperProc.includes('RADIOLOGY') || upperProc.includes('MRI') || upperProc.includes('CT') || upperProc.includes('X-RAY') || upperProc.includes('ULTRASOUND')) {
+//           icon = '📡';
+//           category = 'Radiology';
+//           color = '#E74C3C';
+//         } else if (upperProc.includes('LAB') || upperProc.includes('PCR') || upperProc.includes('BLOOD') || upperProc.includes('URINE')) {
+//           icon = '🧫';
+//           category = 'Laboratory';
+//           color = '#2ECC71';
+//         } else if (upperProc.includes('SURGERY') || upperProc.includes('OPR') || upperProc.includes('OPERATION')) {
+//           icon = '🩺';
+//           category = 'Surgical';
+//           color = '#F39C12';
+//         }
+        
+//         proceduresHtml += `
+//           <div class="procedure-item" style="border-left-color: ${color};">
+//             <div class="procedure-category" style="color: ${color};">${icon} ${category}</div>
+//             <div class="procedure-name">${proc}</div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.proceduresReport')}</h1>
+//         <p>Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>🔬 ${t('doctor.details.procedures')}</h2>
+//         ${proceduresHtml}
+//       </div>
+//     `;
+
+//     generatePDF(t('doctor.pdf.proceduresReport'), content, `Visit_${visit.id}_Procedures`);
+//   }, [detailsVisitData, detailsVisitProcedures, generatePDF, t]);
+
+//   const exportPatientAndDrugsPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const patient = visit.patient || {};
+//     const statusColor = visit.visitStatus === 'CREATED' ? 'badge-created' : 
+//                         visit.visitStatus === 'IN_PROGRESS' ? 'badge-inprogress' : 
+//                         visit.visitStatus === 'CLOSED' ? 'badge-closed' : 'badge-default';
+    
+//     let drugsHtml = '';
+//     if (detailsVisitDrugs.length === 0) {
+//       drugsHtml = '<p style="color: #999; font-style: italic;">No drugs prescribed</p>';
+//     } else {
+//       detailsVisitDrugs.forEach((drug) => {
+//         const drugObj = drug.drug || {};
+//         drugsHtml += `
+//           <div class="drug-item">
+//             <div class="drug-name">💊 ${drugObj.tradeName || drug.tradeName || 'Unknown'}</div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Strength:</span>
+//               <span>${drugObj.strength || drug.strength || '-'} ${drugObj.unitType || drug.unitType || ''}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Dose:</span>
+//               <span>${drug.dose || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Frequency:</span>
+//               <span>${drug.frequency || '-'}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Duration:</span>
+//               <span>${drug.duration || '-'} ${mapDurationType(drug.durationType)}</span>
+//             </div>
+//             <div class="drug-detail">
+//               <span class="drug-label">Instructions:</span>
+//               <span>${drug.instructions || 'No instructions'}</span>
+//             </div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.drugsReport')}</h1>
+//         <p>Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>👤 ${t('doctor.details.patientInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.id')}</span>
+//           <span class="info-value">${visit.id}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.patient')}</span>
+//           <span class="info-value">${buildFullName(patient)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.phone')}</span>
+//           <span class="info-value">${patient.phone || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.gender')}</span>
+//           <span class="info-value">${patient.gender || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.visitDate')}</span>
+//           <span class="info-value">${formatDateTime(visit.visitDate)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.status')}</span>
+//           <span class="info-value"><span class="badge ${statusColor}">${visit.visitStatus || 'N/A'}</span></span>
+//         </div>
+//       </div>
+
+//       <div class="section-divider"></div>
+
+//       <div class="section">
+//         <h2>💊 ${t('doctor.details.prescribedDrugs')}</h2>
+//         ${drugsHtml}
+//       </div>
+//     `;
+
+//     generatePDF(`${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.drugsReport')}`, content, `Visit_${visit.id}_Patient_Drugs`);
+//   }, [detailsVisitData, detailsVisitDrugs, buildFullName, formatDateTime, mapDurationType, generatePDF, t]);
+
+//   const exportPatientAndProceduresPdf = useCallback(() => {
+//     if (!detailsVisitData) return;
+    
+//     const visit = detailsVisitData;
+//     const patient = visit.patient || {};
+//     const statusColor = visit.visitStatus === 'CREATED' ? 'badge-created' : 
+//                         visit.visitStatus === 'IN_PROGRESS' ? 'badge-inprogress' : 
+//                         visit.visitStatus === 'CLOSED' ? 'badge-closed' : 'badge-default';
+    
+//     let proceduresHtml = '';
+//     if (detailsVisitProcedures.length === 0) {
+//       proceduresHtml = '<p style="color: #999; font-style: italic;">No procedures performed</p>';
+//     } else {
+//       detailsVisitProcedures.forEach((proc) => {
+//         let icon = '🧪';
+//         let category = 'General';
+//         let color = '#3498DB';
+        
+//         if (proc.startsWith('[RADIOLOGY]')) {
+//           icon = '📡';
+//           category = 'Radiology';
+//           color = '#E74C3C';
+//         } else if (proc.startsWith('[LABORATORY]')) {
+//           icon = '🧫';
+//           category = 'Laboratory';
+//           color = '#2ECC71';
+//         } else if (proc.startsWith('[MEDICAL]')) {
+//           icon = '🩺';
+//           category = 'Medical';
+//           color = '#F39C12';
+//         }
+        
+//         const cleanProc = proc.replace(/\[.*?\]\s*/, '');
+        
+//         proceduresHtml += `
+//           <div class="procedure-item" style="border-left-color: ${color};">
+//             <div class="procedure-category" style="color: ${color};">${icon} ${category}</div>
+//             <div class="procedure-name">${cleanProc}</div>
+//           </div>
+//         `;
+//       });
+//     }
+
+//     const content = `
+//       <div class="header">
+//         <h1>${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.proceduresReport')}</h1>
+//         <p>Visit #${visit.id}</p>
+//       </div>
+
+//       <div class="section">
+//         <h2>👤 ${t('doctor.details.patientInfo')}</h2>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.id')}</span>
+//           <span class="info-value">${visit.id}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.details.patient')}</span>
+//           <span class="info-value">${buildFullName(patient)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.phone')}</span>
+//           <span class="info-value">${patient.phone || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.gender')}</span>
+//           <span class="info-value">${patient.gender || '-'}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.visitDate')}</span>
+//           <span class="info-value">${formatDateTime(visit.visitDate)}</span>
+//         </div>
+//         <div class="info-row">
+//           <span class="info-label">${t('doctor.visit.status')}</span>
+//           <span class="info-value"><span class="badge ${statusColor}">${visit.visitStatus || 'N/A'}</span></span>
+//         </div>
+//       </div>
+
+//       <div class="section-divider"></div>
+
+//       <div class="section">
+//         <h2>🔬 ${t('doctor.details.procedures')}</h2>
+//         ${proceduresHtml}
+//       </div>
+//     `;
+
+//     generatePDF(`${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.proceduresReport')}`, content, `Visit_${visit.id}_Patient_Procedures`);
+//   }, [detailsVisitData, detailsVisitProcedures, buildFullName, formatDateTime, generatePDF, t]);
+
+// //   const reopenVisit = useCallback(async (visitId) => {
+// //     try {
+// //       const endpoint = `/api/visits/${visitId}/reopen`;
+// //       await apiFetch(endpoint, { method: 'PUT' });
+// //       alert(t('doctor.visit.reopened'));
+// //       loadDoctorVisits(currentFilter, false);
+// //       loadSummaryCards();
+// //       setShowVisitPopup(false);
+// //       setPopupVisit(null);
+// //     } catch (error) {
+// //       alert(t('doctor.visit.reopenError') + ': ' + error.message);
+// //     }
+// //   }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+
+
+
+// const reopenVisit = useCallback(async (visitId) => {
+//   try {
+//     const endpoint = `/api/visits/${visitId}/reopen`;
+//     const response = await apiFetch(endpoint, { method: 'PUT' });
+    
+//     // If response is null (empty), it's still a success
+//     if (response === null) {
+//       console.log('Visit reopened successfully (empty response)');
+//     }
+    
+//     alert(t('doctor.visit.reopened'));
+//     loadDoctorVisits(currentFilter, false);
+//     loadSummaryCards();
+//     setShowVisitPopup(false);
+//     setPopupVisit(null);
+//   } catch (error) {
+//     alert(t('doctor.visit.reopenError') + ': ' + error.message);
+//   }
+// }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+
+
+//   const changePassword = useCallback(async (oldPassword, newPassword) => {
+//     const endpoint = '/api/doctors/change-password';
+//     await apiFetch(endpoint, {
+//       method: 'PUT',
+//       body: JSON.stringify({
+//         username,
+//         oldPassword,
+//         newPassword
+//       })
+//     });
+//     return true;
+//   }, [username, apiFetch]);
+
+//   // ==================== VISIT SCREEN HANDLING ====================
+//   const openVisitScreen = useCallback((visitId, status) => {
+//     setSelectedVisitId(visitId);
+//     setSelectedVisitStatus(status);
+//     setShowVisitScreen(true);
+//     setShowVisitPopup(false);
+//     setPopupVisit(null);
+//   }, []);
+
+//   const closeVisitScreen = useCallback(() => {
+//     setShowVisitScreen(false);
+//     setSelectedVisitId(null);
+//     setSelectedVisitStatus('NEW');
+//     loadDoctorVisits(currentFilter, false);
+//     loadSummaryCards();
+//   }, [currentFilter, loadDoctorVisits, loadSummaryCards]);
+
+//   // ==================== SEARCH PATIENT HANDLING ====================
+//   const openSearchPatient = useCallback(() => {
+//     setShowSearchPatient(true);
+//   }, []);
+
+//   const closeSearchPatient = useCallback(() => {
+//     setShowSearchPatient(false);
+//   }, []);
+
+
+//    // ==================== REPORTS HANDLING ====================
+//   const openReportsScreen = useCallback(() => {
+//     setShowReportsScreen(true);
+//   }, []);
+
+//   const closeReportsScreen = useCallback(() => {
+//     setShowReportsScreen(false);
+//   }, []);
+//   // ==================== AVATAR HANDLING ====================
+//   const getAvatarPath = useCallback((gender) => {
+//     if (!gender) return `${process.env.PUBLIC_URL}/unknown.PNG`;
+    
+//     const normalizedGender = gender.toUpperCase();
+//     if (normalizedGender === 'FEMALE' || normalizedGender === 'F') {
+//       return `${process.env.PUBLIC_URL}/female.PNG`;
+//     } else if (normalizedGender === 'MALE' || normalizedGender === 'M') {
+//       return `${process.env.PUBLIC_URL}/male.PNG`;
+//     }
+//     return `${process.env.PUBLIC_URL}/unknown.PNG`;
+//   }, []);
+
+//   const getAvatarColor = useCallback((gender) => {
+//     if (!gender) return '#95a5a6';
+    
+//     const normalizedGender = gender.toUpperCase();
+//     if (normalizedGender === 'FEMALE' || normalizedGender === 'F') {
+//       return '#e91e63';
+//     } else if (normalizedGender === 'MALE' || normalizedGender === 'M') {
+//       return '#2196f3';
+//     }
+//     return '#95a5a6';
+//   }, []);
+
+//   // ==================== SEARCH HANDLING ====================
+//   const handleSearch = useCallback((query) => {
+//     setCurrentSearchQuery(query);
+//     const filtered = filterVisits(visitsCache, currentFilter, query, sortByDateAsc);
+//     setFilteredVisits(filtered);
+//   }, [visitsCache, currentFilter, sortByDateAsc, filterVisits]);
+
+//   // ==================== CARD LAYOUT ====================
+//   const toggleCardLayout = useCallback(() => {
+//     const newIndex = (cardsPerRowIndex + 1) % cardsPerRowPattern.length;
+//     setCardsPerRowIndex(newIndex);
+//     setIsGridLayout(true);
+//   }, [cardsPerRowIndex, cardsPerRowPattern]);
+
+//   // ==================== PAGINATION ====================
+//   const goToPage = useCallback((page) => {
+//     if (page >= 0 && page < totalPages && page !== currentPage) {
+//       setCurrentPage(page);
+//       loadDoctorVisits(currentFilter, false, page);
+//     }
+//   }, [totalPages, currentPage, currentFilter, loadDoctorVisits]);
+
+//   // ==================== NOTIFICATIONS ====================
+//   const checkNotifications = useCallback(() => {
+//     const count = visitsCache.filter(v => {
+//       const status = v.visitStatus || 'CREATED';
+//       return status === 'IN_PROGRESS' || status === 'CREATED';
+//     }).length;
+    
+//     setNotificationCount(count);
+    
+//     if (count > 0 && count > lastNotificationCount) {
+//       const icon = document.getElementById('notification-icon');
+//       if (icon) {
+//         icon.classList.add('notification-pulse');
+//         setTimeout(() => icon.classList.remove('notification-pulse'), 300);
+//       }
+//     }
+//     setLastNotificationCount(count);
+//   }, [visitsCache, lastNotificationCount]);
+
+//   // ==================== AUTO REFRESH ====================
+//   useEffect(() => {
+//     const startAutoRefresh = () => {
+//       if (autoRefreshInterval.current) clearInterval(autoRefreshInterval.current);
+//       autoRefreshInterval.current = setInterval(() => {
+//         if (mountedRef.current) {
+//           loadDoctorVisits(currentFilter, false);
+//           loadSummaryCards();
+//         }
+//       }, 30000);
+//     };
+    
+//     const startNotificationCheck = () => {
+//       if (notificationInterval.current) clearInterval(notificationInterval.current);
+//       notificationInterval.current = setInterval(() => {
+//         if (mountedRef.current) {
+//           checkNotifications();
+//         }
+//       }, 30000);
+//     };
+    
+//     startAutoRefresh();
+//     startNotificationCheck();
+    
+//     return () => {
+//       if (autoRefreshInterval.current) clearInterval(autoRefreshInterval.current);
+//       if (notificationInterval.current) clearInterval(notificationInterval.current);
+//       mountedRef.current = false;
+//     };
+//   }, [loadDoctorVisits, loadSummaryCards, checkNotifications, currentFilter]);
+
+//   // ==================== INITIALIZATION ====================
+// //   useEffect(() => {
+// //     const init = async () => {
+// //       await loadSummaryCards();
+// //       await loadDoctorVisits('TODAY', true);
+// //     };
+// //     init();
+// //   }, []);
+// useEffect(() => {
+//   let isMounted = true;
+  
+//   const initialize = async () => {
+//     try {
+//       // Load data in parallel
+//       await Promise.all([
+//         loadSummaryCards(),
+//         loadDoctorVisits('TODAY', true)
+//       ]);
+//     } catch (error) {
+//       console.error('Initialization error:', error);
+//       if (isMounted) {
+//         setError(t('doctor.visit.loadError') || 'Failed to load data');
+//       }
+//     }
+//   };
+  
+//   initialize();
+  
+//   return () => {
+//     isMounted = false;
+//   };
+// }, []);
+//   // ==================== SIDEBAR HANDLING ====================
+//   const handleSidebarMouseEnter = () => {
+//     if (!sidebarOpen) {
+//       setSidebarOpen(true);
+//     }
+//   };
+
+//   const handleSidebarMouseLeave = () => {
+//     if (sidebarOpen) {
+//       setSidebarOpen(false);
+//     }
+//   };
+
+//   // ==================== PASSWORD CHANGE HANDLING ====================
+//   const handlePasswordSubmit = (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+    
+//     setPasswordError('');
+
+//     // Validation
+//     if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+//       setPasswordError(t('doctor.password.fillAll'));
+//       return;
+//     }
+
+//     if (passwordData.newPassword !== passwordData.confirmPassword) {
+//       setPasswordError(t('doctor.password.notMatch'));
+//       return;
+//     }
+
+//     setChangingPassword(true);
+//     changePassword(passwordData.oldPassword, passwordData.newPassword)
+//       .then(() => {
+//         alert(t('doctor.password.success'));
+//         setShowPasswordModal(false);
+//         setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+//         setPasswordError('');
+//       })
+//       .catch((error) => {
+//         setPasswordError(t('doctor.password.error') + ': ' + error.message);
+//       })
+//       .finally(() => {
+//         setChangingPassword(false);
+//       });
+//   };
+
+//   const handlePasswordInputChange = (field, value) => {
+//     setPasswordData(prev => ({ ...prev, [field]: value }));
+//     setPasswordError('');
+//   };
+
+//   const closePasswordModal = () => {
+//     setShowPasswordModal(false);
+//     setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+//     setPasswordError('');
+//   };
+
+//   // ==================== RENDER COMPONENTS ====================
+  
+//   // Avatar Component
+//   const PatientAvatar = ({ gender, name, size = 60 }) => {
+//     const avatarPath = getAvatarPath(gender);
+//     const bgColor = getAvatarColor(gender);
+//     const initials = name ? name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '?';
+//     const [imageError, setImageError] = useState(false);
+
+//     return (
+//       <div 
+//         className="patient-avatar"
+//         style={{ 
+//           width: size, 
+//           height: size,
+//           borderRadius: '50%',
+//           overflow: 'hidden',
+//           flexShrink: 0,
+//           border: '2px solid #e9ecef',
+//           display: 'flex',
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//           backgroundColor: bgColor,
+//           color: 'white',
+//           fontSize: `${size * 0.35}px`,
+//           fontWeight: 'bold',
+//           position: 'relative'
+//         }}
+//       >
+//         {!imageError ? (
+//           <img
+//             src={avatarPath}
+//             alt={`${gender || 'Unknown'} avatar`}
+//             style={{
+//               width: '100%',
+//               height: '100%',
+//               objectFit: 'cover'
+//             }}
+//             onError={() => setImageError(true)}
+//           />
+//         ) : (
+//           <span>{initials}</span>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   // Sidebar Button Component
+//   const SidebarButton = ({ icon, text, color, onClick }) => (
+//     <button
+//       type="button"
+//       className="sidebar-button"
+//       style={{ '--hover-color': color }}
+//       onClick={onClick}
+//     >
+//       <span className="sidebar-icon">{icon}</span>
+//       <span className="sidebar-text">{text}</span>
+//     </button>
+//   );
+
+//   // Filter Button Component
+//   const FilterButton = ({ filterKey, label, count, active, onClick }) => (
+//     <button
+//       type="button"
+//       className={`filter-button ${active ? 'active' : 'inactive'}`}
+//       onClick={onClick}
+//     >
+//       {label} ({count})
+//     </button>
+//   );
+
+//   // Summary Card Component
+//   const SummaryCard = ({ title, value, color, delay }) => (
+//     <div 
+//       className="summary-card"
+//       style={{ backgroundColor: color, animationDelay: `${delay}ms` }}
+//     >
+//       <div className="summary-card-title">{title}</div>
+//       <div className="summary-card-value">{value}</div>
+//     </div>
+//   );
+
+//   // Performance Item Component
+//   const PerformanceItem = ({ icon, label, value }) => (
+//     <div className="performance-item">
+//       <span className="performance-icon">{icon}</span>
+//       <div className="performance-text">
+//         <div className="performance-label">{label}</div>
+//         <div className="performance-value">{value}</div>
+//       </div>
+//     </div>
+//   );
+
+//   // Status Badge Component
+//   const StatusBadge = ({ status }) => {
+//     const color = getStatusColor(status);
+//     return (
+//       <span className="status-badge" style={{ backgroundColor: color }}>
+//         {status}
+//       </span>
+//     );
+//   };
+
+//   // Visit Card Component
+//   const VisitCard = ({ visit, onOpen, onDetails }) => {
+//     const patient = visit.patient || {};
+//     const status = visit.visitStatus || 'CREATED';
+//     const bgColor = getStatusBgColor(status);
+//     const gender = patient.gender || 'Unknown';
+//     const fullName = buildFullName(patient);
+    
+//     return (
+//       <div className="visit-card" style={{ backgroundColor: bgColor }}>
+//         <div className="visit-card-header">
+//           <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+//           <span className="visit-header-spacer" />
+//           <StatusBadge status={status} />
+//         </div>
+//         <div className="visit-card-body">
+//           <PatientAvatar gender={gender} name={fullName} size={60} />
+//           <div className="visit-info">
+//             <div className="visit-name">👤 {fullName}</div>
+//             <div className="visit-details">
+//               📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+//             </div>
+//             <div className="visit-details">
+//               📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+//             </div>
+//           </div>
+//           <div className="visit-actions">
+//             <button 
+//               type="button"
+//               className="btn-open"
+//               onClick={() => onOpen(visit.id, status)}
+//             >
+//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+//             </button>
+//             <button 
+//               type="button"
+//               className="btn-details"
+//               onClick={() => onDetails(visit.id)}
+//             >
+//               {t('doctor.visit.details')}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   // ==================== VISIT POPUP COMPONENT ====================
+//   const VisitPopup = ({ visit, onClose, onOpen, onDetails }) => {
+//     if (!visit) return null;
+    
+//     const patient = visit.patient || {};
+//     const status = visit.visitStatus || 'CREATED';
+//     const bgColor = getStatusBgColor(status);
+//     const gender = patient.gender || 'Unknown';
+//     const fullName = buildFullName(patient);
+    
+//     return (
+//       <div className="visit-popup-overlay" onClick={onClose}>
+//         <div className="visit-popup-content" onClick={(e) => e.stopPropagation()}>
+//           <button type="button" className="visit-popup-close" onClick={onClose}>✖</button>
+//           <h2 className="visit-popup-title">📋 {t('doctor.visit.details')}</h2>
+          
+//           <div className="visit-popup-card" style={{ backgroundColor: bgColor }}>
+//             <div className="visit-card-header">
+//               <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+//               <span className="visit-header-spacer" />
+//               <StatusBadge status={status} />
+//             </div>
+//             <div className="visit-card-body">
+//               <PatientAvatar gender={gender} name={fullName} size={60} />
+//               <div className="visit-info">
+//                 <div className="visit-name">👤 {fullName}</div>
+//                 <div className="visit-details">
+//                   📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+//                 </div>
+//                 <div className="visit-details">
+//                   📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+//                 </div>
+//                 <div className="visit-details" style={{ marginTop: '8px' }}>
+//                   <strong>{t('doctor.details.medicalInfo')}:</strong><br />
+//                   🩺 {t('doctor.details.chiefComplaint')}: {visit.chiefComplaint || '-'}<br />
+//                   📜 {t('doctor.details.history')}: {visit.history || '-'}<br />
+//                   💊 {t('doctor.details.medications')}: {visit.medications || '-'}<br />
+//                   ⚠ {t('doctor.details.allergies')}: {visit.allergies || '-'}<br />
+//                   📝 {t('doctor.details.notes')}: {visit.doctorNotes || '-'}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+          
+//           <div className="visit-popup-actions">
+//             <button 
+//               type="button"
+//               className="btn-open"
+//               onClick={() => onOpen(visit.id, status)}
+//             >
+//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+//             </button>
+//             <button 
+//               type="button"
+//               className="btn-details"
+//               onClick={() => onDetails(visit.id)}
+//             >
+//               {t('doctor.visit.details')}
+//             </button>
+//             <button type="button" className="btn-close-popup" onClick={onClose}>
+//               {t('doctor.dialog.close')}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   // ==================== DETAILS MODAL ====================
+//   const DetailsModal = () => {
+//     if (!showDetailsModal || !detailsVisitData) return null;
+    
+//     const visit = detailsVisitData;
+//     const patient = visit.patient || {};
+    
+//     const formatDateTimeLocal = (iso) => {
+//       if (!iso) return '-';
+//       try {
+//         const date = new Date(iso);
+//         return date.toLocaleString(isRTL ? 'ar' : 'en-GB', {
+//           day: '2-digit',
+//           month: '2-digit',
+//           year: 'numeric',
+//           hour: '2-digit',
+//           minute: '2-digit'
+//         });
+//       } catch {
+//         return '-';
+//       }
+//     };
+
+//     const buildFullNameLocal = (p) => {
+//       if (!p) return '';
+//       return [p.firstName, p.middleName, p.lastName].filter(Boolean).join(' ').trim() || 'Unknown';
+//     };
+
+//     const getStatusColorLocal = (status) => {
+//       switch (status?.toUpperCase()) {
+//         case 'COMPLETED':
+//         case 'CLOSED':
+//           return '#27ae60';
+//         case 'IN_PROGRESS':
+//           return '#f39c12';
+//         case 'CANCELLED':
+//           return '#e74c3c';
+//         case 'CREATED':
+//         case 'NEW':
+//           return '#e74c3c';
+//         default:
+//           return '#3498db';
+//       }
+//     };
+
+//     const mapDurationTypeLocal = (type) => {
+//       if (!type) return '-';
+//       const map = {
+//         '1': 'Hour',
+//         '2': 'Day',
+//         '3': 'Week',
+//         '4': 'Month',
+//         '5': 'Year'
+//       };
+//       return map[type] || '-';
+//     };
+
+//     const drugs = detailsVisitDrugs || [];
+//     const procedures = detailsVisitProcedures || [];
+
+//     return (
+//       <div className="modal-overlay" onClick={() => setShowDetailsModal(false)}>
+//         <div className="modal-content full-details" onClick={(e) => e.stopPropagation()} ref={detailsModalRef}>
+//           <button type="button" className="modal-close" onClick={() => setShowDetailsModal(false)}>✖</button>
+          
+//           {loadingDetails ? (
+//             <div className="loading-container">
+//               <div className="loading-spinner-large"></div>
+//               <p>{t('doctor.loading')}</p>
+//             </div>
+//           ) : (
+//             <>
+//               <h2>📋 {t('doctor.visit.details')} #{visit.id}</h2>
+              
+//               <div className="pdf-buttons-container">
+//                 <button type="button" className="btn-pdf full" onClick={exportFullVisitPdf} disabled={generatingPdf}>
+//                   📄 {generatingPdf ? t('doctor.pdf.generating') : t('doctor.pdf.fullReport')}
+//                 </button>
+//                 <button type="button" className="btn-pdf patient" onClick={exportPatientPdf} disabled={generatingPdf}>
+//                   👤 {t('doctor.pdf.patient')}
+//                 </button>
+//                 <button type="button" className="btn-pdf medical" onClick={exportMedicalPdf} disabled={generatingPdf}>
+//                   🏥 {t('doctor.pdf.medical')}
+//                 </button>
+//                 <button type="button" className="btn-pdf drugs" onClick={exportDrugsPdf} disabled={generatingPdf}>
+//                   💊 {t('doctor.pdf.drugs')}
+//                 </button>
+//                 <button type="button" className="btn-pdf procedures" onClick={exportProceduresPdf} disabled={generatingPdf}>
+//                   🔬 {t('doctor.pdf.procedures')}
+//                 </button>
+//                 <button type="button" className="btn-pdf combined" onClick={exportPatientAndDrugsPdf} disabled={generatingPdf}>
+//                   👤+💊 {t('doctor.pdf.patientDrugs')}
+//                 </button>
+//                 <button type="button" className="btn-pdf combined" onClick={exportPatientAndProceduresPdf} disabled={generatingPdf}>
+//                   👤+🔬 {t('doctor.pdf.patientProcedures')}
+//                 </button>
+//               </div>
+
+//               <div className="details-scrollable">
+//                 <div className="details-section basic-info">
+//                   <h3>👤 {t('doctor.details.patientInfo')}</h3>
+//                   <div className="info-grid">
+//                     <div className="info-card">
+//                       <span className="info-icon">🆔</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.visit.id')}</span>
+//                         <span className="info-value">{visit.id}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">👤</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.details.patient')}</span>
+//                         <span className="info-value">{buildFullNameLocal(patient)}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">📞</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.visit.phone')}</span>
+//                         <span className="info-value">{patient.phone || '-'}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">⚧</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.visit.gender')}</span>
+//                         <span className="info-value">{patient.gender || '-'}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">📅</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.visit.visitDate')}</span>
+//                         <span className="info-value">{formatDateTimeLocal(visit.visitDate)}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">📌</span>
+//                       <div className="info-content">
+//                         <span className="info-label">{t('doctor.visit.status')}</span>
+//                         <span className="status-badge" style={{ 
+//                           backgroundColor: getStatusColorLocal(visit.visitStatus),
+//                           color: 'white',
+//                           padding: '4px 15px',
+//                           borderRadius: '12px',
+//                           fontSize: '12px',
+//                           fontWeight: 'bold',
+//                           display: 'inline-block'
+//                         }}>
+//                           {visit.visitStatus || 'N/A'}
+//                         </span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">💳</span>
+//                       <div className="info-content">
+//                         <span className="info-label">Payment</span>
+//                         <span className="info-value">{visit.paid ? '✅ Paid' : '❌ Unpaid'}</span>
+//                       </div>
+//                     </div>
+//                     <div className="info-card">
+//                       <span className="info-icon">💰</span>
+//                       <div className="info-content">
+//                         <span className="info-label">Amount</span>
+//                         <span className="info-value">{visit.originalAmount || 0} {visit.currency || 'JOD'}</span>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="details-section medical-info">
+//                   <h3>🏥 {t('doctor.details.medicalInfo')}</h3>
+//                   <div className="medical-grid">
+//                     <div className="medical-item">
+//                       <div className="medical-header" style={{ color: '#E74C3C' }}>
+//                         🩺 {t('doctor.details.chiefComplaint')}
+//                       </div>
+//                       <div className="medical-content">{visit.chiefComplaint || '-'}</div>
+//                     </div>
+//                     <div className="medical-item">
+//                       <div className="medical-header" style={{ color: '#3498DB' }}>
+//                         📜 {t('doctor.details.history')}
+//                       </div>
+//                       <div className="medical-content">{visit.history || '-'}</div>
+//                     </div>
+//                     <div className="medical-item">
+//                       <div className="medical-header" style={{ color: '#2ECC71' }}>
+//                         💊 {t('doctor.details.medications')}
+//                       </div>
+//                       <div className="medical-content">{visit.medications || '-'}</div>
+//                     </div>
+//                     <div className="medical-item">
+//                       <div className="medical-header" style={{ color: '#F39C12' }}>
+//                         ⚠ {t('doctor.details.allergies')}
+//                       </div>
+//                       <div className="medical-content">{visit.allergies || '-'}</div>
+//                     </div>
+//                     <div className="medical-item">
+//                       <div className="medical-header" style={{ color: '#9B59B6' }}>
+//                         📝 {t('doctor.details.notes')}
+//                       </div>
+//                       <div className="medical-content">{visit.doctorNotes || '-'}</div>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="details-section drugs-info">
+//                   <h3>💊 {t('doctor.details.prescribedDrugs')}</h3>
+//                   {!drugs || drugs.length === 0 ? (
+//                     <div className="empty-state small">📭 {t('doctor.details.noDrugs')}</div>
+//                   ) : (
+//                     <div className="drugs-grid">
+//                       {drugs.map((item, index) => {
+//                         const drug = item.drug || {};
+//                         return (
+//                           <div key={index} className="drug-card">
+//                             <div className="drug-header">
+//                               <span className="drug-name">💊 {drug.tradeName || 'Unknown'}</span>
+//                               <span className="drug-form-badge">{drug.dosageForm || '-'}</span>
+//                             </div>
+//                             <div className="drug-details">
+//                               <div className="drug-detail-row">
+//                                 <span className="drug-label">💪 Strength:</span>
+//                                 <span className="drug-value">
+//                                   {drug.strength || '-'} {drug.unitType || ''}
+//                                 </span>
+//                               </div>
+//                               <div className="drug-detail-row">
+//                                 <span className="drug-label">💊 Dose:</span>
+//                                 <span className="drug-value">{item.dose || '-'}</span>
+//                               </div>
+//                               <div className="drug-detail-row">
+//                                 <span className="drug-label">⏰ Frequency:</span>
+//                                 <span className="drug-value">{item.frequency || '-'}</span>
+//                               </div>
+//                               <div className="drug-detail-row">
+//                                 <span className="drug-label">📅 Duration:</span>
+//                                 <span className="drug-value">
+//                                   {item.duration || '-'} {mapDurationTypeLocal(item.durationType)}
+//                                 </span>
+//                               </div>
+//                               <div className="drug-detail-row">
+//                                 <span className="drug-label">📦 Package:</span>
+//                                 <span className="drug-value">
+//                                   {drug.packageSize || '-'} - {drug.packageType || '-'}
+//                                 </span>
+//                               </div>
+//                             </div>
+//                             <div className="drug-instructions">
+//                               📝 {item.instructions || 'No instructions'}
+//                             </div>
+//                           </div>
+//                         );
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+
+//                 <div className="details-section procedures-info">
+//                   <h3>🔬 {t('doctor.details.procedures')}</h3>
+//                   {!procedures || procedures.length === 0 ? (
+//                     <div className="empty-state small">📭 {t('doctor.details.noProcedures')}</div>
+//                   ) : (
+//                     <div className="procedures-list">
+//                       {procedures.map((proc, index) => {
+//                         let icon = '🧪';
+//                         let category = 'General';
+//                         let color = '#3498DB';
+                        
+//                         const upperProc = proc.toUpperCase();
+//                         if (upperProc.includes('RADIOLOGY') || upperProc.includes('MRI') || upperProc.includes('CT') || upperProc.includes('X-RAY') || upperProc.includes('ULTRASOUND')) {
+//                           icon = '📡';
+//                           category = 'Radiology';
+//                           color = '#E74C3C';
+//                         } else if (upperProc.includes('LAB') || upperProc.includes('PCR') || upperProc.includes('BLOOD') || upperProc.includes('URINE')) {
+//                           icon = '🧫';
+//                           category = 'Laboratory';
+//                           color = '#2ECC71';
+//                         } else if (upperProc.includes('SURGERY') || upperProc.includes('OPR') || upperProc.includes('OPERATION')) {
+//                           icon = '🩺';
+//                           category = 'Surgical';
+//                           color = '#F39C12';
+//                         } else if (upperProc.includes('ELBOW') || upperProc.includes('KNEE') || upperProc.includes('SHOULDER')) {
+//                           icon = '🦴';
+//                           category = 'Orthopedic';
+//                           color = '#8E44AD';
+//                         }
+                        
+//                         return (
+//                           <div key={index} className="procedure-item" style={{ borderLeftColor: color }}>
+//                             <span className="procedure-icon">{icon}</span>
+//                             <div className="procedure-content">
+//                               <span className="procedure-category" style={{ color: color }}>
+//                                 {category}
+//                               </span>
+//                               <span className="procedure-name">{proc}</span>
+//                             </div>
+//                           </div>
+//                         );
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   // ==================== PASSWORD CHANGE MODAL ====================
+//   const PasswordChangeModal = () => {
+//     if (!showPasswordModal) return null;
+
+//     return (
+//       <div className="modal-overlay" onClick={(e) => {
+//         if (e.target === e.currentTarget) {
+//           closePasswordModal();
+//         }
+//       }}>
+//         <div className="modal-content password-modal" onClick={(e) => e.stopPropagation()}>
+//           <button 
+//             type="button" 
+//             className="modal-close" 
+//             onClick={closePasswordModal}
+//           >
+//             ✖
+//           </button>
+          
+//           <h2>🔒 {t('doctor.password.title')}</h2>
+          
+//           <form onSubmit={handlePasswordSubmit} className="password-form" noValidate>
+//             <div className="form-group">
+//               <label htmlFor="oldPassword">{t('doctor.password.old')}</label>
+//               <input
+//                 id="oldPassword"
+//                 type="password"
+//                 className="form-input"
+//                 value={passwordData.oldPassword}
+//                 onChange={(e) => handlePasswordInputChange('oldPassword', e.target.value)}
+//                 placeholder={t('doctor.password.old')}
+//                 autoFocus
+//                 autoComplete="off"
+//               />
+//             </div>
+            
+//             <div className="form-group">
+//               <label htmlFor="newPassword">{t('doctor.password.new')}</label>
+//               <input
+//                 id="newPassword"
+//                 type="password"
+//                 className="form-input"
+//                 value={passwordData.newPassword}
+//                 onChange={(e) => handlePasswordInputChange('newPassword', e.target.value)}
+//                 placeholder={t('doctor.password.new')}
+//                 autoComplete="off"
+//               />
+//             </div>
+            
+//             <div className="form-group">
+//               <label htmlFor="confirmPassword">{t('doctor.password.confirm')}</label>
+//               <input
+//                 id="confirmPassword"
+//                 type="password"
+//                 className="form-input"
+//                 value={passwordData.confirmPassword}
+//                 onChange={(e) => handlePasswordInputChange('confirmPassword', e.target.value)}
+//                 placeholder={t('doctor.password.confirm')}
+//                 autoComplete="off"
+//               />
+//             </div>
+            
+//             {passwordError && (
+//               <div className="error-message small">{passwordError}</div>
+//             )}
+            
+//             <button 
+//               type="submit" 
+//               className="btn-save-password"
+//               disabled={changingPassword}
+//             >
+//               {changingPassword ? '⏳ ' + t('doctor.loading') : '💾 ' + t('doctor.password.save')}
+//             </button>
+//           </form>
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   // Pagination Component
+//   const Pagination = () => {
+//     const visiblePages = 7;
+//     const halfVisible = Math.floor(visiblePages / 2);
+//     let startPage = Math.max(0, currentPage - halfVisible);
+//     let endPage = Math.min(totalPages - 1, startPage + visiblePages - 1);
+    
+//     if (endPage - startPage < visiblePages - 1) {
+//       startPage = Math.max(0, endPage - visiblePages + 1);
+//     }
+    
+//     const pageNumbers = [];
+//     for (let i = startPage; i <= endPage; i++) {
+//       pageNumbers.push(i);
+//     }
+    
+//     return (
+//       <div className="pagination">
+//         <button 
+//           type="button"
+//           className="pagination-prev"
+//           disabled={currentPage === 0}
+//           onClick={() => goToPage(currentPage - 1)}
+//         >
+//           ◀
+//         </button>
+        
+//         {startPage > 0 && (
+//           <>
+//             <button type="button" className="pagination-page" onClick={() => goToPage(0)}>1</button>
+//             {startPage > 1 && <span className="pagination-ellipsis">...</span>}
+//           </>
+//         )}
+        
+//         {pageNumbers.map(num => (
+//           <button
+//             type="button"
+//             key={num}
+//             className={`pagination-page ${num === currentPage ? 'active' : ''}`}
+//             onClick={() => goToPage(num)}
+//           >
+//             {num + 1}
+//           </button>
+//         ))}
+        
+//         {endPage < totalPages - 1 && (
+//           <>
+//             {endPage < totalPages - 2 && <span className="pagination-ellipsis">...</span>}
+//             <button type="button" className="pagination-page" onClick={() => goToPage(totalPages - 1)}>
+//               {totalPages}
+//             </button>
+//           </>
+//         )}
+        
+//         <button 
+//           type="button"
+//           className="pagination-next"
+//           disabled={currentPage >= totalPages - 1}
+//           onClick={() => goToPage(currentPage + 1)}
+//         >
+//           ▶
+//         </button>
+        
+//         <span className="pagination-info">
+//           {t('doctor.filter.page')} {currentPage + 1} {t('doctor.filter.of')} {totalPages}
+//         </span>
+//       </div>
+//     );
+//   };
+
+//   // ==================== RENDER ====================
+//   if (loading && isInitialLoad) {
+//     return (
+//       <div className={`doctor-home ${isRTL ? 'rtl' : ''}`}>
+//         <div className="loading-spinner">{t('doctor.loading')}</div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className={`doctor-home ${isRTL ? 'rtl' : ''}`}>
+//         <div className="error-message">
+//           <h2>⚠️ {t('doctor.error')}</h2>
+//           <p>{error}</p>
+//           <button type="button" onClick={() => window.location.reload()}>{t('doctor.retry')}</button>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className={`doctor-home ${isRTL ? 'rtl' : ''}`}>
+//       {/* Sidebar */}
+//       <aside 
+//         className={`sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}
+//         onMouseEnter={handleSidebarMouseEnter}
+//         onMouseLeave={handleSidebarMouseLeave}
+//       >
+//         <div className="sidebar-header">
+//           <span className="menu-icon">☰</span>
+//           {sidebarOpen && <span className="menu-title">{t('doctor.sidebar.menu')}</span>}
+//         </div>
+        
+//         <nav className="sidebar-nav">
+//           <SidebarButton 
+//             icon="🔍" 
+//             text={t('doctor.sidebar.searchPatient')}
+//             color="#3498db"
+//             onClick={openSearchPatient}
+//           />
+//         <SidebarButton 
+//   icon="📊" 
+//   text={t('doctor.sidebar.reports')}
+//   color="#2ecc71"
+//   onClick={openReportsScreen}
+// />
+//           <SidebarButton 
+//             icon="🔒" 
+//             text={t('doctor.sidebar.changePassword')}
+//             color="#f39c12"
+//             onClick={() => setShowPasswordModal(true)}
+//           />
+//           <SidebarButton 
+//             icon="🚪" 
+//             text={t('doctor.sidebar.logout')}
+//             color="#e74c3c"
+//             onClick={() => {
+//               if (window.confirm(t('doctor.sidebar.logoutConfirm'))) {
+//                 window.location.href = '/login';
+//               }
+//             }}
+//           />
+//         </nav>
+//       </aside>
+
+//       {/* Main Content */}
+//       <main className="main-content">
+//         {/* Welcome Section */}
+//         <div className="welcome-section">
+//           <div className="welcome-text">
+//             <h1 className="welcome-greeting">
+//               {t('doctor.home.welcome').replace('{0}', username)}
+//             </h1>
+//           </div>
+          
+//           <div className="welcome-actions">
+
+            
+//             <div className="find-visit">
+//                  {/* Add this button */}
+//     <button 
+//         onClick={() => setShowGuide(true)}
+//         style={{
+//             background: '#9f7aea',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '8px',
+//             padding: '8px 16px',
+//             cursor: 'pointer',
+//             fontWeight: 'bold'
+//         }}
+//     >
+//         ❓ Guide
+//     </button>
+//               <input
+//                 type="text"
+//                 className="find-visit-input"
+//                 placeholder={t('doctor.findVisit.prompt')}
+//                 onKeyPress={(e) => {
+//                   if (e.key === 'Enter') {
+//                     const value = e.target.value.trim();
+//                     if (value) findVisitById(value);
+//                   }
+//                 }}
+//               />
+//               <button 
+//                 type="button"
+//                 className="find-visit-btn"
+//                 onClick={() => {
+//                   const input = document.querySelector('.find-visit-input');
+//                   if (input && input.value.trim()) {
+//                     findVisitById(input.value.trim());
+//                   }
+//                 }}
+//               >
+//                 🔍
+//               </button>
+//             </div>
+            
+//             <span 
+//               id="notification-icon"
+//               className={`notification-icon ${notificationCount > 0 ? 'has-notifications' : ''}`}
+//               onClick={() => {
+//                 const openVisits = visitsCache.filter(v => v.visitStatus !== 'CLOSED');
+//                 if (openVisits.length === 0) {
+//                   alert(t('doctor.notifications.noOpen'));
+//                   return;
+//                 }
+//                 const message = openVisits.map(v => 
+//                   `${t('doctor.notifications.visitId')}: ${v.id}, ${t('doctor.notifications.patient')}: ${buildFullName(v.patient)}, ${t('doctor.notifications.status')}: ${v.visitStatus}`
+//                 ).join('\n');
+//                 alert(t('doctor.notifications.openVisits') + '\n\n' + message);
+//               }}
+//             >
+//               🔔 {notificationCount}
+//             </span>
+//           </div>
+//         </div>
+
+//         {/* Summary Cards */}
+//         <div className="summary-cards">
+//           <SummaryCard 
+//             title={t('doctor.dashboard.todayVisits')} 
+//             value={summaryStats.today} 
+//             color="#1E90FF"
+//             delay={100}
+//           />
+//           <SummaryCard 
+//             title={t('doctor.dashboard.totalVisits')} 
+//             value={summaryStats.total} 
+//             color="#20B2AA"
+//             delay={200}
+//           />
+//           <SummaryCard 
+//             title={t('doctor.dashboard.newVisits')} 
+//             value={summaryStats.open} 
+//             color="#FF9800"
+//             delay={300}
+//           />
+//           <SummaryCard 
+//             title={t('doctor.dashboard.closedVisits')} 
+//             value={summaryStats.closed} 
+//             color="#4CAF50"
+//             delay={400}
+//           />
+//         </div>
+
+//         {/* Performance Widget */}
+//         <details className="performance-widget">
+//           <summary>{t('doctor.performance.title')}</summary>
+//           <div className="performance-grid">
+//             <PerformanceItem 
+//               icon="👤" 
+//               label={t('doctor.performance.patientsSeen')} 
+//               value={performanceStats.patientsSeen}
+//             />
+//             <PerformanceItem 
+//               icon="📋" 
+//               label={t('doctor.performance.openVisits')} 
+//               value={performanceStats.openVisits}
+//             />
+//             <PerformanceItem 
+//               icon="✅" 
+//               label={t('doctor.performance.completedToday')} 
+//               value={performanceStats.completedToday}
+//             />
+//             <PerformanceItem 
+//               icon="📊" 
+//               label={t('doctor.performance.completionRate')} 
+//               value={`${performanceStats.completionRate}%`}
+//             />
+//           </div>
+//         </details>
+
+//         {/* Filters */}
+//         <div className="filters-bar">
+//           <div className="filter-buttons">
+//             <FilterButton 
+//               filterKey="TODAY"
+//               label={t('doctor.filter.today')}
+//               count={filterCounts.TODAY}
+//               active={currentFilter === 'TODAY'}
+//               onClick={() => loadDoctorVisits('TODAY', true)}
+//             />
+//             <FilterButton 
+//               filterKey="ALL"
+//               label={t('doctor.filter.all')}
+//               count={filterCounts.ALL}
+//               active={currentFilter === 'ALL'}
+//               onClick={() => loadDoctorVisits('ALL', true)}
+//             />
+//             <FilterButton 
+//               filterKey="NEW"
+//               label={t('doctor.filter.new')}
+//               count={filterCounts.NEW}
+//               active={currentFilter === 'NEW'}
+//               onClick={() => loadDoctorVisits('NEW', true)}
+//             />
+//             <FilterButton 
+//               filterKey="IN_PROGRESS"
+//               label={t('doctor.filter.inProgress')}
+//               count={filterCounts.IN_PROGRESS}
+//               active={currentFilter === 'IN_PROGRESS'}
+//               onClick={() => loadDoctorVisits('IN_PROGRESS', true)}
+//             />
+//             <FilterButton 
+//               filterKey="CLOSED"
+//               label={t('doctor.filter.closed')}
+//               count={filterCounts.CLOSED}
+//               active={currentFilter === 'CLOSED'}
+//               onClick={() => loadDoctorVisits('CLOSED', true)}
+//             />
+//           </div>
+          
+//           <div className="filter-actions">
+//             <button 
+//               type="button"
+//               className="filter-action-btn refresh"
+//               onClick={() => {
+//                 loadDoctorVisits(currentFilter, false);
+//                 loadSummaryCards();
+//               }}
+//             >
+//               🔄 {t('doctor.filter.refresh')}
+//             </button>
+//             <input
+//               type="text"
+//               className="search-input"
+//               placeholder={t('doctor.filter.searchPrompt')}
+//               value={currentSearchQuery}
+//               onChange={(e) => handleSearch(e.target.value)}
+//             />
+//             <button 
+//               type="button"
+//               className="filter-action-btn layout"
+//               onClick={toggleCardLayout}
+//             >
+//               ⊞ {t(`doctor.filter.cardView${cardsPerRowPattern[cardsPerRowIndex]}`)}
+//             </button>
+//             <button 
+//               type="button"
+//               className="filter-action-btn sort"
+//               onClick={() => {
+//                 const newSort = !sortByDateAsc;
+//                 setSortByDateAsc(newSort);
+//                 const filtered = filterVisits(visitsCache, currentFilter, currentSearchQuery, newSort);
+//                 setFilteredVisits(filtered);
+//               }}
+//             >
+//               ↕ {sortByDateAsc ? t('doctor.filter.sortAsc') : t('doctor.filter.sortDesc')}
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Card Container */}
+//         <div className="card-scroll-container" ref={scrollPaneRef}>
+//           <div className="card-container">
+//             {filteredVisits.length === 0 ? (
+//               <div className="empty-state">
+//                 📭 {t('doctor.filter.noResults')}
+//               </div>
+//             ) : isGridLayout ? (
+//               <div 
+//                 className="card-grid"
+//                 style={{ 
+//                   gridTemplateColumns: `repeat(${cardsPerRowPattern[cardsPerRowIndex]}, 1fr)`
+//                 }}
+//               >
+//                 {filteredVisits.map((visit) => (
+//                   <VisitCard
+//                     key={visit.id}
+//                     visit={visit}
+//                     onOpen={(id, status) => {
+//                       if (status === 'CLOSED') {
+//                         reopenVisit(id);
+//                       } else {
+//                         openVisitScreen(id, status);
+//                       }
+//                     }}
+//                     onDetails={showVisitDetails}
+//                   />
+//                 ))}
+//               </div>
+//             ) : (
+//               <div className="card-list">
+//                 {filteredVisits.map((visit) => (
+//                   <VisitCard
+//                     key={visit.id}
+//                     visit={visit}
+//                     onOpen={(id, status) => {
+//                       if (status === 'CLOSED') {
+//                         reopenVisit(id);
+//                       } else {
+//                         openVisitScreen(id, status);
+//                       }
+//                     }}
+//                     onDetails={showVisitDetails}
+//                   />
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Pagination */}
+//         {totalPages > 1 && <Pagination />}
+//       </main>
+
+//       {/* Visit Popup */}
+//       {showVisitPopup && popupVisit && (
+//         <VisitPopup
+//           visit={popupVisit}
+//           onClose={() => {
+//             setShowVisitPopup(false);
+//             setPopupVisit(null);
+//           }}
+//           onOpen={(id, status) => {
+//             if (status === 'CLOSED') {
+//               reopenVisit(id);
+//             } else {
+//               openVisitScreen(id, status);
+//             }
+//           }}
+//           onDetails={(id) => {
+//             setShowVisitPopup(false);
+//             showVisitDetails(id);
+//           }}
+//         />
+//       )}
+
+//       {/* Visit Screen Modal */}
+//       {showVisitScreen && selectedVisitId && (
+//         <div className="visit-screen-modal-overlay" onClick={closeVisitScreen}>
+//           <div className="visit-screen-modal-content" onClick={(e) => e.stopPropagation()}>
+//             <button 
+//               type="button"
+//               className="visit-screen-close-btn"
+//               onClick={closeVisitScreen}
+//             >
+//               ✖
+//             </button>
+//             <DoctorVisitScreen
+//               doctorId={doctorId}
+//               visitId={selectedVisitId}
+//               initialStatus={selectedVisitStatus}
+//               username={username}
+//               onClose={closeVisitScreen}
+//               language={locale}
+//             />
+//           </div>
+//         </div>
+//       )}
+//       {/* Search Patient Modal */}
+//       {showSearchPatient && (
+//         <div className="visit-screen-modal-overlay" onClick={closeSearchPatient}>
+//           <div className="visit-screen-modal-content" onClick={(e) => e.stopPropagation()}>
+//             <button 
+//               type="button"
+//               className="visit-screen-close-btn"
+//               onClick={closeSearchPatient}
+//             >
+//               ✖
+//             </button>
+//             <DoctorSearchPatientScreen
+//               loggedUser={username}
+//               language={locale}
+//               onClose={closeSearchPatient}
+//             />
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Reports Screen Modal */}
+//       {showReportsScreen && (
+//         <div className="visit-screen-modal-overlay" onClick={closeReportsScreen}>
+//           <div className="visit-screen-modal-content reports-modal-content" onClick={(e) => e.stopPropagation()}>
+//             <button 
+//               type="button"
+//               className="visit-screen-close-btn"
+//               onClick={closeReportsScreen}
+//             >
+//               ✖
+//             </button>
+//             <ReportsScreen
+//               loggedUser={username}
+//               lang={locale}
+//               onClose={closeReportsScreen}
+//             />
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Details Modal */}
+//       <DetailsModal />
+
+//       {/* Password Change Modal */}
+//       <PasswordChangeModal />
+//       {/* ==================== GUIDE MODAL ==================== */}
+//       {showGuide && (
+//         <DoctorGuide
+//             isOpen={showGuide}
+//             onClose={() => setShowGuide(false)}
+//             locale={locale}
+//         />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default DoctorHomePage;   15072026  7:30 pm 
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BASE_URL } from '../../utils/api';
@@ -22972,8 +25736,12 @@ const EN_BUNDLE = {
   'doctor.pdf.fullReport': 'Full Report',
   'doctor.pdf.patientDrugs': 'Patient + Drugs',
   'doctor.pdf.patientProcedures': 'Patient + Procedures',
-    'doctor.reports.title': 'Reports Dashboard',
+  'doctor.reports.title': 'Reports Dashboard',
   'doctor.reports.close': 'Close Reports',
+  'doctor.reopen.confirm': 'Are you sure you want to reopen visit #{0}?',
+  'doctor.reopen.warning': 'This will change the visit status from CLOSED to IN_PROGRESS.',
+  'doctor.reopen.yes': 'Yes, Reopen',
+  'doctor.reopen.cancel': 'Cancel',
 };
 
 // Arabic translations
@@ -23087,6 +25855,10 @@ const AR_BUNDLE = {
   'doctor.pdf.patientProcedures': 'المريض + الإجراءات',
   'doctor.reports.title': 'لوحة التقارير',
   'doctor.reports.close': 'إغلاق التقارير',
+  'doctor.reopen.confirm': 'هل أنت متأكد من إعادة فتح الزيارة رقم #{0}؟',
+  'doctor.reopen.warning': 'سيؤدي هذا إلى تغيير حالة الزيارة من مغلقة إلى قيد التنفيذ.',
+  'doctor.reopen.yes': 'نعم، إعادة فتح',
+  'doctor.reopen.cancel': 'إلغاء',
 };
 
 const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
@@ -23122,9 +25894,13 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [locale, setLocale] = useState(getLanguage());
   
+  // ==================== REOPEN CONFIRMATION STATE ====================
+  const [showReopenConfirm, setShowReopenConfirm] = useState(false);
+  const [visitToReopen, setVisitToReopen] = useState(null);
 
-    // ==================== GUIDE STATE ====================
+  // ==================== GUIDE STATE ====================
   const [showGuide, setShowGuide] = useState(false);
+  
   // ==================== SEARCH PATIENT SCREEN STATE ====================
   const [showSearchPatient, setShowSearchPatient] = useState(false);
   
@@ -23145,6 +25921,7 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   });
   const [passwordError, setPasswordError] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
+  
   // ==================== REPORTS SCREEN STATE ====================
   const [showReportsScreen, setShowReportsScreen] = useState(false);
 
@@ -23223,9 +26000,11 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
         throw new Error(errorMessage);
       }
       
+      // Check if response has content
       const text = await response.text();
       if (!text || text.trim() === '') {
-        throw new Error('Empty response');
+        // Return null for empty responses (successful but no data)
+        return null;
       }
       
       try {
@@ -24184,19 +26963,39 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
     generatePDF(`${t('doctor.pdf.patientInfo')} & ${t('doctor.pdf.proceduresReport')}`, content, `Visit_${visit.id}_Patient_Procedures`);
   }, [detailsVisitData, detailsVisitProcedures, buildFullName, formatDateTime, generatePDF, t]);
 
+  // ==================== REOPEN VISIT ====================
   const reopenVisit = useCallback(async (visitId) => {
+    // Show confirmation dialog first
+    setVisitToReopen(visitId);
+    setShowReopenConfirm(true);
+  }, []);
+
+  // Actual reopen function called after confirmation
+  const confirmReopenVisit = useCallback(async () => {
+    if (!visitToReopen) return;
+    
     try {
-      const endpoint = `/api/visits/${visitId}/reopen`;
-      await apiFetch(endpoint, { method: 'PUT' });
+      const endpoint = `/api/visits/${visitToReopen}/reopen`;
+      const response = await apiFetch(endpoint, { method: 'PUT' });
+      
+      // If response is null (empty), it's still a success
+      if (response === null) {
+        console.log('Visit reopened successfully (empty response)');
+      }
+      
       alert(t('doctor.visit.reopened'));
       loadDoctorVisits(currentFilter, false);
       loadSummaryCards();
       setShowVisitPopup(false);
       setPopupVisit(null);
+      setShowReopenConfirm(false);
+      setVisitToReopen(null);
     } catch (error) {
       alert(t('doctor.visit.reopenError') + ': ' + error.message);
+      setShowReopenConfirm(false);
+      setVisitToReopen(null);
     }
-  }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch]);
+  }, [t, currentFilter, loadDoctorVisits, loadSummaryCards, apiFetch, visitToReopen]);
 
   const changePassword = useCallback(async (oldPassword, newPassword) => {
     const endpoint = '/api/doctors/change-password';
@@ -24246,6 +27045,7 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   const closeReportsScreen = useCallback(() => {
     setShowReportsScreen(false);
   }, []);
+  
   // ==================== AVATAR HANDLING ====================
   const getAvatarPath = useCallback((gender) => {
     if (!gender) return `${process.env.PUBLIC_URL}/unknown.PNG`;
@@ -24344,37 +27144,31 @@ const DoctorHomePage = ({ doctorId, username, language: propLanguage }) => {
   }, [loadDoctorVisits, loadSummaryCards, checkNotifications, currentFilter]);
 
   // ==================== INITIALIZATION ====================
-//   useEffect(() => {
-//     const init = async () => {
-//       await loadSummaryCards();
-//       await loadDoctorVisits('TODAY', true);
-//     };
-//     init();
-//   }, []);
-useEffect(() => {
-  let isMounted = true;
-  
-  const initialize = async () => {
-    try {
-      // Load data in parallel
-      await Promise.all([
-        loadSummaryCards(),
-        loadDoctorVisits('TODAY', true)
-      ]);
-    } catch (error) {
-      console.error('Initialization error:', error);
-      if (isMounted) {
-        setError(t('doctor.visit.loadError') || 'Failed to load data');
+  useEffect(() => {
+    let isMounted = true;
+    
+    const initialize = async () => {
+      try {
+        // Load data in parallel
+        await Promise.all([
+          loadSummaryCards(),
+          loadDoctorVisits('TODAY', true)
+        ]);
+      } catch (error) {
+        console.error('Initialization error:', error);
+        if (isMounted) {
+          setError(t('doctor.visit.loadError') || 'Failed to load data');
+        }
       }
-    }
-  };
+    };
+    
+    initialize();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   
-  initialize();
-  
-  return () => {
-    isMounted = false;
-  };
-}, []);
   // ==================== SIDEBAR HANDLING ====================
   const handleSidebarMouseEnter = () => {
     if (!sidebarOpen) {
@@ -24537,103 +27331,52 @@ useEffect(() => {
   };
 
   // Visit Card Component
-//   const VisitCard = ({ visit, onOpen, onDetails }) => {
-//     const patient = visit.patient || {};
-//     const status = visit.visitStatus || 'CREATED';
-//     const bgColor = getStatusBgColor(status);
-//     const gender = patient.gender || 'Unknown';
-//     const fullName = buildFullName(patient);
+  const VisitCard = ({ visit, onOpen, onDetails }) => {
+    const patient = visit.patient || {};
+    const status = visit.visitStatus || 'CREATED';
+    const bgColor = getStatusBgColor(status);
+    const gender = patient.gender || 'Unknown';
+    const fullName = buildFullName(patient);
     
-//     return (
-//       <div className="visit-card" style={{ backgroundColor: bgColor }}>
-//         <div className="visit-card-header">
-//           <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-//           <span className="visit-header-spacer" />
-//           <StatusBadge status={status} />
-//         </div>
-//         <div className="visit-card-body">
-//           <PatientAvatar gender={gender} name={fullName} size={60} />
-//           <div className="visit-info">
-//             <div className="visit-name">👤 {fullName}</div>
-//             <div className="visit-details">
-//               📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
-//             </div>
-//             <div className="visit-details">
-//               📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
-//             </div>
-//           </div>
-//           <div className="visit-actions">
-//             <button 
-//               type="button"
-//               className="btn-open"
-//               onClick={() => onOpen(visit.id, status)}
-//             >
-//               {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-//             </button>
-//             <button 
-//               type="button"
-//               className="btn-details"
-//               onClick={() => onDetails(visit.id)}
-//             >
-//               {t('doctor.visit.details')}
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   };
-// Visit Card Component
-const VisitCard = ({ visit, onOpen, onDetails }) => {
-  const patient = visit.patient || {};
-  const status = visit.visitStatus || 'CREATED';
-  const bgColor = getStatusBgColor(status);
-  const gender = patient.gender || 'Unknown';
-  const fullName = buildFullName(patient);
-  
-  return (
-    <div 
-      className="visit-card" 
-      style={{ 
-        backgroundColor: bgColor,
-        overflow: 'visible'  // Add this
-      }}
-    >
-      <div className="visit-card-header">
-        <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
-        <span className="visit-header-spacer" />
-        <StatusBadge status={status} />
-      </div>
-      <div className="visit-card-body">
-        <PatientAvatar gender={gender} name={fullName} size={60} />
-        <div className="visit-info">
-          <div className="visit-name">👤 {fullName}</div>
-          <div className="visit-details">
-            📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+    return (
+      <div className="visit-card" style={{ backgroundColor: bgColor }}>
+        <div className="visit-card-header">
+          <span className="visit-id">🆔 {t('doctor.visit.id')}: {visit.id}</span>
+          <span className="visit-header-spacer" />
+          <StatusBadge status={status} />
+        </div>
+        <div className="visit-card-body">
+          <PatientAvatar gender={gender} name={fullName} size={60} />
+          <div className="visit-info">
+            <div className="visit-name">👤 {fullName}</div>
+            <div className="visit-details">
+              📞 {patient.phone || '-'} | {t('doctor.visit.age')}: {calculateAge(patient.dateOfBirth)}
+            </div>
+            <div className="visit-details">
+              📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+            </div>
           </div>
-          <div className="visit-details">
-            📅 {formatDateTime(visit.visitDate)} | {t('doctor.visit.type')}: {visit.visitType || 'APPOINTMENT'}
+          <div className="visit-actions">
+            <button 
+              type="button"
+              className="btn-open"
+              onClick={() => onOpen(visit.id, status)}
+            >
+              {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
+            </button>
+            <button 
+              type="button"
+              className="btn-details"
+              onClick={() => onDetails(visit.id)}
+            >
+              {t('doctor.visit.details')}
+            </button>
           </div>
         </div>
-        <div className="visit-actions">
-          <button 
-            type="button"
-            className="btn-open"
-            onClick={() => onOpen(visit.id, status)}
-          >
-            {status === 'CLOSED' ? t('doctor.visit.reopen') : t('doctor.visit.open')}
-          </button>
-          <button 
-            type="button"
-            className="btn-details"
-            onClick={() => onDetails(visit.id)}
-          >
-            {t('doctor.visit.details')}
-          </button>
-        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+
   // ==================== VISIT POPUP COMPONENT ====================
   const VisitPopup = ({ visit, onClose, onOpen, onDetails }) => {
     if (!visit) return null;
@@ -25093,6 +27836,81 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
     );
   };
 
+  // ==================== REOPEN CONFIRMATION MODAL ====================
+  const ReopenConfirmationModal = () => {
+    if (!showReopenConfirm) return null;
+
+    return (
+      <div className="modal-overlay" onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setShowReopenConfirm(false);
+          setVisitToReopen(null);
+        }
+      }}>
+        <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
+          <h2 style={{ color: '#f39c12', marginBottom: '15px' }}>
+            ⚠️ {t('doctor.visit.reopen')}
+          </h2>
+          <p style={{ fontSize: '16px', marginBottom: '20px', lineHeight: '1.5' }}>
+            {t('doctor.reopen.confirm').replace('{0}', visitToReopen)}
+            <br />
+            <span style={{ color: '#666', fontSize: '14px' }}>
+              {t('doctor.reopen.warning')}
+            </span>
+          </p>
+          <div style={{ 
+            display: 'flex', 
+            gap: '10px', 
+            justifyContent: 'center',
+            marginTop: '20px'
+          }}>
+            <button
+              type="button"
+              style={{
+                padding: '10px 25px',
+                borderRadius: '6px',
+                border: 'none',
+                fontSize: '16px',
+                cursor: 'pointer',
+                backgroundColor: '#27ae60',
+                color: 'white',
+                fontWeight: 'bold',
+                transition: 'all 0.3s'
+              }}
+              onClick={confirmReopenVisit}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#1e8449'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#27ae60'}
+            >
+              ✅ {t('doctor.reopen.yes')}
+            </button>
+            <button
+              type="button"
+              style={{
+                padding: '10px 25px',
+                borderRadius: '6px',
+                border: 'none',
+                fontSize: '16px',
+                cursor: 'pointer',
+                backgroundColor: '#e74c3c',
+                color: 'white',
+                fontWeight: 'bold',
+                transition: 'all 0.3s'
+              }}
+              onClick={() => {
+                setShowReopenConfirm(false);
+                setVisitToReopen(null);
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#c0392b'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#e74c3c'}
+            >
+              ❌ {t('doctor.reopen.cancel')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Pagination Component
   const Pagination = () => {
     const visiblePages = 7;
@@ -25204,12 +28022,12 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
             color="#3498db"
             onClick={openSearchPatient}
           />
-        <SidebarButton 
-  icon="📊" 
-  text={t('doctor.sidebar.reports')}
-  color="#2ecc71"
-  onClick={openReportsScreen}
-/>
+          <SidebarButton 
+            icon="📊" 
+            text={t('doctor.sidebar.reports')}
+            color="#2ecc71"
+            onClick={openReportsScreen}
+          />
           <SidebarButton 
             icon="🔒" 
             text={t('doctor.sidebar.changePassword')}
@@ -25240,24 +28058,21 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           </div>
           
           <div className="welcome-actions">
-
-            
             <div className="find-visit">
-                 {/* Add this button */}
-    <button 
-        onClick={() => setShowGuide(true)}
-        style={{
-            background: '#9f7aea',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-        }}
-    >
-        ❓ Guide
-    </button>
+              <button 
+                onClick={() => setShowGuide(true)}
+                style={{
+                  background: '#9f7aea',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+              >
+                ❓ Guide
+              </button>
               <input
                 type="text"
                 className="find-visit-input"
@@ -25447,8 +28262,11 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
               </div>
             ) : isGridLayout ? (
               <div 
-  className={`card-grid cols-${cardsPerRowPattern[cardsPerRowIndex]}`}
->
+                className="card-grid"
+                style={{ 
+                  gridTemplateColumns: `repeat(${cardsPerRowPattern[cardsPerRowIndex]}, 1fr)`
+                }}
+              >
                 {filteredVisits.map((visit) => (
                   <VisitCard
                     key={visit.id}
@@ -25533,6 +28351,7 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
           </div>
         </div>
       )}
+      
       {/* Search Patient Modal */}
       {showSearchPatient && (
         <div className="visit-screen-modal-overlay" onClick={closeSearchPatient}>
@@ -25578,12 +28397,16 @@ const VisitCard = ({ visit, onOpen, onDetails }) => {
 
       {/* Password Change Modal */}
       <PasswordChangeModal />
+      
+      {/* Reopen Confirmation Modal */}
+      <ReopenConfirmationModal />
+      
       {/* ==================== GUIDE MODAL ==================== */}
       {showGuide && (
         <DoctorGuide
-            isOpen={showGuide}
-            onClose={() => setShowGuide(false)}
-            locale={locale}
+          isOpen={showGuide}
+          onClose={() => setShowGuide(false)}
+          locale={locale}
         />
       )}
     </div>
