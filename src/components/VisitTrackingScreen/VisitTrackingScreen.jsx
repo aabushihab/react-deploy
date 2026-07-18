@@ -9236,7 +9236,7 @@ const translations = {
     },
     label: {
       visits: 'visits',
-      patientInfo: 'Patient Information',
+      selectedPatient: 'Selected Patient',
       noPatientSelected: 'No patient selected',
       phone: 'Phone',
       gender: 'Gender',
@@ -9350,7 +9350,7 @@ const translations = {
     },
     label: {
       visits: 'زيارات',
-      patientInfo: 'معلومات المريض',
+      selectedPatient: 'المريض المحدد',
       noPatientSelected: 'لم يتم تحديد مريض',
       phone: 'الجوال',
       gender: 'الجنس',
@@ -9404,7 +9404,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const [viewMode, setViewMode] = useState('table');
   const [showPayment, setShowPayment] = useState(false);
   const [isDateSearch, setIsDateSearch] = useState(true);
-  const [showPatientInfo, setShowPatientInfo] = useState(false);
   
   // Add ref to store current patient IDs for refresh
   const currentPatientIdsRef = useRef([]);
@@ -9426,30 +9425,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
-
-  // ---------- Calculate age from date of birth ----------
-  const calculateAge = (dob) => {
-    if (!dob) return 'N/A';
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  // ---------- Format date for display ----------
-  const formatDateDisplay = (dateString) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   };
 
   // ---------- Fetch patient details ----------
@@ -9728,7 +9703,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
     currentPatientIdsRef.current = [];
     setStatusMsg(`🗑️ ${t.status.cleared}`);
     setIsDateSearch(false);
-    setShowPatientInfo(false);
   }, [t]);
 
   // ---------- Visit actions ----------
@@ -9871,11 +9845,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
       }
     }
   }, [fetchPatientDetails, logAction]);
-
-  // ---------- Toggle patient info panel ----------
-  const togglePatientInfo = () => {
-    setShowPatientInfo(!showPatientInfo);
-  };
 
   // ---------- Determine if row should be disabled ----------
   const shouldDisableRow = (visit) => {
@@ -10101,96 +10070,11 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
         }
 
         .visit-tracking-content {
-          display: flex;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-
-        .visit-tracking-main-content {
-          flex: 1;
-          min-width: 0;
           background: white;
           border-radius: 12px;
           padding: 10px;
           box-shadow: 0 2px 10px rgba(0,0,0,0.1);
           min-height: 300px;
-        }
-
-        .visit-tracking-patient-panel {
-          width: 350px;
-          min-width: 280px;
-          background: white;
-          border-radius: 12px;
-          padding: 15px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          max-height: 600px;
-          overflow-y: auto;
-          border-left: 4px solid #4299e1;
-        }
-
-        .visit-tracking-patient-panel-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 15px;
-          border-bottom: 2px solid #edf2f7;
-          padding-bottom: 10px;
-        }
-
-        .visit-tracking-patient-panel-header h3 {
-          margin: 0;
-          font-size: 16px;
-          color: #2d3748;
-        }
-
-        .visit-tracking-patient-panel-toggle {
-          background: #edf2f7;
-          border: none;
-          border-radius: 6px;
-          padding: 4px 10px;
-          cursor: pointer;
-          font-size: 12px;
-          min-height: 30px;
-          transition: all 0.2s;
-        }
-
-        .visit-tracking-patient-panel-toggle:hover {
-          background: #e2e8f0;
-        }
-
-        .visit-tracking-patient-info {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .visit-tracking-patient-info-item {
-          display: flex;
-          justify-content: space-between;
-          padding: 6px 0;
-          border-bottom: 1px solid #f7fafc;
-          font-size: 13px;
-        }
-
-        .visit-tracking-patient-info-item .label {
-          color: #718096;
-          font-weight: 500;
-        }
-
-        .visit-tracking-patient-info-item .value {
-          color: #2d3748;
-          font-weight: 500;
-          text-align: right;
-        }
-
-        .visit-tracking-patient-info-item .value.highlight {
-          color: #4299e1;
-        }
-
-        .visit-tracking-patient-info-empty {
-          text-align: center;
-          padding: 30px;
-          color: #a0aec0;
         }
 
         .visit-tracking-loading {
@@ -10205,6 +10089,135 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
           color: #a0aec0;
         }
 
+        /* Selected Patient Banner */
+        .visit-tracking-selected-patient-banner {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 16px;
+          background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+          border-radius: 8px;
+          margin-bottom: 15px;
+          border-left: 4px solid #4299e1;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-label {
+          font-weight: 600;
+          color: #2d3748;
+          font-size: 14px;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-name {
+          font-weight: 700;
+          color: #2b6cb0;
+          font-size: 16px;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-id {
+          color: #4a5568;
+          font-size: 13px;
+          margin-left: 4px;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-details {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-detail-item {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: #4a5568;
+          font-size: 13px;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-detail-item .label {
+          color: #718096;
+        }
+
+        .visit-tracking-selected-patient-banner .patient-detail-item .value {
+          font-weight: 500;
+          color: #2d3748;
+        }
+
+        .visit-tracking-selected-patient-banner .clear-btn {
+          margin-left: auto;
+          background: #e2e8f0;
+          border: none;
+          border-radius: 6px;
+          padding: 4px 12px;
+          cursor: pointer;
+          font-size: 12px;
+          min-height: 28px;
+          transition: all 0.2s;
+          color: #4a5568;
+        }
+
+        .visit-tracking-selected-patient-banner .clear-btn:hover {
+          background: #cbd5e0;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+          .visit-tracking-selected-patient-banner {
+            background: linear-gradient(135deg, #1a2744 0%, #2d3748 100%);
+            border-left-color: #63b3ed;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-label {
+            color: #e2e8f0;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-name {
+            color: #63b3ed;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-id {
+            color: #a0aec0;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-detail-item {
+            color: #a0aec0;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-detail-item .label {
+            color: #718096;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-detail-item .value {
+            color: #e2e8f0;
+          }
+
+          .visit-tracking-selected-patient-banner .clear-btn {
+            background: #2d2d44;
+            color: #b0b0b0;
+          }
+
+          .visit-tracking-selected-patient-banner .clear-btn:hover {
+            background: #3d3d5c;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .visit-tracking-selected-patient-banner {
+            flex-wrap: wrap;
+          }
+
+          .visit-tracking-selected-patient-banner .patient-details {
+            width: 100%;
+            gap: 8px;
+          }
+
+          .visit-tracking-selected-patient-banner .clear-btn {
+            margin-left: 0;
+            width: 100%;
+          }
+        }
+
+        /* Rest of the styles remain the same */
         .visit-tracking-actions {
           display: flex;
           gap: 10px;
@@ -10487,18 +10500,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
             text-align: center;
           }
 
-          .visit-tracking-content {
-            flex-direction: column;
-          }
-
-          .visit-tracking-patient-panel {
-            width: 100%;
-            min-width: unset;
-            max-height: unset;
-            border-left: none;
-            border-top: 4px solid #4299e1;
-          }
-
           .visit-tracking-table {
             font-size: 12px;
             min-width: 500px;
@@ -10598,14 +10599,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
           .visit-tracking-card .card-patient {
             font-size: 14px;
           }
-
-          .visit-tracking-patient-panel {
-            padding: 12px;
-          }
-
-          .visit-tracking-patient-info-item {
-            font-size: 12px;
-          }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
@@ -10635,8 +10628,7 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
           .visit-tracking-search-section,
           .visit-tracking-date-section,
-          .visit-tracking-main-content,
-          .visit-tracking-patient-panel {
+          .visit-tracking-content {
             background: #2d2d44;
           }
 
@@ -10796,39 +10788,6 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
           .visit-tracking-card-checkbox label {
             color: #b0b0b0;
           }
-
-          .visit-tracking-patient-panel-header h3 {
-            color: #ecf0f1;
-          }
-
-          .visit-tracking-patient-panel-toggle {
-            background: #1a1a2e;
-            color: #b0b0b0;
-          }
-
-          .visit-tracking-patient-panel-toggle:hover {
-            background: #3d3d5c;
-          }
-
-          .visit-tracking-patient-info-item {
-            border-bottom-color: #3d3d5c;
-          }
-
-          .visit-tracking-patient-info-item .label {
-            color: #a0aec0;
-          }
-
-          .visit-tracking-patient-info-item .value {
-            color: #ecf0f1;
-          }
-
-          .visit-tracking-patient-info-item .value.highlight {
-            color: #63b3ed;
-          }
-
-          .visit-tracking-patient-info-empty {
-            color: #666;
-          }
         }
       `}</style>
 
@@ -10920,233 +10879,189 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
         {/* Content */}
         <div className="visit-tracking-content">
-          {/* Main Content (Table/Cards) */}
-          <div className="visit-tracking-main-content">
-            {loading ? (
-              <div className="visit-tracking-loading">⏳ Loading...</div>
-            ) : filteredVisits.length === 0 ? (
-              <div className="visit-tracking-empty">📭 {t.msg.noVisitsForDate || 'No visits found'}</div>
-            ) : viewMode === 'table' ? (
-              <div className="visit-tracking-table-wrapper">
-                <table className="visit-tracking-table">
-                  <thead>
-                    <tr>
-                      <th>{t.col.id}</th>
-                      <th>{t.col.patient}</th>
-                      <th>{t.col.doctor}</th>
-                      <th>{t.col.type}</th>
-                      <th>{t.col.status}</th>
-                      <th>{t.col.payment}</th>
-                      <th>{t.col.amount}</th>
-                      <th>{t.col.insurancePaid}</th>
-                      <th>{t.col.remaining}</th>
-                      <th>{t.col.details}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredVisits.map(visit => {
-                      const disabled = shouldDisableRow(visit);
-                      const remaining = Math.max(0, visit.amount - visit.totalPaid);
-
-                      return (
-                        <tr
-                          key={visit.id}
-                          className={`${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
-                          onClick={() => handleVisitSelect(visit)}
-                        >
-                          <td>{visit.id}</td>
-                          <td>{visit.patientName}</td>
-                          <td>{visit.doctorName}</td>
-                          <td>{visit.visitType}</td>
-                          <td>
-                            <span className={`status-badge 
-                              ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
-                                visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
-                                'closed'}`}>
-                              {visit.visitStatus}
-                            </span>
-                          </td>
-                          <td>{t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</td>
-                          <td>{visit.amount.toFixed(2)}</td>
-                          <td>
-                            {visit.paymentMethod === 'INSURANCE' && (
-                              <input
-                                type="checkbox"
-                                checked={visit.insurancePaid || false}
-                                disabled={visit.insurancePaid}
-                                onChange={() => handleMarkInsurancePaid(visit.id)}
-                                style={{ cursor: 'pointer' }}
-                              />
-                            )}
-                          </td>
-                          <td className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>
-                            {remaining.toFixed(2)}
-                          </td>
-                          <td>
-                            <button
-                              className={`btn-view ${disabled ? 'danger' : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                showPaymentDetails(visit.id);
-                              }}
-                              disabled={disabled}
-                            >
-                              📋 {t.btn.view}
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="visit-tracking-card-grid">
-                {filteredVisits.map(visit => {
-                  const disabled = shouldDisableRow(visit);
-                  const remaining = Math.max(0, visit.amount - visit.totalPaid);
-
-                  return (
-                    <div
-                      key={visit.id}
-                      className={`visit-tracking-card ${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
-                      onClick={() => handleVisitSelect(visit)}
-                    >
-                      <div className="visit-tracking-card-header">
-                        <span className="visit-tracking-card-id">#{visit.id}</span>
-                        <span className="visit-tracking-card-patient">{visit.patientName}</span>
-                        <span className={`visit-tracking-card-status 
-                          ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
-                            visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
-                            'closed'}`}>
-                          {visit.visitStatus}
-                        </span>
-                      </div>
-                      <div className="visit-tracking-card-body">
-                        <div className="detail">👨‍⚕️ {visit.doctorName}</div>
-                        <div className="detail">📋 {visit.visitType} | 💳 {t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</div>
-                        <div className="detail">
-                          💰 {visit.amount.toFixed(2)} | {t.col.remaining}: <span className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>{remaining.toFixed(2)}</span>
-                        </div>
-                        {visit.paymentMethod === 'INSURANCE' && (
-                          <div className="visit-tracking-card-checkbox">
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={visit.insurancePaid || false}
-                                disabled={visit.insurancePaid}
-                                onChange={(e) => {
-                                  e.stopPropagation();
-                                  handleMarkInsurancePaid(visit.id);
-                                }}
-                              /> {t.col.insurancePaid}
-                            </label>
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        className="btn-view"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          showPaymentDetails(visit.id);
-                        }}
-                      >
-                        📋 {t.btn.view}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Patient Info Panel */}
-          <div className="visit-tracking-patient-panel">
-            <div className="visit-tracking-patient-panel-header">
-              <h3>👤 {t.label.patientInfo}</h3>
-              <button
-                className="visit-tracking-patient-panel-toggle"
-                onClick={togglePatientInfo}
-              >
-                {showPatientInfo ? '🔽' : '🔼'}
-              </button>
-            </div>
-            
-            {showPatientInfo && (
-              <div className="visit-tracking-patient-info">
-                {selectedPatient ? (
-                  <>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">ID:</span>
-                      <span className="value highlight">{selectedPatient.id}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.search.name}:</span>
-                      <span className="value highlight">
-                        {selectedPatient.firstName || ''} {selectedPatient.middleName || ''} {selectedPatient.lastName || ''}
-                      </span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.phone}:</span>
-                      <span className="value">{selectedPatient.phone || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.gender}:</span>
-                      <span className="value">{selectedPatient.gender || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.dob}:</span>
-                      <span className="value">{formatDateDisplay(selectedPatient.dateOfBirth)}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.age}:</span>
-                      <span className="value">{calculateAge(selectedPatient.dateOfBirth)}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.type}:</span>
-                      <span className="value">{selectedPatient.patientType || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.passport}:</span>
-                      <span className="value">{selectedPatient.passportNumber || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.insurance}:</span>
-                      <span className="value">{selectedPatient.insuranceProvider || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.address}:</span>
-                      <span className="value">{selectedPatient.address || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.country}:</span>
-                      <span className="value">{selectedPatient.country || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.city}:</span>
-                      <span className="value">{selectedPatient.city || 'N/A'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.classA}:</span>
-                      <span className="value">{selectedPatient.classA ? '✅' : '❌'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.classB}:</span>
-                      <span className="value">{selectedPatient.classB ? '✅' : '❌'}</span>
-                    </div>
-                    <div className="visit-tracking-patient-info-item">
-                      <span className="label">{t.label.classC}:</span>
-                      <span className="value">{selectedPatient.classC ? '✅' : '❌'}</span>
-                    </div>
-                  </>
-                ) : (
-                  <div className="visit-tracking-patient-info-empty">
-                    {t.label.noPatientSelected}
-                  </div>
+          {/* Selected Patient Banner */}
+          {selectedPatient && (
+            <div className="visit-tracking-selected-patient-banner">
+              <span className="patient-label">👤 {t.label.selectedPatient}:</span>
+              <span className="patient-name">
+                {selectedPatient.firstName || ''} {selectedPatient.middleName || ''} {selectedPatient.lastName || ''}
+                <span className="patient-id">(#{selectedPatient.id})</span>
+              </span>
+              <div className="patient-details">
+                {selectedPatient.phone && (
+                  <span className="patient-detail-item">
+                    <span className="label">📞</span>
+                    <span className="value">{selectedPatient.phone}</span>
+                  </span>
+                )}
+                {selectedPatient.gender && (
+                  <span className="patient-detail-item">
+                    <span className="label">⚧</span>
+                    <span className="value">{selectedPatient.gender}</span>
+                  </span>
+                )}
+                {selectedPatient.patientType && (
+                  <span className="patient-detail-item">
+                    <span className="label">📋</span>
+                    <span className="value">{selectedPatient.patientType}</span>
+                  </span>
+                )}
+                {selectedPatient.insuranceProvider && (
+                  <span className="patient-detail-item">
+                    <span className="label">🏥</span>
+                    <span className="value">{selectedPatient.insuranceProvider}</span>
+                  </span>
                 )}
               </div>
-            )}
-          </div>
+              <button
+                className="clear-btn"
+                onClick={() => {
+                  setSelectedPatient(null);
+                  setSelectedVisit(null);
+                }}
+              >
+                ✕ {t.btn.clear}
+              </button>
+            </div>
+          )}
+
+          {/* Table/Cards */}
+          {loading ? (
+            <div className="visit-tracking-loading">⏳ Loading...</div>
+          ) : filteredVisits.length === 0 ? (
+            <div className="visit-tracking-empty">📭 {t.msg.noVisitsForDate || 'No visits found'}</div>
+          ) : viewMode === 'table' ? (
+            <div className="visit-tracking-table-wrapper">
+              <table className="visit-tracking-table">
+                <thead>
+                  <tr>
+                    <th>{t.col.id}</th>
+                    <th>{t.col.patient}</th>
+                    <th>{t.col.doctor}</th>
+                    <th>{t.col.type}</th>
+                    <th>{t.col.status}</th>
+                    <th>{t.col.payment}</th>
+                    <th>{t.col.amount}</th>
+                    <th>{t.col.insurancePaid}</th>
+                    <th>{t.col.remaining}</th>
+                    <th>{t.col.details}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredVisits.map(visit => {
+                    const disabled = shouldDisableRow(visit);
+                    const remaining = Math.max(0, visit.amount - visit.totalPaid);
+
+                    return (
+                      <tr
+                        key={visit.id}
+                        className={`${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+                        onClick={() => handleVisitSelect(visit)}
+                      >
+                        <td>{visit.id}</td>
+                        <td>{visit.patientName}</td>
+                        <td>{visit.doctorName}</td>
+                        <td>{visit.visitType}</td>
+                        <td>
+                          <span className={`status-badge 
+                            ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
+                              visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
+                              'closed'}`}>
+                            {visit.visitStatus}
+                          </span>
+                        </td>
+                        <td>{t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</td>
+                        <td>{visit.amount.toFixed(2)}</td>
+                        <td>
+                          {visit.paymentMethod === 'INSURANCE' && (
+                            <input
+                              type="checkbox"
+                              checked={visit.insurancePaid || false}
+                              disabled={visit.insurancePaid}
+                              onChange={() => handleMarkInsurancePaid(visit.id)}
+                              style={{ cursor: 'pointer' }}
+                            />
+                          )}
+                        </td>
+                        <td className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>
+                          {remaining.toFixed(2)}
+                        </td>
+                        <td>
+                          <button
+                            className={`btn-view ${disabled ? 'danger' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              showPaymentDetails(visit.id);
+                            }}
+                            disabled={disabled}
+                          >
+                            📋 {t.btn.view}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="visit-tracking-card-grid">
+              {filteredVisits.map(visit => {
+                const disabled = shouldDisableRow(visit);
+                const remaining = Math.max(0, visit.amount - visit.totalPaid);
+
+                return (
+                  <div
+                    key={visit.id}
+                    className={`visit-tracking-card ${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+                    onClick={() => handleVisitSelect(visit)}
+                  >
+                    <div className="visit-tracking-card-header">
+                      <span className="visit-tracking-card-id">#{visit.id}</span>
+                      <span className="visit-tracking-card-patient">{visit.patientName}</span>
+                      <span className={`visit-tracking-card-status 
+                        ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
+                          visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
+                          'closed'}`}>
+                        {visit.visitStatus}
+                      </span>
+                    </div>
+                    <div className="visit-tracking-card-body">
+                      <div className="detail">👨‍⚕️ {visit.doctorName}</div>
+                      <div className="detail">📋 {visit.visitType} | 💳 {t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</div>
+                      <div className="detail">
+                        💰 {visit.amount.toFixed(2)} | {t.col.remaining}: <span className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>{remaining.toFixed(2)}</span>
+                      </div>
+                      {visit.paymentMethod === 'INSURANCE' && (
+                        <div className="visit-tracking-card-checkbox">
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={visit.insurancePaid || false}
+                              disabled={visit.insurancePaid}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                handleMarkInsurancePaid(visit.id);
+                              }}
+                            /> {t.col.insurancePaid}
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      className="btn-view"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showPaymentDetails(visit.id);
+                      }}
+                    >
+                      📋 {t.btn.view}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Action Buttons - Wrapped in container for better mobile handling */}
