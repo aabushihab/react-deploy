@@ -15146,6 +15146,1470 @@
 
 // export default AdminHomePage; 11072026 11:20 pm
 
+// import React, {
+//   useState,
+//   useEffect,
+//   useRef,
+//   useCallback,
+// } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { adminTranslations } from '../../i18n/adminTranslations';
+// import { BASE_URL, fetchClinicInfo } from '../../utils/api';
+// import SearchPatientScreen from '../SearchPatientScreen/SearchPatientScreen';
+// import AppointmentsAdminScreen from '../AppointmentsAdminScreen/AppointmentsAdminScreen';
+// import VisitTrackingScreen from '../VisitTrackingScreen/VisitTrackingScreen';
+// import ClaimsTrackingScreen from '../ClaimsTrackingScreen/ClaimsTrackingScreen';
+// import DoctorManagementScreen from '../DoctorManagementScreen/DoctorManagementScreen';
+// import ReportsScreen from '../ReportsScreen/ReportsScreen';
+// import ClinicPaymentReportScreen from '../ClinicPaymentReportScreen/ClinicPaymentReportScreen';
+// import SectionManagementScreen from '../SectionManagementScreen/SectionManagementScreen';
+// import RoomManagementScreen from '../RoomManagementScreen/RoomManagementScreen';
+// import UserManagementScreen from '../UserManagementScreen/UserManagementScreen';
+// import HealthInsuranceScreen from '../HealthInsuranceScreen/HealthInsuranceScreen';
+// import LogsMonitorScreen from '../LogsMonitorScreen/LogsMonitorScreen';
+
+// // Import the guide components
+// import PatientLifeCycleGuide from '../PatientLifeCycleGuide/PatientLifeCycleGuide';
+
+// // -------------------- Styles (inline) --------------------
+// const styles = `
+//   * {
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+//   }
+//   .app {
+//     display: flex;
+//     flex-direction: column;
+//     height: 100vh;
+//     background: #f0f2f5;
+//     overflow: hidden;
+//   }
+  
+//   /* Top Bar */
+//   .topbar {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     padding: 12px 25px;
+//     background: linear-gradient(135deg, #2c3e50, #3498db, #2980b9);
+//     color: white;
+//     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+//     flex-shrink: 0;
+//     flex-wrap: wrap;
+//     gap: 10px;
+//   }
+//   .topbar .clinic {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     font-size: 24px;
+//     font-weight: bold;
+//     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+//   }
+//   .topbar .datetime {
+//     display: flex;
+//     align-items: center;
+//     gap: 15px;
+//     font-size: 16px;
+//     flex-wrap: wrap;
+//   }
+//   .topbar .datetime .time {
+//     font-weight: bold;
+//     color: #f1c40f;
+//     font-size: 20px;
+//   }
+//   .topbar .datetime .clock-icon {
+//     display: inline-block;
+//     animation: spin 60s linear infinite;
+//   }
+//   @keyframes spin {
+//     from { transform: rotate(0deg); }
+//     to { transform: rotate(360deg); }
+//   }
+
+//   /* Mobile hamburger button */
+//   .hamburger-btn {
+//     display: none;
+//     background: rgba(255,255,255,0.2);
+//     color: white;
+//     border: none;
+//     padding: 8px 12px;
+//     border-radius: 6px;
+//     font-size: 24px;
+//     cursor: pointer;
+//     transition: background 0.3s;
+//   }
+//   .hamburger-btn:hover {
+//     background: rgba(255,255,255,0.3);
+//   }
+
+//   /* Sidebar */
+//   .sidebar-wrapper {
+//     display: flex;
+//     position: relative;
+//     flex-shrink: 0;
+//   }
+  
+//   .sidebar {
+//     display: flex;
+//     flex-direction: column;
+//     background: rgba(44, 62, 80, 0.98);
+//     color: #ecf0f1;
+//     width: 65px;
+//     min-width: 65px;
+//     padding: 15px 12px;
+//     transition: width 0.3s ease, transform 0.3s ease;
+//     overflow: hidden;
+//     flex-shrink: 0;
+//     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+//     height: 100%;
+//   }
+//   .sidebar:hover {
+//     width: 270px;
+//   }
+//   .sidebar .header {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     padding-bottom: 15px;
+//     border-bottom: 1px solid rgba(255,255,255,0.1);
+//     margin-bottom: 10px;
+//     white-space: nowrap;
+//     font-size: 20px;
+//   }
+//   .sidebar .header .icon {
+//     font-size: 24px;
+//   }
+//   .sidebar .header .title {
+//     font-size: 17px;
+//     font-weight: bold;
+//     opacity: 0;
+//     transition: opacity 0.3s;
+//   }
+//   .sidebar:hover .header .title {
+//     opacity: 1;
+//   }
+//   .sidebar .menu {
+//     flex: 1;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 6px;
+//     overflow-y: auto;
+//   }
+//   .sidebar .menu button {
+//     padding: 10px 16px;
+//     font-size: 15px;
+//     background: transparent;
+//     border: none;
+//     color: #ecf0f1;
+//     border-radius: 8px;
+//     text-align: left;
+//     cursor: pointer;
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     white-space: nowrap;
+//     transition: all 0.2s;
+//     width: 100%;
+//   }
+//   .sidebar .menu button:hover {
+//     background: rgba(255,255,255,0.15);
+//     transform: scale(1.02);
+//     border-left: 3px solid #3498db;
+//   }
+//   .sidebar .menu button .label {
+//     opacity: 0;
+//     transition: opacity 0.3s;
+//   }
+//   .sidebar:hover .menu button .label {
+//     opacity: 1;
+//   }
+//   .sidebar .logout {
+//     margin-top: auto;
+//     padding-top: 10px;
+//     border-top: 1px solid rgba(255,255,255,0.1);
+//   }
+//   .sidebar .logout button {
+//     padding: 10px 16px;
+//     font-size: 15px;
+//     background: #c0392b;
+//     color: white;
+//     font-weight: bold;
+//     border-radius: 8px;
+//     width: 100%;
+//     border: none;
+//     cursor: pointer;
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     transition: all 0.2s;
+//   }
+//   .sidebar .logout button:hover {
+//     background: #e74c3c;
+//     transform: scale(1.05);
+//   }
+//   .sidebar .logout button .label {
+//     opacity: 0;
+//     transition: opacity 0.3s;
+//   }
+//   .sidebar:hover .logout button .label {
+//     opacity: 1;
+//   }
+
+//   /* Mobile overlay */
+//   .sidebar-overlay {
+//     display: none;
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background: rgba(0,0,0,0.5);
+//     z-index: 999;
+//   }
+//   .sidebar-overlay.active {
+//     display: block;
+//   }
+
+//   /* Main Content */
+//   .main {
+//     flex: 1;
+//     padding: 20px;
+//     overflow-y: auto;
+//     background: #f0f2f5;
+//     min-width: 0;
+//   }
+//   .main .title {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     font-size: 28px;
+//     font-weight: bold;
+//     color: #2c3e50;
+//     margin-bottom: 20px;
+//   }
+  
+//   /* Summary Cards */
+//   .summary {
+//     display: grid;
+//     gap: 15px;
+//     margin-bottom: 20px;
+//     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+//   }
+//   .summary .card {
+//     padding: 12px;
+//     border-radius: 14px;
+//     text-align: center;
+//     color: white;
+//     cursor: pointer;
+//     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+//     transition: all 0.2s;
+//     background: linear-gradient(135deg, #3498db, #2980b9);
+//     position: relative;
+//     overflow: hidden;
+//     min-width: 120px;
+//   }
+//   .summary .card:hover {
+//     transform: scale(1.05);
+//     box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+//   }
+//   .summary .card .icon { font-size: 28px; }
+//   .summary .card .title { font-size: 13px; font-weight: bold; opacity: 0.9; }
+//   .summary .card .value { font-size: 34px; font-weight: bold; }
+//   .summary .card .top-bar {
+//     height: 5px;
+//     background: rgba(255,255,255,0.3);
+//     border-radius: 12px 12px 0 0;
+//     margin: -12px -12px 10px -12px;
+//   }
+//   .summary .card.total { background: linear-gradient(135deg, #3498db, #2980b9); }
+//   .summary .card.attended { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+//   .summary .card.inprogress { background: linear-gradient(135deg, #f39c12, #e67e22); }
+//   .summary .card.cancelled { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+//   /* Toggle Button */
+//   .toggle-btn {
+//     background: linear-gradient(135deg, #3498db, #2980b9);
+//     color: white;
+//     border: none;
+//     padding: 12px 30px;
+//     border-radius: 30px;
+//     font-weight: bold;
+//     font-size: 16px;
+//     cursor: pointer;
+//     box-shadow: 0 4px 15px rgba(52,152,219,0.3);
+//     transition: all 0.2s;
+//     margin-bottom: 15px;
+//     width: 100%;
+//     max-width: 300px;
+//   }
+//   .toggle-btn:hover {
+//     transform: scale(1.08);
+//     box-shadow: 0 6px 20px rgba(52,152,219,0.5);
+//   }
+//   .toggle-btn:active {
+//     transform: scale(0.95);
+//   }
+
+//   /* Table / Card Container */
+//   .content-container {
+//     background: white;
+//     border-radius: 10px;
+//     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+//     padding: 0;
+//     overflow: hidden;
+//     transition: opacity 0.3s;
+//     position: relative;
+//     min-height: 400px;
+//   }
+  
+//   /* Responsive Table */
+//   .content-container .table-view {
+//     width: 100%;
+//     border-collapse: collapse;
+//   }
+//   .content-container .table-view th {
+//     background: #f8f9fa;
+//     padding: 12px 15px;
+//     text-align: left;
+//     font-weight: bold;
+//     color: #2c3e50;
+//     border-bottom: 2px solid #e9ecef;
+//   }
+//   .content-container .table-view td {
+//     padding: 10px 15px;
+//     border-bottom: 1px solid #f0f0f0;
+//     font-size: 13px;
+//   }
+//   .content-container .table-view tr:hover td {
+//     background: #f8f9fa;
+//   }
+//   .content-container .table-view .status-badge {
+//     display: inline-block;
+//     padding: 3px 14px;
+//     border-radius: 12px;
+//     font-weight: bold;
+//     font-size: 12px;
+//     color: white;
+//     text-align: center;
+//   }
+//   .content-container .table-view .status-badge.attended { background: #27ae60; }
+//   .content-container .table-view .status-badge.inprogress { background: #f39c12; }
+//   .content-container .table-view .status-badge.closed { background: #e74c3c; }
+//   .content-container .table-view .status-badge.cancelled { background: #95a5a6; }
+//   .content-container .table-view .status-badge.normal { background: #3498db; }
+
+//   .scrollable {
+//     overflow-x: auto;
+//     max-height: 60vh;
+//     -webkit-overflow-scrolling: touch;
+//   }
+
+//   /* Card Grid */
+//   .card-grid {
+//     display: grid;
+//     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+//     gap: 15px;
+//     padding: 20px;
+//   }
+//   .card-grid .appt-card {
+//     background: white;
+//     border-radius: 12px;
+//     padding: 15px;
+//     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+//     border: 1px solid #e9ecef;
+//     transition: all 0.2s;
+//     cursor: pointer;
+//   }
+//   .card-grid .appt-card:hover {
+//     transform: scale(1.02);
+//     box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+//   }
+//   .card-grid .appt-card:active {
+//     transform: scale(0.98);
+//   }
+//   .card-grid .appt-card .status-badge {
+//     display: inline-block;
+//     padding: 3px 14px;
+//     border-radius: 12px;
+//     font-weight: bold;
+//     font-size: 12px;
+//     color: white;
+//     margin-bottom: 8px;
+//   }
+//   .card-grid .appt-card .patient {
+//     font-size: 18px;
+//     font-weight: bold;
+//     color: #2c3e50;
+//   }
+//   .card-grid .appt-card .detail {
+//     display: flex;
+//     align-items: center;
+//     gap: 6px;
+//     color: #34495e;
+//     font-size: 14px;
+//     margin-top: 4px;
+//   }
+//   .card-grid .appt-card .detail .label {
+//     color: #7f8c8d;
+//     font-size: 13px;
+//   }
+
+//   /* Status Bar */
+//   .statusbar {
+//     display: flex;
+//     align-items: center;
+//     gap: 15px;
+//     padding: 10px 20px;
+//     background: white;
+//     border-radius: 10px;
+//     margin-top: 15px;
+//     border: 1px solid #e9ecef;
+//     box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+//     flex-wrap: wrap;
+//   }
+//   .statusbar .loading {
+//     width: 20px;
+//     height: 20px;
+//   }
+//   .statusbar .message {
+//     font-size: 13px;
+//     color: #27ae60;
+//     word-break: break-word;
+//   }
+//   .statusbar .message.error { color: #e74c3c; }
+//   .statusbar .message.loading { color: #f39c12; }
+//   .statusbar .version {
+//     margin-left: auto;
+//     font-size: 12px;
+//     color: #95a5a6;
+//   }
+
+//   /* Utilities */
+//   .flex-row { display: flex; flex-direction: row; }
+//   .flex-1 { flex: 1; }
+//   .h-full { height: 100%; }
+//   .overflow-hidden { overflow: hidden; }
+  
+//   /* Additional styles for room management integration */
+//   .screen-container {
+//     height: 100%;
+//     overflow-y: auto;
+//     padding: 0;
+//   }
+  
+//   .screen-container > * {
+//     height: 100%;
+//   }
+  
+//   .back-button {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 8px;
+//     padding: 10px 20px;
+//     background: #4299e1;
+//     color: white;
+//     border: none;
+//     border-radius: 8px;
+//     font-weight: bold;
+//     cursor: pointer;
+//     margin-bottom: 20px;
+//     transition: all 0.2s;
+//   }
+  
+//   .back-button:hover {
+//     background: #3182ce;
+//     transform: scale(1.05);
+//   }
+  
+//   .coming-soon {
+//     padding: 60px;
+//     text-align: center;
+//     font-size: 18px;
+//     color: #7f8c8d;
+//     background: white;
+//     border-radius: 12px;
+//     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+//   }
+  
+//   .coming-soon .icon {
+//     font-size: 48px;
+//     display: block;
+//     margin-bottom: 20px;
+//   }
+  
+//   .coming-soon .title {
+//     font-size: 24px;
+//     font-weight: bold;
+//     color: #2c3e50;
+//     margin-bottom: 10px;
+//   }
+  
+//   .coming-soon .subtitle {
+//     color: #95a5a6;
+//   }
+
+//   /* Guide Button Styles */
+//   .guide-btn {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 8px;
+//     padding: 8px 16px;
+//     background: linear-gradient(135deg, #9f7aea, #805ad5);
+//     color: white;
+//     border: none;
+//     border-radius: 20px;
+//     font-weight: bold;
+//     cursor: pointer;
+//     font-size: 14px;
+//     transition: all 0.2s;
+//     box-shadow: 0 2px 10px rgba(159, 122, 234, 0.3);
+//   }
+  
+//   .guide-btn:hover {
+//     transform: scale(1.05);
+//     box-shadow: 0 4px 15px rgba(159, 122, 234, 0.4);
+//   }
+//   .guide-btn:active {
+//     transform: scale(0.95);
+//   }
+
+//   /* Guide Modal Override */
+//   .guide-modal-overlay {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background: rgba(0, 0, 0, 0.7);
+//     backdrop-filter: blur(5px);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     z-index: 9999;
+//     padding: 20px;
+//   }
+  
+//   .guide-modal-content {
+//     max-width: 90%;
+//     max-height: 90vh;
+//     overflow-y: auto;
+//     background: transparent;
+//     width: 100%;
+//   }
+
+//   /* ===== RESPONSIVE BREAKPOINTS ===== */
+  
+//   /* Tablets & Small Laptops */
+//   @media (max-width: 1024px) {
+//     .sidebar {
+//       width: 55px;
+//       min-width: 55px;
+//     }
+//     .sidebar:hover {
+//       width: 220px;
+//     }
+//     .topbar .clinic {
+//       font-size: 20px;
+//     }
+//     .topbar .datetime {
+//       font-size: 14px;
+//       gap: 10px;
+//     }
+//     .summary .card .value {
+//       font-size: 28px;
+//     }
+//   }
+
+//   /* Mobile & Small Tablets */
+//   @media (max-width: 768px) {
+//     .hamburger-btn {
+//       display: block;
+//     }
+    
+//     .sidebar-wrapper {
+//       position: relative;
+//     }
+    
+//     .sidebar {
+//       position: fixed;
+//       top: 0;
+//       left: 0;
+//       bottom: 0;
+//       z-index: 1000;
+//       width: 280px !important;
+//       transform: translateX(-100%);
+//       transition: transform 0.3s ease;
+//       box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+//     }
+    
+//     .sidebar.open {
+//       transform: translateX(0);
+//     }
+    
+//     .sidebar .header .title,
+//     .sidebar .menu button .label,
+//     .sidebar .logout button .label {
+//       opacity: 1 !important;
+//     }
+    
+//     .sidebar-overlay.active {
+//       display: block;
+//     }
+    
+//     .topbar {
+//       padding: 10px 15px;
+//     }
+    
+//     .topbar .clinic {
+//       font-size: 16px;
+//       gap: 6px;
+//     }
+    
+//     .topbar .clinic span:last-child {
+//       font-size: 14px;
+//     }
+    
+//     .topbar .datetime {
+//       font-size: 12px;
+//       gap: 8px;
+//       flex-wrap: wrap;
+//     }
+    
+//     .topbar .datetime .time {
+//       font-size: 16px;
+//     }
+    
+//     .topbar .datetime input[type="date"] {
+//       max-width: 120px;
+//       font-size: 12px;
+//     }
+    
+//     .guide-btn {
+//       padding: 4px 10px;
+//       font-size: 11px;
+//     }
+    
+//     .main {
+//       padding: 12px;
+//     }
+    
+//     .main .title {
+//       font-size: 22px;
+//       margin-bottom: 15px;
+//     }
+    
+//     .summary {
+//       grid-template-columns: repeat(2, 1fr);
+//       gap: 10px;
+//     }
+    
+//     .summary .card {
+//       min-width: auto;
+//       padding: 10px;
+//     }
+    
+//     .summary .card .icon {
+//       font-size: 22px;
+//     }
+    
+//     .summary .card .value {
+//       font-size: 24px;
+//     }
+    
+//     .summary .card .title {
+//       font-size: 11px;
+//     }
+    
+//     .toggle-btn {
+//       font-size: 14px;
+//       padding: 10px 20px;
+//       max-width: 100%;
+//     }
+    
+//     /* Mobile table view - convert to cards */
+//     .content-container .table-view thead {
+//       display: none;
+//     }
+    
+//     .content-container .table-view tr {
+//       display: block;
+//       margin-bottom: 15px;
+//       border: 1px solid #e9ecef;
+//       border-radius: 8px;
+//       padding: 10px;
+//       background: white;
+//     }
+    
+//     .content-container .table-view td {
+//       display: flex;
+//       justify-content: space-between;
+//       padding: 8px 10px;
+//       border: 0;
+//       border-bottom: 1px solid #f0f0f0;
+//       align-items: center;
+//       font-size: 14px;
+//     }
+    
+//     .content-container .table-view td:last-child {
+//       border-bottom: 0;
+//     }
+    
+//     .content-container .table-view td::before {
+//       content: attr(data-label);
+//       font-weight: bold;
+//       margin-right: 10px;
+//       color: #2c3e50;
+//       font-size: 13px;
+//     }
+    
+//     .content-container .table-view td:first-child {
+//       font-weight: bold;
+//       font-size: 16px;
+//     }
+    
+//     .scrollable {
+//       max-height: 50vh;
+//     }
+    
+//     .card-grid {
+//       grid-template-columns: 1fr;
+//       padding: 12px;
+//       gap: 10px;
+//     }
+    
+//     .statusbar {
+//       padding: 8px 15px;
+//       gap: 10px;
+//       font-size: 12px;
+//     }
+    
+//     .statusbar .version {
+//       margin-left: 0;
+//       width: 100%;
+//       text-align: right;
+//     }
+    
+//     .coming-soon {
+//       padding: 30px 20px;
+//     }
+    
+//     .coming-soon .icon {
+//       font-size: 36px;
+//     }
+    
+//     .coming-soon .title {
+//       font-size: 20px;
+//     }
+    
+//     .guide-modal-content {
+//       max-width: 100%;
+//       max-height: 95vh;
+//     }
+//   }
+
+//   /* Very Small Phones */
+//   @media (max-width: 480px) {
+//     .topbar {
+//       padding: 8px 10px;
+//     }
+    
+//     .topbar .clinic {
+//       font-size: 14px;
+//     }
+    
+//     .topbar .clinic span:last-child {
+//       font-size: 12px;
+//       max-width: 100px;
+//       overflow: hidden;
+//       text-overflow: ellipsis;
+//       white-space: nowrap;
+//     }
+    
+//     .topbar .datetime {
+//       font-size: 11px;
+//       gap: 5px;
+//     }
+    
+//     .topbar .datetime .time {
+//       font-size: 14px;
+//     }
+    
+//     .topbar .datetime input[type="date"] {
+//       max-width: 90px;
+//       font-size: 11px;
+//       padding: 2px 4px;
+//     }
+    
+//     .guide-btn {
+//       padding: 3px 8px;
+//       font-size: 10px;
+//     }
+    
+//     .main {
+//       padding: 8px;
+//     }
+    
+//     .main .title {
+//       font-size: 18px;
+//       margin-bottom: 12px;
+//     }
+    
+//     .summary {
+//       grid-template-columns: 1fr 1fr;
+//       gap: 6px;
+//     }
+    
+//     .summary .card {
+//       padding: 8px;
+//       border-radius: 10px;
+//     }
+    
+//     .summary .card .icon {
+//       font-size: 18px;
+//     }
+    
+//     .summary .card .value {
+//       font-size: 20px;
+//     }
+    
+//     .summary .card .title {
+//       font-size: 10px;
+//     }
+    
+//     .toggle-btn {
+//       font-size: 12px;
+//       padding: 8px 15px;
+//     }
+    
+//     .content-container .table-view td {
+//       font-size: 12px;
+//       padding: 6px 8px;
+//     }
+    
+//     .card-grid {
+//       padding: 8px;
+//       gap: 8px;
+//     }
+    
+//     .card-grid .appt-card {
+//       padding: 12px;
+//     }
+    
+//     .card-grid .appt-card .patient {
+//       font-size: 16px;
+//     }
+    
+//     .card-grid .appt-card .detail {
+//       font-size: 12px;
+//     }
+    
+//     .statusbar {
+//       padding: 6px 12px;
+//       font-size: 11px;
+//     }
+//   }
+// `;
+
+// // -------------------- Helper: format local date --------------------
+// const formatLocalDate = (date) => {
+//   const year = date.getFullYear();
+//   const month = String(date.getMonth() + 1).padStart(2, '0');
+//   const day = String(date.getDate()).padStart(2, '0');
+//   return `${year}-${month}-${day}`;
+// };
+
+// // -------------------- API call using BASE_URL --------------------
+// const fetchScheduleFromApi = async (date) => {
+//   const formattedDate = formatLocalDate(date);
+//   const url = `${BASE_URL}/api/schedule?date=${formattedDate}`;
+//   console.log('📤 Fetching:', url);
+
+//   try {
+//     const response = await fetch(url);
+//     console.log('📡 Response status:', response.status);
+//     const rawText = await response.text();
+//     console.log('📄 Raw response body:', rawText);
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP ${response.status}: ${rawText}`);
+//     }
+
+//     return JSON.parse(rawText);
+//   } catch (err) {
+//     console.error('🚨 Fetch error:', err);
+//     throw err;
+//   }
+// };
+
+// // -------------------- Main Component --------------------
+// const AdminHomePage = () => {
+//   // ---------- Language ----------
+//   const lang = sessionStorage.getItem('lang') || 'en';
+//   const t = adminTranslations[lang];
+//   const isRTL = lang === 'ar';
+
+//   // ---------- State ----------
+//   const [appointments, setAppointments] = useState([]);
+//   const [filteredAppointments, setFilteredAppointments] = useState([]);
+//   const [summary, setSummary] = useState({ total: 0, attended: 0, inProgress: 0, cancelled: 0 });
+//   const [viewMode, setViewMode] = useState('table');
+//   const [loading, setLoading] = useState(false);
+//   const [statusMessage, setStatusMessage] = useState({ text: `● ${t.status.ready}`, type: 'success' });
+//   const [clinicInfo, setClinicInfo] = useState({ name: t.clinic.default, date: '' });
+//   const [currentTime, setCurrentTime] = useState(new Date());
+//   const [selectedDate, setSelectedDate] = useState(new Date());
+//   const [currentScreen, setCurrentScreen] = useState('dashboard');
+//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+//   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+//   // Guide state
+//   const [showGuide, setShowGuide] = useState(false);
+//   const [guideStep, setGuideStep] = useState(0);
+
+//   const refreshInterval = useRef(null);
+//   const navigate = useNavigate();
+
+//   // Get user role from localStorage
+//   const userRole = localStorage.getItem('userRole') || 'ASSISTANT';
+//   const isAdmin = userRole === 'ADMIN';
+
+//   // ---------- Handle window resize ----------
+//   useEffect(() => {
+//     const handleResize = () => {
+//       const mobile = window.innerWidth <= 768;
+//       setIsMobile(mobile);
+//       if (!mobile) {
+//         setIsMobileMenuOpen(false);
+//       }
+//     };
+//     window.addEventListener('resize', handleResize);
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   // ---------- Helper: update status ----------
+//   const setStatus = useCallback((text, type = 'success') => {
+//     setStatusMessage({ text, type });
+//   }, []);
+
+//   // ---------- Load clinic info from API ----------
+//   useEffect(() => {
+//     const loadClinic = async () => {
+//       try {
+//         const data = await fetchClinicInfo();
+//         if (data) {
+//           const displayDate = data.day && data.date ? `${data.day} | ${data.date}` : t.clinic.default;
+//           setClinicInfo({
+//             name: data.clinicName || t.clinic.default,
+//             date: displayDate,
+//           });
+//         } else {
+//           setClinicInfo({
+//             name: t.clinic.default,
+//             date: new Date().toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US', {
+//               weekday: 'long',
+//               year: 'numeric',
+//               month: 'long',
+//               day: 'numeric',
+//             }),
+//           });
+//         }
+//       } catch (err) {
+//         console.warn('Failed to fetch clinic info:', err);
+//       }
+//     };
+//     loadClinic();
+//   }, [lang, t]);
+
+//   // ---------- Load appointments from API ----------
+//   const loadAppointments = useCallback(async (date) => {
+//     setLoading(true);
+//     setStatus(t.status.loading, 'loading');
+//     try {
+//       const data = await fetchScheduleFromApi(date);
+//       const allItems = [...(data.appointments || []), ...(data.walkIns || [])];
+//       const rows = allItems.map(item => {
+//         const timeStr = item.visitTime || item.appointmentTime;
+//         const time = timeStr ? new Date(timeStr) : new Date();
+//         const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+//         let patientName = '';
+//         if (item.patient) {
+//           const { firstName = '', middleName = '', lastName = '' } = item.patient;
+//           patientName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+//         } else if (item.patientName) {
+//           patientName = item.patientName;
+//         }
+
+//         let doctorName = '';
+//         if (item.doctorName) {
+//           doctorName = item.doctorName;
+//         } else if (item.doctor) {
+//           const { firstName = '', middleName = '', lastName = '' } = item.doctor;
+//           doctorName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+//         }
+
+//         const roomNumber = item.room?.roomNumber || '';
+//         const sectionName = item.room?.section?.name || '';
+
+//         return {
+//           id: item.id,
+//           patientName: patientName || 'Unknown',
+//           doctorName: doctorName || 'N/A',
+//           appointmentTimeString: timeString,
+//           roomNumber,
+//           sectionName,
+//           status: item.status || 'NORMAL',
+//           notes: item.notes || '',
+//         };
+//       });
+
+//       setAppointments(rows);
+//       setFilteredAppointments(rows);
+
+//       const total = rows.length;
+//       const attended = rows.filter(a => a.status === 'ATTENDED').length;
+//       const inProgress = rows.filter(a => a.status === 'IN_PROGRESS').length;
+//       const cancelled = rows.filter(a => a.status === 'CANCELLED').length;
+//       setSummary({ total, attended, inProgress, cancelled });
+//       setStatus(`${t.status.loaded} (${total} ${t.status.appointments})`, 'success');
+//     } catch (err) {
+//       setStatus(t.status.error, 'error');
+//       console.error('🚨 Load error:', err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [t, setStatus]);
+
+//   // ---------- Apply filter ----------
+//   const applyFilter = useCallback((status) => {
+//     if (status === 'ALL') {
+//       setFilteredAppointments(appointments);
+//     } else {
+//       setFilteredAppointments(appointments.filter(a => a.status === status));
+//     }
+//     setStatus(`${t.status.filtered}: ${status}`, 'info');
+//     // Close mobile menu if open
+//     if (isMobile) setIsMobileMenuOpen(false);
+//   }, [appointments, t, setStatus, isMobile]);
+
+//   // ---------- Toggle view ----------
+//   const toggleView = useCallback(() => {
+//     setViewMode(prev => prev === 'table' ? 'card' : 'table');
+//   }, []);
+
+//   // ---------- Clock ----------
+//   useEffect(() => {
+//     const timer = setInterval(() => {
+//       setCurrentTime(new Date());
+//     }, 1000);
+//     return () => clearInterval(timer);
+//   }, []);
+
+//   // ---------- Date change handler ----------
+//   const handleDateChange = (e) => {
+//     const newDate = new Date(e.target.value + 'T00:00:00');
+//     setSelectedDate(newDate);
+//   };
+
+//   // ---------- Initial load and auto‑refresh ----------
+//   useEffect(() => {
+//     loadAppointments(selectedDate);
+//     refreshInterval.current = setInterval(() => {
+//       loadAppointments(selectedDate);
+//     }, 30000);
+//     return () => clearInterval(refreshInterval.current);
+//   }, [selectedDate, loadAppointments]);
+
+//   // ---------- Guide handlers ----------
+//   const openGuide = () => {
+//     setShowGuide(true);
+//     setGuideStep(0);
+//   };
+
+//   const closeGuide = () => {
+//     setShowGuide(false);
+//   };
+
+//   const handleGuideStepChange = (step) => {
+//     setGuideStep(step);
+//   };
+
+//   // ---------- Helper: status CSS class for badge ----------
+//   const getStatusClass = (status) => {
+//     switch (status) {
+//       case 'ATTENDED': return 'attended';
+//       case 'IN_PROGRESS': return 'inprogress';
+//       case 'CLOSED': return 'closed';
+//       case 'CANCELLED': return 'cancelled';
+//       default: return 'normal';
+//     }
+//   };
+
+//   // ---------- Logout handler ----------
+//   const handleLogout = () => {
+//     localStorage.removeItem('adminToken');
+//     localStorage.removeItem('userRole');
+//     localStorage.removeItem('username');
+//     localStorage.removeItem('userId');
+//     navigate('/');
+//   };
+
+//   // ---------- Handle menu item click ----------
+//   const handleMenuClick = (action) => {
+//     action();
+//     if (isMobile) setIsMobileMenuOpen(false);
+//   };
+
+//   // ---------- Toggle mobile menu ----------
+//   const toggleMobileMenu = () => {
+//     setIsMobileMenuOpen(!isMobileMenuOpen);
+//   };
+
+//   // ---------- Render helpers (dashboard) ----------
+//   const renderSummaryCards = () => {
+//     const cards = [
+//       { key: 'total', label: t.summary.total, count: summary.total, icon: '📊', cls: 'total', filter: 'ALL' },
+//       { key: 'attended', label: t.summary.attended, count: summary.attended, icon: '✅', cls: 'attended', filter: 'ATTENDED' },
+//       { key: 'inProgress', label: t.summary.inProgress, count: summary.inProgress, icon: '🔄', cls: 'inprogress', filter: 'IN_PROGRESS' },
+//       { key: 'cancelled', label: t.summary.cancelled, count: summary.cancelled, icon: '❌', cls: 'cancelled', filter: 'CANCELLED' },
+//     ];
+//     return (
+//       <div className="summary">
+//         {cards.map(({ key, label, count, icon, cls, filter }) => (
+//           <div key={key} className={`card ${cls}`} onClick={() => applyFilter(filter)}>
+//             <div className="top-bar"></div>
+//             <div className="icon">{icon}</div>
+//             <div className="title">{label}</div>
+//             <div className="value">{count}</div>
+//           </div>
+//         ))}
+//       </div>
+//     );
+//   };
+
+//   const renderTable = () => (
+//     <table className="table-view">
+//       <thead>
+//         <tr>
+//           <th>{t.table.patient}</th>
+//           <th>{t.table.doctor}</th>
+//           <th>{t.table.time}</th>
+//           <th>{t.table.room}</th>
+//           <th>{t.table.section}</th>
+//           <th>{t.table.status}</th>
+//           <th>{t.table.notes}</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         {filteredAppointments.length === 0 ? (
+//           <tr><td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: '#95a5a6' }}>{t.table.noAppointments}</td></tr>
+//         ) : (
+//           filteredAppointments.map(a => (
+//             <tr key={a.id}>
+//               <td data-label={t.table.patient}>{a.patientName}</td>
+//               <td data-label={t.table.doctor}>{a.doctorName}</td>
+//               <td data-label={t.table.time}>{a.appointmentTimeString}</td>
+//               <td data-label={t.table.room}>{a.roomNumber}</td>
+//               <td data-label={t.table.section}>{a.sectionName}</td>
+//               <td data-label={t.table.status}>
+//                 <span className={`status-badge ${getStatusClass(a.status)}`}>{a.status}</span>
+//               </td>
+//               <td data-label={t.table.notes}>{a.notes}</td>
+//             </tr>
+//           ))
+//         )}
+//       </tbody>
+//     </table>
+//   );
+
+//   const renderCardGrid = () => (
+//     <div className="card-grid">
+//       {filteredAppointments.length === 0 ? (
+//         <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#95a5a6' }}>{t.table.noAppointments}</div>
+//       ) : (
+//         filteredAppointments.map(a => (
+//           <div key={a.id} className={`appt-card`}>
+//             <span className={`status-badge ${getStatusClass(a.status)}`}>{a.status}</span>
+//             <div className="patient">{a.patientName}</div>
+//             <div className="detail"><span>🩺</span> {a.doctorName}</div>
+//             <div className="detail"><span>⏰</span> {a.appointmentTimeString}</div>
+//             <div className="detail"><span>🚪</span> {a.roomNumber} | {a.sectionName}</div>
+//             {a.notes && <div className="detail"><span>📝</span> {a.notes}</div>}
+//           </div>
+//         ))
+//       )}
+//     </div>
+//   );
+
+//   // ---------- Sidebar menu items ----------
+//   const menuItems = [
+//     { icon: '🏠', label: t.sidebar.home || 'Home', action: () => handleMenuClick(() => setCurrentScreen('dashboard')) },
+//     { icon: '🔍', label: t.sidebar.searchPatient, action: () => handleMenuClick(() => setCurrentScreen('searchPatient')) },
+//     { icon: '📅', label: t.sidebar.appointments, action: () => handleMenuClick(() => setCurrentScreen('appointmentsAdmin')) },
+//     { icon: '📝', label: t.sidebar.visitTracking, action: () => handleMenuClick(() => setCurrentScreen('visitTracking')) },
+//     { icon: '📑', label: t.sidebar.claimsTracking, action: () => handleMenuClick(() => setCurrentScreen('claimsTracking')) },
+//     { icon: '🩺', label: t.sidebar.manageDoctors, action: () => handleMenuClick(() => setCurrentScreen('doctorManagement')) },
+//     { icon: '📊', label: t.sidebar.reports, action: () => handleMenuClick(() => setCurrentScreen('reports')) },
+//     { icon: '💰', label: t.sidebar.clinicPayments, action: () => handleMenuClick(() => setCurrentScreen('clinicPayments')) },
+//     { icon: '🏢', label: t.sidebar.manageSections, action: () => handleMenuClick(() => setCurrentScreen('manageSections')) },
+//     { icon: '🚪', label: t.sidebar.manageRooms, action: () => handleMenuClick(() => setCurrentScreen('manageRooms')) },
+//     { icon: '👤', label: t.sidebar.userManagement, action: () => handleMenuClick(() => setCurrentScreen('userManagement')) },
+//     { icon: '🏥', label: t.sidebar.healthInsurance, action: () => handleMenuClick(() => setCurrentScreen('healthInsurance')) },
+//     ...(isAdmin ? [{ icon: '📜', label: t.sidebar.logs, action: () => handleMenuClick(() => setCurrentScreen('logs')) }] : []),
+//     { icon: 'ℹ️', label: t.sidebar.about, action: () => handleMenuClick(() => setCurrentScreen('about')) },
+//   ];
+
+//   // ---------- Render coming soon placeholder ----------
+//   const renderComingSoon = (icon, title, subtitle) => (
+//     <div className="coming-soon">
+//       <span className="icon">{icon}</span>
+//       <div className="title">{title}</div>
+//       <div className="subtitle">{subtitle}</div>
+//     </div>
+//   );
+
+//   // ---------- JSX ----------
+//   return (
+//     <>
+//       <style>{styles}</style>
+//       <div className="app" dir={isRTL ? 'rtl' : 'ltr'}>
+//         {/* Top Bar */}
+//         <div className="topbar">
+//           <div className="clinic">
+//             {isMobile && (
+//               <button className="hamburger-btn" onClick={toggleMobileMenu}>
+//                 ☰
+//               </button>
+//             )}
+//             <span>🏥</span>
+//             <span>{clinicInfo.name}</span>
+//           </div>
+//           <div className="datetime">
+//             <span>📅 {clinicInfo.date}</span>
+//             <input
+//               type="date"
+//               value={formatLocalDate(selectedDate)}
+//               onChange={handleDateChange}
+//               style={{
+//                 padding: '4px 8px',
+//                 borderRadius: '6px',
+//                 border: 'none',
+//                 backgroundColor: 'rgba(255,255,255,0.2)',
+//                 color: 'white',
+//                 fontWeight: 'bold',
+//                 fontSize: isMobile ? '12px' : '14px',
+//                 maxWidth: isMobile ? '120px' : '150px',
+//               }}
+//             />
+//             <span>
+//               <span className="clock-icon">🕐</span>
+//               <span className="time">
+//                 {currentTime.toLocaleTimeString(lang === 'ar' ? 'ar-EG' : 'en-GB', {
+//                   hour: '2-digit',
+//                   minute: '2-digit',
+//                   second: '2-digit',
+//                 })}
+//               </span>
+//             </span>
+//             <button 
+//               className="guide-btn"
+//               onClick={openGuide}
+//             >
+//               🗺️ Guide
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="flex-row flex-1 overflow-hidden">
+//           {/* Sidebar Overlay for mobile */}
+//           <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={toggleMobileMenu} />
+
+//           {/* Sidebar */}
+//           <div className="sidebar-wrapper">
+//             <div className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+//               <div className="header">
+//                 <span className="icon">☰</span>
+//                 <span className="title">{t.sidebar.menu}</span>
+//               </div>
+//               <div className="menu">
+//                 {menuItems.map((item, idx) => (
+//                   <button key={idx} onClick={item.action}>
+//                     <span>{item.icon}</span>
+//                     <span className="label">{item.label}</span>
+//                   </button>
+//                 ))}
+//                 {/* <button onClick={openGuide} style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+//                   <span>🗺️</span>
+//                   <span className="label">Patient Guide</span>
+//                 </button> */}
+//               </div>
+//               <div className="logout">
+//                 <button onClick={handleLogout}>
+//                   <span>🚪</span>
+//                   <span className="label">{t.sidebar.logout}</span>
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Main Content */}
+//           <div className="main">
+//             {currentScreen === 'dashboard' && (
+//               <>
+//                 <div className="title">
+//                   <span>📊</span>
+//                   <span>{t.dashboard.title}</span>
+//                 </div>
+
+//                 {renderSummaryCards()}
+
+//                 <button className="toggle-btn" onClick={toggleView}>
+//                   {viewMode === 'table'
+//                     ? `📇 ${t.dashboard.switchToCard}`
+//                     : `📋 ${t.dashboard.switchToTable}`}
+//                 </button>
+
+//                 <div className="content-container">
+//                   <div className="scrollable">
+//                     {viewMode === 'table' ? renderTable() : renderCardGrid()}
+//                   </div>
+//                 </div>
+
+//                 <div className="statusbar">
+//                   {loading && <div className="loading">⏳</div>}
+//                   <span className={`message ${statusMessage.type}`}>{statusMessage.text}</span>
+//                   <span className="version">v2.0.0</span>
+//                 </div>
+//               </>
+//             )}
+
+//             {currentScreen === 'claimsTracking' && (
+//               <ClaimsTrackingScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'visitTracking' && (
+//               <VisitTrackingScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'searchPatient' && (
+//               <SearchPatientScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'appointmentsAdmin' && (
+//               <AppointmentsAdminScreen
+//                 refreshCallback={() => {}}
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//                 embedded={true}
+//               />
+//             )}
+
+//             {currentScreen === 'doctorManagement' && (
+//               <DoctorManagementScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'reports' && (
+//               <ReportsScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'clinicPayments' && (
+//               <ClinicPaymentReportScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'manageSections' && (
+//               <SectionManagementScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'manageRooms' && (
+//               <RoomManagementScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'userManagement' && (
+//               <UserManagementScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'healthInsurance' && (
+//               <HealthInsuranceScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'logs' && isAdmin && (
+//               <LogsMonitorScreen
+//                 loggedUser={localStorage.getItem('adminToken') ? 'admin' : ''}
+//                 lang={lang}
+//                 onClose={() => setCurrentScreen('dashboard')}
+//               />
+//             )}
+
+//             {currentScreen === 'about' && (
+//               renderComingSoon('ℹ️', 'About', 'Coming Soon!')
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Guide Modal */}
+//       {showGuide && (
+//         <div className="guide-modal-overlay">
+//           <div className="guide-modal-content">
+//             <PatientLifeCycleGuide
+//               isOpen={showGuide}
+//               onClose={closeGuide}
+//               locale={lang}
+//               onStepChange={handleGuideStepChange}
+//             />
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default AdminHomePage;  17072026  11:00 pm
+
 import React, {
   useState,
   useEffect,
@@ -15539,6 +17003,11 @@ const styles = `
     color: white;
     margin-bottom: 8px;
   }
+  .card-grid .appt-card .status-badge.attended { background: #27ae60; }
+  .card-grid .appt-card .status-badge.inprogress { background: #f39c12; }
+  .card-grid .appt-card .status-badge.closed { background: #e74c3c; }
+  .card-grid .appt-card .status-badge.cancelled { background: #95a5a6; }
+  .card-grid .appt-card .status-badge.normal { background: #3498db; }
   .card-grid .appt-card .patient {
     font-size: 18px;
     font-weight: bold;
@@ -16248,6 +17717,15 @@ const AdminHomePage = () => {
     }
   };
 
+  // ---------- Helper: format status display ----------
+  const formatStatusDisplay = (status) => {
+    if (!status) return 'Normal';
+    return status
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, char => char.toUpperCase());
+  };
+
   // ---------- Logout handler ----------
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
@@ -16332,7 +17810,9 @@ const AdminHomePage = () => {
       ) : (
         filteredAppointments.map(a => (
           <div key={a.id} className={`appt-card`}>
-            <span className={`status-badge ${getStatusClass(a.status)}`}>{a.status}</span>
+            <span className={`status-badge ${getStatusClass(a.status)}`}>
+              {formatStatusDisplay(a.status)}
+            </span>
             <div className="patient">{a.patientName}</div>
             <div className="detail"><span>🩺</span> {a.doctorName}</div>
             <div className="detail"><span>⏰</span> {a.appointmentTimeString}</div>
@@ -16441,10 +17921,6 @@ const AdminHomePage = () => {
                     <span className="label">{item.label}</span>
                   </button>
                 ))}
-                {/* <button onClick={openGuide} style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span>🗺️</span>
-                  <span className="label">Patient Guide</span>
-                </button> */}
               </div>
               <div className="logout">
                 <button onClick={handleLogout}>
