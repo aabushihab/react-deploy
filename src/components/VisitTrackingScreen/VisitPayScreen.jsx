@@ -5427,6 +5427,9 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   // Check if total payment exceeds original amount
   const isTotalExceedingOriginal = payingNow > originalAmount;
 
+  // Check if FREE payment is valid
+  const isFreePaymentValid = paymentType === 'FREE' && originalAmount > 0;
+
   // Load insurance data when payment type is INSURANCE
   useEffect(() => {
     if (paymentType === 'INSURANCE' && visit.patientId) {
@@ -6617,7 +6620,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
                 loading || 
                 originalAmount <= 0 || 
                 isTotalExceedingOriginal || 
-                (paymentType !== 'FREE' && paymentType !== 'INSURANCE' && payingNow <= 0)
+                (!isFreePaymentValid && paymentType !== 'INSURANCE' && payingNow <= 0)
               }
             >
               {loading ? '⏳ Processing...' : '💰 Pay'}
