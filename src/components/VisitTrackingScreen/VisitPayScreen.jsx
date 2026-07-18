@@ -5427,8 +5427,11 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   // Check if total payment exceeds original amount
   const isTotalExceedingOriginal = payingNow > originalAmount;
 
-  // Check if FREE payment is valid
-  const isFreePaymentValid = paymentType === 'FREE' && originalAmount > 0;
+  // Check if FREE payment is valid (only when originalAmount is 0)
+  const isFreePaymentValid = paymentType === 'FREE' && originalAmount === 0;
+
+  // Check if FREE option should be shown
+  const showFreeOption = originalAmount === 0;
 
   // Load insurance data when payment type is INSURANCE
   useEffect(() => {
@@ -5484,6 +5487,11 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
 
     // Validate payment amount based on payment type
     if (paymentType === 'FREE') {
+      // For FREE payment, originalAmount must be 0
+      if (originalAmount !== 0) {
+        errors.paymentAmount = 'FREE payment is only available when amount is 0';
+        isValid = false;
+      }
       // For FREE payment, only 0 is allowed
       if (payingNow !== 0) {
         errors.paymentAmount = t.error.freeAmountNotZero;
@@ -5616,7 +5624,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         payments.push(insurancePayment);
       }
 
-      // FREE payment - always 0 amount
+      // FREE payment - only available when originalAmount is 0
       if (paymentType === 'FREE') {
         payments.push({
           paymentMethod: 'FREE',
@@ -6339,7 +6347,10 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
               <option value="POS">POS</option>
               <option value="CASH + POS">CASH + POS</option>
               <option value="INSURANCE">INSURANCE</option>
-              <option value="FREE">FREE</option>
+              {/* Only show FREE option when originalAmount is 0 */}
+              {showFreeOption && (
+                <option value="FREE">FREE</option>
+              )}
             </select>
           </div>
 
@@ -6632,4 +6643,4 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   );
 };
 
-export default VisitPayScreen;
+export default VisitPayScreen;//ss
