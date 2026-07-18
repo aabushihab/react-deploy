@@ -5427,11 +5427,11 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   // Check if total payment exceeds original amount
   const isTotalExceedingOriginal = payingNow > originalAmount;
 
-  // Check if FREE payment is valid (only when originalAmount is 0)
-  const isFreePaymentValid = paymentType === 'FREE' && originalAmount === 0;
+  // Check if FREE payment is valid (FREE is always valid when selected, regardless of amount)
+  const isFreePaymentValid = paymentType === 'FREE';
 
-  // Check if FREE option should be shown
-  const showFreeOption = originalAmount === 0;
+  // Check if FREE option should be shown (always show it)
+  const showFreeOption = true;
 
   // Load insurance data when payment type is INSURANCE
   useEffect(() => {
@@ -5487,12 +5487,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
 
     // Validate payment amount based on payment type
     if (paymentType === 'FREE') {
-      // For FREE payment, originalAmount must be 0
-      if (originalAmount !== 0) {
-        errors.paymentAmount = 'FREE payment is only available when amount is 0';
-        isValid = false;
-      }
-      // For FREE payment, only 0 is allowed
+      // For FREE payment, only 0 is allowed for cash/pos amounts
       if (payingNow !== 0) {
         errors.paymentAmount = t.error.freeAmountNotZero;
         isValid = false;
@@ -5624,7 +5619,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
         payments.push(insurancePayment);
       }
 
-      // FREE payment - only available when originalAmount is 0
+      // FREE payment - always 0 amount, regardless of originalAmount
       if (paymentType === 'FREE') {
         payments.push({
           paymentMethod: 'FREE',
@@ -6347,10 +6342,8 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
               <option value="POS">POS</option>
               <option value="CASH + POS">CASH + POS</option>
               <option value="INSURANCE">INSURANCE</option>
-              {/* Only show FREE option when originalAmount is 0 */}
-              {showFreeOption && (
-                <option value="FREE">FREE</option>
-              )}
+              {/* Always show FREE option */}
+              <option value="FREE">FREE</option>
             </select>
           </div>
 
@@ -6643,4 +6636,4 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   );
 };
 
-export default VisitPayScreen;//ss
+export default VisitPayScreen;
