@@ -5430,9 +5430,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
   // Check if FREE payment is valid (FREE is always valid when selected, regardless of amount)
   const isFreePaymentValid = paymentType === 'FREE';
 
-  // Check if FREE option should be shown (always show it)
-  const showFreeOption = true;
-
   // Load insurance data when payment type is INSURANCE
   useEffect(() => {
     if (paymentType === 'INSURANCE' && visit.patientId) {
@@ -5479,8 +5476,8 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
     const errors = {};
     let isValid = true;
 
-    // Validate original amount
-    if (originalAmount <= 0) {
+    // Validate original amount (only for non-FREE payments)
+    if (paymentType !== 'FREE' && originalAmount <= 0) {
       errors.originalAmount = t.error.originalAmountRequired;
       isValid = false;
     }
@@ -6342,7 +6339,6 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
               <option value="POS">POS</option>
               <option value="CASH + POS">CASH + POS</option>
               <option value="INSURANCE">INSURANCE</option>
-              {/* Always show FREE option */}
               <option value="FREE">FREE</option>
             </select>
           </div>
@@ -6622,7 +6618,7 @@ const VisitPayScreen = ({ visit, remaining, loggedUser, onClose, onPaymentComple
               onClick={handlePay}
               disabled={
                 loading || 
-                originalAmount <= 0 || 
+                (paymentType !== 'FREE' && originalAmount <= 0) || 
                 isTotalExceedingOriginal || 
                 (!isFreePaymentValid && paymentType !== 'INSURANCE' && payingNow <= 0)
               }
