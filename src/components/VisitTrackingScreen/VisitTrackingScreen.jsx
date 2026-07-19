@@ -11405,8 +11405,8 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
     }
   }, []);
 
-  // ---------- Parse a single visit ----------
  // ---------- Parse a single visit ----------
+// ---------- Parse a single visit ----------
 const parseVisit = (v) => {
   const p = v.patient || {};
   const d = v.doctor || {};
@@ -11423,7 +11423,7 @@ const parseVisit = (v) => {
   let hasCash = false;
   let hasPos = false;
   let hasInsurance = false;
-  let hasFree = false;  // ✅ ADD THIS
+  let hasFree = false;
 
   payments.forEach(pay => {
     const method = pay.paymentMethod;
@@ -11437,24 +11437,30 @@ const parseVisit = (v) => {
       insuranceFormId = pay.insuranceFormId || null;
       insuranceCardId = pay.insuranceCardId || null;
     }
-    if (method === 'FREE') hasFree = true;  // ✅ ADD THIS
+    if (method === 'FREE') hasFree = true;
     
     paidAmount += amount;
   });
 
-  // Determine payment method based on what payments exist
+  // ✅ CORRECTED: Determine payment method with proper priority
   if (hasInsurance) {
     paymentMethod = 'INSURANCE';
+  } else if (hasFree && hasCash && hasPos) {
+    paymentMethod = 'FREE + CASH + POS';
+  } else if (hasFree && hasCash && !hasPos) {
+    paymentMethod = 'FREE + CASH';
+  } else if (hasFree && hasPos && !hasCash) {
+    paymentMethod = 'FREE + POS';
   } else if (hasFree && !hasCash && !hasPos) {
-    paymentMethod = 'FREE';  // ✅ Only FREE payment
+    paymentMethod = 'FREE';  // ✅ This handles FREE-only visits
   } else if (hasCash && hasPos) {
     paymentMethod = 'CASH + POS';
   } else if (hasCash) {
     paymentMethod = 'CASH';
   } else if (hasPos) {
     paymentMethod = 'POS';
-  } else if (hasFree && (hasCash || hasPos)) {
-    paymentMethod = 'FREE + ' + (hasCash ? 'CASH' : '') + (hasPos ? (hasCash ? ' + POS' : 'POS') : '');
+  } else {
+    paymentMethod = 'NEW';  // No payments
   }
 
   const totalPaid = paidAmount || 0;
@@ -11468,7 +11474,7 @@ const parseVisit = (v) => {
     visitType: v.visitType || 'N/A',
     visitStatus: v.visitStatus || 'NEW',
     paid: v.paid ? 'YES' : 'NO',
-    paymentMethod: paymentMethod,
+    paymentMethod: paymentMethod,  // ✅ This will be 'FREE' for FREE visits
     amount: originalAmount,
     totalPaid: totalPaid,
     remaining: remaining,
@@ -11476,10 +11482,9 @@ const parseVisit = (v) => {
     insuranceFormId: insuranceFormId,
     insuranceCardId: insuranceCardId,
     payments: payments,
-    patient: p, // Store full patient object
+    patient: p,
   };
 };
-
 
 
   // ---------- Fetch visits by date ----------
