@@ -11406,71 +11406,81 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
   }, []);
 
   // ---------- Parse a single visit ----------
-  const parseVisit = (v) => {
-    const p = v.patient || {};
-    const d = v.doctor || {};
+ // ---------- Parse a single visit ----------
+const parseVisit = (v) => {
+  const p = v.patient || {};
+  const d = v.doctor || {};
 
-    let originalAmount = v.originalAmount || 0;
-    let paidAmount = 0;
-    let paymentMethod = 'NEW';
-    let insurancePaid = false;
-    let insuranceFormId = null;
-    let insuranceCardId = null;
+  let originalAmount = v.originalAmount || 0;
+  let paidAmount = 0;
+  let paymentMethod = 'NEW';
+  let insurancePaid = false;
+  let insuranceFormId = null;
+  let insuranceCardId = null;
 
-    const payments = v.payments || [];
+  const payments = v.payments || [];
 
-    let hasCash = false;
-    let hasPos = false;
-    let hasInsurance = false;
+  let hasCash = false;
+  let hasPos = false;
+  let hasInsurance = false;
+  let hasFree = false;  // ✅ ADD THIS
 
-    payments.forEach(pay => {
-      const method = pay.paymentMethod;
-      const amount = pay.amount || 0;
+  payments.forEach(pay => {
+    const method = pay.paymentMethod;
+    const amount = pay.amount || 0;
 
-      if (method === 'CASH') hasCash = true;
-      if (method === 'POS') hasPos = true;
-      if (method === 'INSURANCE') {
-        hasInsurance = true;
-        insurancePaid = pay.insurancePaid || false;
-        insuranceFormId = pay.insuranceFormId || null;
-        insuranceCardId = pay.insuranceCardId || null;
-      }
-      paidAmount += amount;
-    });
-
-    // Determine payment method based on what payments exist
-    if (hasInsurance) {
-      paymentMethod = 'INSURANCE';
-    } else if (hasCash && hasPos) {
-      paymentMethod = 'CASH + POS';
-    } else if (hasCash) {
-      paymentMethod = 'CASH';
-    } else if (hasPos) {
-      paymentMethod = 'POS';
+    if (method === 'CASH') hasCash = true;
+    if (method === 'POS') hasPos = true;
+    if (method === 'INSURANCE') {
+      hasInsurance = true;
+      insurancePaid = pay.insurancePaid || false;
+      insuranceFormId = pay.insuranceFormId || null;
+      insuranceCardId = pay.insuranceCardId || null;
     }
+    if (method === 'FREE') hasFree = true;  // ✅ ADD THIS
+    
+    paidAmount += amount;
+  });
 
-    const totalPaid = paidAmount || 0;
-    const remaining = Math.max(0, originalAmount - totalPaid);
+  // Determine payment method based on what payments exist
+  if (hasInsurance) {
+    paymentMethod = 'INSURANCE';
+  } else if (hasFree && !hasCash && !hasPos) {
+    paymentMethod = 'FREE';  // ✅ Only FREE payment
+  } else if (hasCash && hasPos) {
+    paymentMethod = 'CASH + POS';
+  } else if (hasCash) {
+    paymentMethod = 'CASH';
+  } else if (hasPos) {
+    paymentMethod = 'POS';
+  } else if (hasFree && (hasCash || hasPos)) {
+    paymentMethod = 'FREE + ' + (hasCash ? 'CASH' : '') + (hasPos ? (hasCash ? ' + POS' : 'POS') : '');
+  }
 
-    return {
-      id: v.id,
-      patientId: p.id || null,
-      patientName: p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Unknown',
-      doctorName: d.fullName || `${d.firstName || ''} ${d.lastName || ''}`.trim() || 'Unknown',
-      visitType: v.visitType || 'N/A',
-      visitStatus: v.visitStatus || 'NEW',
-      paid: v.paid ? 'YES' : 'NO',
-      paymentMethod: paymentMethod,
-      amount: originalAmount,
-      totalPaid: totalPaid,
-      remaining: remaining,
-      insurancePaid: insurancePaid,
-      insuranceFormId: insuranceFormId,
-      insuranceCardId: insuranceCardId,
-      payments: payments,
-      patient: p, // Store full patient object
-    };
+  const totalPaid = paidAmount || 0;
+  const remaining = Math.max(0, originalAmount - totalPaid);
+
+  return {
+    id: v.id,
+    patientId: p.id || null,
+    patientName: p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Unknown',
+    doctorName: d.fullName || `${d.firstName || ''} ${d.lastName || ''}`.trim() || 'Unknown',
+    visitType: v.visitType || 'N/A',
+    visitStatus: v.visitStatus || 'NEW',
+    paid: v.paid ? 'YES' : 'NO',
+    paymentMethod: paymentMethod,
+    amount: originalAmount,
+    totalPaid: totalPaid,
+    remaining: remaining,
+    insurancePaid: insurancePaid,
+    insuranceFormId: insuranceFormId,
+    insuranceCardId: insuranceCardId,
+    payments: payments,
+    patient: p, // Store full patient object
   };
+};
+
+
 
   // ---------- Fetch visits by date ----------
   const fetchVisitsByDate = useCallback(async (date) => {
@@ -11925,7 +11935,7 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
   const canPay = (visit) => {
     if (!visit) return false;
-    return visit.paid !== 'YES' && !visit.insurancePaid;
+  return visit.paid !== 'YES' && !visit.insurancePaid && visit.remaining > 0;
   };
 
   // ---------- Render ----------
