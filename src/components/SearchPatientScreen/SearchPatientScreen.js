@@ -6460,7 +6460,7 @@ const SearchPatientScreen = ({ loggedUser, lang = 'en', onClose }) => {
       const tr = (key) => pdfTranslations[key] || key;
 
       const imgData = new Image();
-      imgData.src = '/report-pic.png';
+      imgData.src = '/report-pic-V2.png';
 
       return new Promise((resolve, reject) => {
         imgData.onload = async function() {
