@@ -14010,7 +14010,7 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
 
   const canPay = (visit) => {
     if (!visit) return false;
-    return visit.paid !== 'YES' && !visit.insurancePaid && visit.remaining > 0;
+      return (visit.paymentMethod === 'FREE') || (visit.paid !== 'YES' && !visit.insurancePaid);
   };
 
   // ---------- Render ----------
