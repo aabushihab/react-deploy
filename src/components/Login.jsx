@@ -1951,6 +1951,538 @@
 // export default Login;   09072026  11:00 pm
 
 
+
+
+// import React, { useState, useEffect, useCallback } from 'react';
+// import { translations } from '../i18n/translations';
+// import './Login.css';
+// import { fetchClinicInfo, BASE_URL } from '../utils/api';
+// import { useNavigate } from 'react-router-dom';
+
+// const Login = () => {
+//   const navigate = useNavigate();
+
+//   const [username, setUsername] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+//   const [loading, setLoading] = useState(false);
+//   const [clinicInfo, setClinicInfo] = useState(null);
+//   const [openLogin, setOpenLogin] = useState(false);
+
+//   // language
+//   const [lang, setLang] = useState(() => sessionStorage.getItem('lang') || 'en');
+
+//   const t = translations[lang];
+//   const isRTL = lang === 'ar';
+
+//   // ================= CLOCK =================
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentTime(new Date().toLocaleTimeString());
+//     }, 1000);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   // ================= CLINIC INFO =================
+//   useEffect(() => {
+//     const loadClinic = async () => {
+//       const data = await fetchClinicInfo();
+//       if (data) setClinicInfo(data);
+//     };
+//     loadClinic();
+//   }, []);
+
+//   // ================= SAVE LANGUAGE =================
+//   useEffect(() => {
+//     sessionStorage.setItem('lang', lang);
+//   }, [lang]);
+
+//   // ================= TOAST =================
+//   const showToast = (message, type = 'info') => {
+//     const toast = document.createElement('div');
+//     toast.className = `toast toast-${type}`;
+//     toast.textContent = message;
+//     toast.style.cssText = `
+//       position: fixed;
+//       top: 20px;
+//       right: 20px;
+//       padding: 12px 24px;
+//       border-radius: 8px;
+//       color: white;
+//       font-weight: bold;
+//       z-index: 9999;
+//       animation: slideInRight 0.3s ease-out;
+//       ${type === 'success' ? 'background: #2ecc71;' : ''}
+//       ${type === 'error' ? 'background: #e74c3c;' : ''}
+//       ${type === 'info' ? 'background: #3498db;' : ''}
+//       ${type === 'warning' ? 'background: #f39c12;' : ''}
+//       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+//     `;
+//     document.body.appendChild(toast);
+    
+//     setTimeout(() => {
+//       toast.style.animation = 'slideOutRight 0.3s ease-in';
+//       setTimeout(() => {
+//         if (toast.parentNode) toast.parentNode.removeChild(toast);
+//       }, 300);
+//     }, 3000);
+//   };
+
+//   // ================= LOGIN =================
+//   const handleLogin = useCallback(async () => {
+
+//      // Clear previous login information
+//   sessionStorage.removeItem("adminToken");
+//   sessionStorage.removeItem("doctorId");
+//   sessionStorage.removeItem("userRole");
+//   sessionStorage.removeItem("userType");
+//   sessionStorage.removeItem("username");
+
+
+//     const user = username.trim();
+//     const pass = password.trim();
+
+//     if (!user || !pass) {
+//       setError(t.msg.enterCredentials);
+//       return;
+//     }
+
+//     setLoading(true);
+//     setError('');
+
+//     try {
+//       // ===== 1. ADMIN LOGIN (Hardcoded) =====
+//       if (user === 'admin' && pass === 'admin123') {
+//         sessionStorage.setItem('adminToken', 'true');
+//         sessionStorage.setItem('username', user);
+//         sessionStorage.setItem('userRole', 'ADMIN');
+//         sessionStorage.setItem('userId', '0');
+//         showToast('Welcome Admin!', 'success');
+//         //console.log('✅ Admin login successful, navigating to /admin');
+//         navigate('/admin', { replace: true });
+//         return;
+//       }
+
+//       // ===== 2. ASSISTANT LOGIN (API) =====
+//       const assistantUrl = `${BASE_URL}/api/auth/login`;
+//       //console.log('📤 Attempting assistant login:', assistantUrl);
+
+//       try {
+//         const assistantResponse = await fetch(assistantUrl, {
+//           method: 'POST',
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify({ username: user, password: pass }),
+//         });
+
+//         const assistantRaw = await assistantResponse.text();
+//         //console.log('📄 Assistant raw response:', assistantRaw);
+
+//         // ✅ If assistant login succeeds, navigate to /admin
+//         if (assistantResponse.ok) {
+//           let assistantData;
+//           try {
+//             assistantData = JSON.parse(assistantRaw);
+//           } catch (e) {
+//             //console.error('❌ Failed to parse assistant response:', e);
+//             setError('Server returned invalid response format');
+//             setLoading(false);
+//             return;
+//           }
+
+//           // Check if account is disabled
+//           if (assistantData?.enabled === false) {
+//             setError(t.msg.accountDisabled || 'Account is disabled');
+//             setLoading(false);
+//             return;
+//           }
+
+//           // Store assistant data in 
+//           sessionStorage.setItem('adminToken', assistantData?.token || 'assistant-token');
+//           sessionStorage.setItem('username', assistantData?.username || user);
+//           sessionStorage.setItem('userRole', assistantData?.role || 'ASSISTANT');
+//           sessionStorage.setItem('userId', String(assistantData?.id || ''));
+//           sessionStorage.setItem('userType', 'ASSISTANT');
+          
+//           showToast(`Welcome ${assistantData?.username || 'Assistant'}!`, 'success');
+//           //console.log('✅ Assistant login successful, navigating to /admin');
+          
+//           // Navigate to admin dashboard with replace to prevent back button issues
+//           navigate('/admin', { replace: true });
+//           return;
+//         } else {
+//           // Assistant login failed, log the error
+//           //console.log('❌ Assistant login failed:', assistantResponse.status, assistantRaw);
+//           // Don't throw here, try doctor login next
+//         }
+//       } catch (assistantErr) {
+//         console.warn('⚠️ Assistant login error:', assistantErr.message);
+//         // Continue to doctor login
+//       }
+
+//       // ===== 3. DOCTOR LOGIN (API) – ONLY if assistant failed =====
+//       const doctorUrl = `${BASE_URL}/api/doctors/login`;
+//       //console.log('📤 Attempting doctor login:', doctorUrl);
+
+//       try {
+//         const doctorResponse = await fetch(doctorUrl, {
+//           method: 'POST',
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify({ username: user, password: pass }),
+//         });
+
+//         const doctorRaw = await doctorResponse.text();
+//         //console.log('📄 Doctor raw response:', doctorRaw);
+
+//         // ✅ If doctor login succeeds, navigate to /doctor
+//         if (doctorResponse.ok) {
+//           let doctorData;
+//           try {
+//             doctorData = JSON.parse(doctorRaw);
+//           } catch (e) {
+//             //console.error('❌ Failed to parse doctor response:', e);
+//             setError('Server returned invalid response format');
+//             setLoading(false);
+//             return;
+//           }
+
+//           if (doctorData?.id) {
+//             sessionStorage.setItem('adminToken', 'true');
+//             sessionStorage.setItem('username', doctorData.username || user);
+//             sessionStorage.setItem('userRole', 'DOCTOR');
+//             sessionStorage.setItem('doctorId', String(doctorData.id));
+//             sessionStorage.setItem('userType', 'DOCTOR');
+//             sessionStorage.setItem('doctorName', doctorData.fullName || 
+//               `${doctorData.firstName || ''} ${doctorData.lastName || ''}`.trim() || user);
+            
+//             showToast(`Welcome Dr. ${doctorData.fullName || 'Doctor'}!`, 'success');
+//             //console.log('✅ Doctor login successful, navigating to /doctor');
+//             navigate('/doctor', { replace: true });
+//             return;
+//           }
+//         } else {
+//           //console.log('❌ Doctor login failed:', doctorResponse.status, doctorRaw);
+//         }
+//       } catch (doctorErr) {
+//         //console.warn('⚠️ Doctor login error:', doctorErr.message);
+//       }
+
+//       // ===== 4. BOTH LOGINS FAILED =====
+//       setError('Invalid username or password. Please try again.');
+//       //console.error('❌ Both Assistant and Doctor login failed');
+      
+//     } catch (err) {
+//       //console.error('🚨 Login error:', err);
+//       setError(t.msg.serverError || 'Server error. Please try again.');
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [username, password, navigate, t]);
+
+//   // ================= ENTER KEY =================
+//   const handleKeyDown = (e) => {
+//     if (e.key === 'Enter') handleLogin();
+//   };
+
+//   // ================= LANGUAGE =================
+//   const handleLanguageChange = (e) => {
+//     const newLang = e.target.value;
+//     setLang(newLang);
+//   };
+
+//   const updateClinicLanguage = async (language) => {
+//     try {
+//       await fetch(`${BASE_URL}/api/clinic/1/language?language=${language}`, {
+//         method: 'PUT',
+//         headers: { 'Content-Type': 'application/json' },
+//       });
+//     } catch (err) {
+//       //console.warn(err);
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="login-container"
+//       dir={isRTL ? 'rtl' : 'ltr'}
+//       style={{
+//         backgroundImage: `url(${process.env.PUBLIC_URL}/report-pic.png)`,
+//         backgroundSize: 'cover',
+//         backgroundPosition: 'center',
+//         backgroundRepeat: 'no-repeat'
+//       }}
+//     >
+//       {/* HEADER */}
+//       <div className="background-header">
+//         <div className="header-left">{clinicInfo?.day}</div>
+
+//         <div className="header-center">
+//           {t.clinicLabel} : {clinicInfo?.clinicName || t.loading}
+//         </div>
+
+//         <div className="header-right">
+//           <select
+//             value={lang}
+//             onChange={(e) => {
+//               handleLanguageChange(e);
+//               updateClinicLanguage(e.target.value);
+//             }}
+//             style={{ 
+//               padding: '8px 12px', 
+//               borderRadius: '8px', 
+//               border: 'none', 
+//               background: 'rgba(255,255,255,0.9)', 
+//               fontWeight: 'bold',
+//               cursor: 'pointer',
+//               fontSize: '14px',
+//               boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+//             }}
+//           >
+//             <option value="en">🇬🇧 English</option>
+//             <option value="ar">🇸🇦 العربية</option>
+//           </select>
+
+//           <span style={{ 
+//             fontSize: '18px', 
+//             fontWeight: 'bold',
+//             textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+//           }}>
+//             {currentTime}
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* LOGIN BUTTON */}
+//       {!openLogin && (
+//         <button
+//           className="login-main-button"
+//           onClick={() => {
+//             setUsername('');
+//             setPassword('');
+//             setError('');
+//             setOpenLogin(true);
+//           }}
+//           style={{
+//             position: 'fixed',
+//             top: '50%',
+//             left: '50%',
+//             transform: 'translate(-50%, -50%)',
+//             padding: '18px 40px',
+//             fontSize: '20px',
+//             fontWeight: 'bold',
+//             background: 'linear-gradient(135deg, #2c3e50, #3498db)',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '50px',
+//             cursor: 'pointer',
+//             boxShadow: '0 8px 25px rgba(52, 152, 219, 0.4)',
+//             transition: 'all 0.3s ease'
+//           }}
+//           onMouseEnter={(e) => {
+//             e.target.style.transform = 'translate(-50%, -50%) scale(1.05)';
+//             e.target.style.boxShadow = '0 12px 35px rgba(52, 152, 219, 0.6)';
+//           }}
+//           onMouseLeave={(e) => {
+//             e.target.style.transform = 'translate(-50%, -50%) scale(1)';
+//             e.target.style.boxShadow = '0 8px 25px rgba(52, 152, 219, 0.4)';
+//           }}
+//         >
+//           {t.btn.signin}
+//         </button>
+//       )}
+
+//       {/* LOGIN MODAL */}
+//       {openLogin && (
+//         <div className="login-overlay">
+//           <div className="login-modal" dir={isRTL ? 'rtl' : 'ltr'}>
+//             <div className="modal-header">
+//               <div className="modal-clinic-name">
+//                 🏥 {clinicInfo?.clinicName}
+//               </div>
+//               <div className="modal-day">
+//                 📅 {clinicInfo?.day}
+//               </div>
+//             </div>
+
+//             <div className="welcome-premium" style={{
+//               textAlign: 'center',
+//               fontSize: '16px',
+//               color: '#fbfbfbff',
+//               marginBottom: '20px'
+//             }}>
+//               Welcome to <span style={{ fontWeight: 'bold', color: '#fcfcfcff' }}>Clinic Management System</span>
+//             </div>
+
+//             <h2 style={{
+//               textAlign: 'center',
+//               marginBottom: '25px',
+//               fontSize: '28px',
+//               color: '#fdfdfdff'
+//             }}>
+//               {t.title.login}
+//             </h2>
+
+//             <div style={{ marginBottom: '15px' }}>
+//               <label style={{ 
+//                 display: 'block', 
+//                 marginBottom: '5px', 
+//                 fontWeight: 'bold',
+//                 color: '#f8fbfeff',
+//                 fontSize: '14px'
+//               }}>
+//                 {t.prompt.username}
+//               </label>
+//               <input
+//                 type="text"
+//                 value={username}
+//                 placeholder={t.prompt.username}
+//                 onChange={(e) => setUsername(e.target.value)}
+//                 onKeyDown={handleKeyDown}
+//                 className="text-field"
+//                 autoFocus
+//                 style={{
+//                   width: '100%',
+//                   padding: '14px 16px',
+//                   borderRadius: '10px',
+//                   border: '2px solid #dce4ec',
+//                   fontSize: '16px',
+//                   transition: 'all 0.3s ease',
+//                   outline: 'none',
+//                   background: '#f8f9fa'
+//                 }}
+//                 onFocus={(e) => {
+//                   e.target.style.borderColor = '#3498db';
+//                   e.target.style.background = 'white';
+//                   e.target.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
+//                 }}
+//                 onBlur={(e) => {
+//                   e.target.style.borderColor = '#dce4ec';
+//                   e.target.style.background = '#f8f9fa';
+//                   e.target.style.boxShadow = 'none';
+//                 }}
+//               />
+//             </div>
+
+//             <div style={{ marginBottom: '15px' }}>
+//               <label style={{ 
+//                 display: 'block', 
+//                 marginBottom: '5px', 
+//                 fontWeight: 'bold',
+//                 color: '#f4f4f4ff',
+//                 fontSize: '14px'
+//               }}>
+//                 {t.prompt.password}
+//               </label>
+//               <input
+//                 type="password"
+//                 value={password}
+//                 placeholder={t.prompt.password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//                 onKeyDown={handleKeyDown}
+//                 className="text-field"
+//                 style={{
+//                   width: '100%',
+//                   padding: '14px 16px',
+//                   borderRadius: '10px',
+//                   border: '2px solid #dce4ec',
+//                   fontSize: '16px',
+//                   transition: 'all 0.3s ease',
+//                   outline: 'none',
+//                   background: '#f8f9fa'
+//                 }}
+//                 onFocus={(e) => {
+//                   e.target.style.borderColor = '#3498db';
+//                   e.target.style.background = 'white';
+//                   e.target.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
+//                 }}
+//                 onBlur={(e) => {
+//                   e.target.style.borderColor = '#dce4ec';
+//                   e.target.style.background = '#f8f9fa';
+//                   e.target.style.boxShadow = 'none';
+//                 }}
+//               />
+//             </div>
+
+//             <div className="error-label" style={{
+//               color: '#e74c3c',
+//               fontSize: '14px',
+//               textAlign: 'center',
+//               marginBottom: '15px',
+//               minHeight: '22px',
+//               fontWeight: '500'
+//             }}>
+//               {error}
+//             </div>
+
+//             <button
+//               className="login-button"
+//               onClick={handleLogin}
+//               disabled={loading}
+//               style={{
+//                 width: '100%',
+//                 padding: '14px',
+//                 fontSize: '18px',
+//                 fontWeight: 'bold',
+//                 background: loading ? '#bdc3c7' : 'linear-gradient(135deg, #2c3e50, #3498db)',
+//                 color: 'white',
+//                 border: 'none',
+//                 borderRadius: '10px',
+//                 cursor: loading ? 'not-allowed' : 'pointer',
+//                 transition: 'all 0.3s ease',
+//                 boxShadow: loading ? 'none' : '0 4px 15px rgba(52, 152, 219, 0.3)',
+//                 marginBottom: '12px'
+//               }}
+//               onMouseEnter={(e) => {
+//                 if (!loading) {
+//                   e.target.style.transform = 'scale(1.02)';
+//                   e.target.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.5)';
+//                 }
+//               }}
+//               onMouseLeave={(e) => {
+//                 if (!loading) {
+//                   e.target.style.transform = 'scale(1)';
+//                   e.target.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
+//                 }
+//               }}
+//             >
+//               {loading ? '⏳ Signing in...' : t.btn.signin}
+//             </button>
+
+//             <button
+//               className="close-button"
+//               onClick={() => setOpenLogin(false)}
+//               style={{
+//                 width: '100%',
+//                 padding: '12px',
+//                 fontSize: '16px',
+//                 fontWeight: 'bold',
+//                 background: '#e2e8f0',
+//                 color: '#4a5568',
+//                 border: 'none',
+//                 borderRadius: '10px',
+//                 cursor: 'pointer',
+//                 transition: 'all 0.3s ease'
+//               }}
+//               onMouseEnter={(e) => {
+//                 e.target.style.background = '#cbd5e0';
+//                 e.target.style.transform = 'scale(1.02)';
+//               }}
+//               onMouseLeave={(e) => {
+//                 e.target.style.background = '#e2e8f0';
+//                 e.target.style.transform = 'scale(1)';
+//               }}
+//             >
+//               {t.btn.cancel}
+//             </button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Login;  19072026
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { translations } from '../i18n/translations';
 import './Login.css';
@@ -2029,14 +2561,11 @@ const Login = () => {
 
   // ================= LOGIN =================
   const handleLogin = useCallback(async () => {
-
-     // Clear previous login information
-  sessionStorage.removeItem("adminToken");
-  sessionStorage.removeItem("doctorId");
-  sessionStorage.removeItem("userRole");
-  sessionStorage.removeItem("userType");
-  sessionStorage.removeItem("username");
-
+    sessionStorage.removeItem("adminToken");
+    sessionStorage.removeItem("doctorId");
+    sessionStorage.removeItem("userRole");
+    sessionStorage.removeItem("userType");
+    sessionStorage.removeItem("username");
 
     const user = username.trim();
     const pass = password.trim();
@@ -2057,15 +2586,13 @@ const Login = () => {
         sessionStorage.setItem('userRole', 'ADMIN');
         sessionStorage.setItem('userId', '0');
         showToast('Welcome Admin!', 'success');
-        //console.log('✅ Admin login successful, navigating to /admin');
         navigate('/admin', { replace: true });
         return;
       }
 
       // ===== 2. ASSISTANT LOGIN (API) =====
       const assistantUrl = `${BASE_URL}/api/auth/login`;
-      //console.log('📤 Attempting assistant login:', assistantUrl);
-
+      
       try {
         const assistantResponse = await fetch(assistantUrl, {
           method: 'POST',
@@ -2074,28 +2601,23 @@ const Login = () => {
         });
 
         const assistantRaw = await assistantResponse.text();
-        //console.log('📄 Assistant raw response:', assistantRaw);
 
-        // ✅ If assistant login succeeds, navigate to /admin
         if (assistantResponse.ok) {
           let assistantData;
           try {
             assistantData = JSON.parse(assistantRaw);
           } catch (e) {
-            //console.error('❌ Failed to parse assistant response:', e);
             setError('Server returned invalid response format');
             setLoading(false);
             return;
           }
 
-          // Check if account is disabled
           if (assistantData?.enabled === false) {
             setError(t.msg.accountDisabled || 'Account is disabled');
             setLoading(false);
             return;
           }
 
-          // Store assistant data in 
           sessionStorage.setItem('adminToken', assistantData?.token || 'assistant-token');
           sessionStorage.setItem('username', assistantData?.username || user);
           sessionStorage.setItem('userRole', assistantData?.role || 'ASSISTANT');
@@ -2103,24 +2625,15 @@ const Login = () => {
           sessionStorage.setItem('userType', 'ASSISTANT');
           
           showToast(`Welcome ${assistantData?.username || 'Assistant'}!`, 'success');
-          //console.log('✅ Assistant login successful, navigating to /admin');
-          
-          // Navigate to admin dashboard with replace to prevent back button issues
           navigate('/admin', { replace: true });
           return;
-        } else {
-          // Assistant login failed, log the error
-          //console.log('❌ Assistant login failed:', assistantResponse.status, assistantRaw);
-          // Don't throw here, try doctor login next
         }
       } catch (assistantErr) {
         console.warn('⚠️ Assistant login error:', assistantErr.message);
-        // Continue to doctor login
       }
 
-      // ===== 3. DOCTOR LOGIN (API) – ONLY if assistant failed =====
+      // ===== 3. DOCTOR LOGIN (API) =====
       const doctorUrl = `${BASE_URL}/api/doctors/login`;
-      //console.log('📤 Attempting doctor login:', doctorUrl);
 
       try {
         const doctorResponse = await fetch(doctorUrl, {
@@ -2130,15 +2643,12 @@ const Login = () => {
         });
 
         const doctorRaw = await doctorResponse.text();
-        //console.log('📄 Doctor raw response:', doctorRaw);
 
-        // ✅ If doctor login succeeds, navigate to /doctor
         if (doctorResponse.ok) {
           let doctorData;
           try {
             doctorData = JSON.parse(doctorRaw);
           } catch (e) {
-            //console.error('❌ Failed to parse doctor response:', e);
             setError('Server returned invalid response format');
             setLoading(false);
             return;
@@ -2154,23 +2664,18 @@ const Login = () => {
               `${doctorData.firstName || ''} ${doctorData.lastName || ''}`.trim() || user);
             
             showToast(`Welcome Dr. ${doctorData.fullName || 'Doctor'}!`, 'success');
-            //console.log('✅ Doctor login successful, navigating to /doctor');
             navigate('/doctor', { replace: true });
             return;
           }
-        } else {
-          //console.log('❌ Doctor login failed:', doctorResponse.status, doctorRaw);
         }
       } catch (doctorErr) {
-        //console.warn('⚠️ Doctor login error:', doctorErr.message);
+        console.warn('⚠️ Doctor login error:', doctorErr.message);
       }
 
       // ===== 4. BOTH LOGINS FAILED =====
       setError('Invalid username or password. Please try again.');
-      //console.error('❌ Both Assistant and Doctor login failed');
       
     } catch (err) {
-      //console.error('🚨 Login error:', err);
       setError(t.msg.serverError || 'Server error. Please try again.');
     } finally {
       setLoading(false);
@@ -2210,12 +2715,13 @@ const Login = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* HEADER */}
+      {/* HEADER with Micro Care SYSTEM */}
       <div className="background-header">
         <div className="header-left">{clinicInfo?.day}</div>
 
         <div className="header-center">
-          {t.clinicLabel} : {clinicInfo?.clinicName || t.loading}
+          <span className="clinic-brand">🏥 {clinicInfo?.clinicName || t.loading}</span>
+          <span className="system-badge">SYSTEM</span>
         </div>
 
         <div className="header-right">
@@ -2225,26 +2731,12 @@ const Login = () => {
               handleLanguageChange(e);
               updateClinicLanguage(e.target.value);
             }}
-            style={{ 
-              padding: '8px 12px', 
-              borderRadius: '8px', 
-              border: 'none', 
-              background: 'rgba(255,255,255,0.9)', 
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              fontSize: '14px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-            }}
           >
             <option value="en">🇬🇧 English</option>
             <option value="ar">🇸🇦 العربية</option>
           </select>
 
-          <span style={{ 
-            fontSize: '18px', 
-            fontWeight: 'bold',
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-          }}>
+          <span className="header-time">
             {currentTime}
           </span>
         </div>
@@ -2260,74 +2752,36 @@ const Login = () => {
             setError('');
             setOpenLogin(true);
           }}
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '18px 40px',
-            fontSize: '20px',
-            fontWeight: 'bold',
-            background: 'linear-gradient(135deg, #2c3e50, #3498db)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50px',
-            cursor: 'pointer',
-            boxShadow: '0 8px 25px rgba(52, 152, 219, 0.4)',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'translate(-50%, -50%) scale(1.05)';
-            e.target.style.boxShadow = '0 12px 35px rgba(52, 152, 219, 0.6)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'translate(-50%, -50%) scale(1)';
-            e.target.style.boxShadow = '0 8px 25px rgba(52, 152, 219, 0.4)';
-          }}
         >
-          {t.btn.signin}
+          🔓 {t.btn.signin}
         </button>
       )}
 
-      {/* LOGIN MODAL */}
+      {/* LOGIN MODAL with Micro Care SYSTEM */}
       {openLogin && (
         <div className="login-overlay">
           <div className="login-modal" dir={isRTL ? 'rtl' : 'ltr'}>
             <div className="modal-header">
               <div className="modal-clinic-name">
-                🏥 {clinicInfo?.clinicName}
+                <span className="clinic-name-main">🏥 {clinicInfo?.clinicName || 'Micro Care'}</span>
+                <span className="system-tag">SYSTEM</span>
               </div>
               <div className="modal-day">
-                📅 {clinicInfo?.day}
+                📅 {clinicInfo?.day} • {currentTime}
               </div>
             </div>
 
-            <div className="welcome-premium" style={{
-              textAlign: 'center',
-              fontSize: '16px',
-              color: '#fbfbfbff',
-              marginBottom: '20px'
-            }}>
-              Welcome to <span style={{ fontWeight: 'bold', color: '#fcfcfcff' }}>Clinic Management System</span>
+            <div className="welcome-premium">
+              Welcome Back! 👋<br />
+              <span>Micro Care SYSTEM</span>
             </div>
 
-            <h2 style={{
-              textAlign: 'center',
-              marginBottom: '25px',
-              fontSize: '28px',
-              color: '#fdfdfdff'
-            }}>
-              {t.title.login}
+            <h2>
+              🔐 {t.title.login}
             </h2>
 
             <div style={{ marginBottom: '15px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '5px', 
-                fontWeight: 'bold',
-                color: '#f8fbfeff',
-                fontSize: '14px'
-              }}>
+              <label className="input-label">
                 {t.prompt.username}
               </label>
               <input
@@ -2338,37 +2792,11 @@ const Login = () => {
                 onKeyDown={handleKeyDown}
                 className="text-field"
                 autoFocus
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  borderRadius: '10px',
-                  border: '2px solid #dce4ec',
-                  fontSize: '16px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                  background: '#f8f9fa'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#3498db';
-                  e.target.style.background = 'white';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#dce4ec';
-                  e.target.style.background = '#f8f9fa';
-                  e.target.style.boxShadow = 'none';
-                }}
               />
             </div>
 
             <div style={{ marginBottom: '15px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '5px', 
-                fontWeight: 'bold',
-                color: '#f4f4f4ff',
-                fontSize: '14px'
-              }}>
+              <label className="input-label">
                 {t.prompt.password}
               </label>
               <input
@@ -2378,37 +2806,10 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="text-field"
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  borderRadius: '10px',
-                  border: '2px solid #dce4ec',
-                  fontSize: '16px',
-                  transition: 'all 0.3s ease',
-                  outline: 'none',
-                  background: '#f8f9fa'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#3498db';
-                  e.target.style.background = 'white';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#dce4ec';
-                  e.target.style.background = '#f8f9fa';
-                  e.target.style.boxShadow = 'none';
-                }}
               />
             </div>
 
-            <div className="error-label" style={{
-              color: '#e74c3c',
-              fontSize: '14px',
-              textAlign: 'center',
-              marginBottom: '15px',
-              minHeight: '22px',
-              fontWeight: '500'
-            }}>
+            <div className="error-label">
               {error}
             </div>
 
@@ -2416,61 +2817,15 @@ const Login = () => {
               className="login-button"
               onClick={handleLogin}
               disabled={loading}
-              style={{
-                width: '100%',
-                padding: '14px',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                background: loading ? '#bdc3c7' : 'linear-gradient(135deg, #2c3e50, #3498db)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: loading ? 'none' : '0 4px 15px rgba(52, 152, 219, 0.3)',
-                marginBottom: '12px'
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.target.style.transform = 'scale(1.02)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.5)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!loading) {
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
-                }
-              }}
             >
-              {loading ? '⏳ Signing in...' : t.btn.signin}
+              {loading ? '⏳ Signing in...' : '➜ ' + t.btn.signin}
             </button>
 
             <button
               className="close-button"
               onClick={() => setOpenLogin(false)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                background: '#e2e8f0',
-                color: '#4a5568',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = '#cbd5e0';
-                e.target.style.transform = 'scale(1.02)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = '#e2e8f0';
-                e.target.style.transform = 'scale(1)';
-              }}
             >
-              {t.btn.cancel}
+              ✕ {t.btn.cancel}
             </button>
           </div>
         </div>

@@ -540,3 +540,136 @@ select{
 
 
 
+/* ================= MICRO CARE SYSTEM BRANDING ================= */
+
+/* Header branding */
+.clinic-brand {
+  color: #fff;
+  font-weight: 700;
+}
+
+.system-badge {
+  background: linear-gradient(135deg, #00d4ff, #0096c7);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.6em;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
+  animation: pulseGlow 2s infinite;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+/* RTL support for system badge */
+.login-container[dir="rtl"] .system-badge {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+/* Header time */
+.header-time {
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  color: #fff;
+}
+
+/* Modal branding */
+.modal-clinic-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.clinic-name-main {
+  color: #fff;
+  font-weight: 700;
+}
+
+.system-tag {
+  background: linear-gradient(135deg, #00d4ff, #0096c7);
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+  animation: pulseGlow 2s infinite;
+  display: inline-block;
+}
+
+/* Welcome message with Micro Care SYSTEM */
+.welcome-premium span {
+  color: #00d4ff;
+  text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+  display: inline-block;
+  background: rgba(0, 212, 255, 0.1);
+  padding: 2px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+/* Input labels */
+.input-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #f8fbfeff;
+  font-size: 14px;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .modal-clinic-name {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .system-badge {
+    font-size: 0.5em;
+    padding: 3px 10px;
+  }
+  
+  .system-tag {
+    font-size: 0.55em;
+    padding: 3px 12px;
+  }
+  
+  .header-center {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .header-time {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-premium {
+    font-size: 16px !important;
+  }
+  
+  .modal-clinic-name {
+    font-size: 18px !important;
+  }
+}
