@@ -13178,6 +13178,2085 @@
 // export default VisitTrackingScreen;    19072026  4:00 am 
 
 
+
+
+// import React, { useState, useCallback, useRef, useEffect } from 'react';
+// import { BASE_URL } from '../../utils/api';
+// import VisitPayScreen from './VisitPayScreen';
+
+// // ---------- Translations ----------
+// const translations = {
+//   en: {
+//     title: 'Visit Tracking',
+//     search: {
+//       name: 'Name',
+//       mobile: 'Mobile',
+//       placeholder: 'Search by name or mobile...',
+//     },
+//     btn: {
+//       search: 'Search',
+//       clear: 'Clear',
+//       start: 'Start Visit',
+//       end: 'End Visit',
+//       pay: 'Payment',
+//       view: 'View',
+//       yes: 'Yes',
+//       no: 'No',
+//       close: 'Close',
+//       cancel: 'Cancel',
+//       table: 'Table',
+//       cards: 'Cards',
+//       loadDate: 'Load Date',
+//     },
+//     col: {
+//       id: 'ID',
+//       patient: 'Patient',
+//       doctor: 'Doctor',
+//       type: 'Type',
+//       status: 'Status',
+//       payment: 'Payment',
+//       amount: 'Amount',
+//       insurancePaid: 'Insurance Paid',
+//       remaining: 'Remaining',
+//       details: 'Details',
+//     },
+//     status: {
+//       ready: 'Ready',
+//       loading: 'Loading...',
+//       found: 'Found',
+//       cleared: 'Cleared',
+//       visit: 'Visit',
+//       success: 'successfully',
+//     },
+//     msg: {
+//       enterSearchValue: 'Please enter a search value',
+//       noPatients: 'No patients found',
+//       selectVisit: 'Please select a visit',
+//       visitActionFailedHttp: 'Visit {0} failed (HTTP {1})',
+//       visitActionFailedError: 'Visit {0} failed: {1}',
+//       noInsuranceId: 'No insurance ID found',
+//       insuranceMarked: 'Insurance marked as paid',
+//       insuranceFailed: 'Failed to mark insurance as paid',
+//       insuranceServiceError: 'Insurance service error',
+//       paymentDetailsFailed: 'Failed to load payment details',
+//       paymentDetailsError: 'Error loading payment details',
+//       searchFailed: 'Search failed',
+//       closeConfirm: 'Are you sure you want to close this screen?',
+//       confirmClose: 'Confirm Close',
+//       noVisitsForDate: 'No visits found for this date',
+//     },
+//     confirm: {
+//       title: 'Confirm',
+//       header: 'Insurance Payment',
+//       message: 'Mark insurance as paid?',
+//     },
+//     payment: {
+//       details: {
+//         title: 'Payment Details',
+//       },
+//       original: 'Original Amount',
+//       insurance: 'Insurance Amount',
+//       insurancePaid: 'Insurance Paid',
+//       insuranceDiscount: 'Insurance Discount',
+//       patientPaid: 'Patient Paid',
+//       remaining: 'Remaining',
+//       transactions: 'Transactions',
+//     },
+//     label: {
+//       visits: 'visits',
+//       selectedPatient: 'Selected Patient',
+//       noPatientSelected: 'No patient selected',
+//       phone: 'Phone',
+//       gender: 'Gender',
+//       dob: 'Date of Birth',
+//       age: 'Age',
+//       address: 'Address',
+//       type: 'Patient Type',
+//       passport: 'Passport Number',
+//       insurance: 'Insurance Provider',
+//       country: 'Country',
+//       city: 'City',
+//       classA: 'Class A',
+//       classB: 'Class B',
+//       classC: 'Class C',
+//     },
+//     alert: {
+//       title: 'Information',
+//     },
+//     tooltip: {
+//       visitClosed: 'Visit not available',
+//     },
+//     date: {
+//       label: 'Date',
+//       today: 'Today',
+//       load: 'Load Visits',
+//     },
+//     paymentMethods: {
+//       NEW: 'New',
+//       FREE: 'Free',
+//       CASH: 'Cash',
+//       POS: 'POS',
+//       INSURANCE: 'Insurance',
+//       'CASH + POS': 'Cash + POS',
+//       'FREE + CASH': 'Free + Cash',
+//       'FREE + POS': 'Free + POS',
+//       'FREE + CASH + POS': 'Free + Cash + POS'
+//     }
+//   },
+//   ar: {
+//     title: 'تتبع الزيارات',
+//     search: {
+//       name: 'الاسم',
+//       mobile: 'الجوال',
+//       placeholder: 'ابحث بالاسم أو رقم الجوال...',
+//     },
+//     btn: {
+//       search: 'بحث',
+//       clear: 'مسح',
+//       start: 'بدء الزيارة',
+//       end: 'إنهاء الزيارة',
+//       pay: 'دفع',
+//       view: 'عرض',
+//       yes: 'نعم',
+//       no: 'لا',
+//       close: 'إغلاق',
+//       cancel: 'إلغاء',
+//       table: 'جدول',
+//       cards: 'بطاقات',
+//       loadDate: 'تحميل التاريخ',
+//     },
+//     col: {
+//       id: 'الرقم',
+//       patient: 'المريض',
+//       doctor: 'الطبيب',
+//       type: 'النوع',
+//       status: 'الحالة',
+//       payment: 'الدفع',
+//       amount: 'المبلغ',
+//       insurancePaid: 'دفع التأمين',
+//       remaining: 'المتبقي',
+//       details: 'التفاصيل',
+//     },
+//     status: {
+//       ready: 'جاهز',
+//       loading: 'جاري التحميل...',
+//       found: 'تم العثور على',
+//       cleared: 'تم المسح',
+//       visit: 'الزيارة',
+//       success: 'بنجاح',
+//     },
+//     msg: {
+//       enterSearchValue: 'يرجى إدخال قيمة للبحث',
+//       noPatients: 'لم يتم العثور على مرضى',
+//       selectVisit: 'يرجى تحديد زيارة',
+//       visitActionFailedHttp: 'فشل {0} الزيارة (HTTP {1})',
+//       visitActionFailedError: 'فشل {0} الزيارة: {1}',
+//       noInsuranceId: 'لم يتم العثور على رقم تأمين',
+//       insuranceMarked: 'تم تحديد التأمين كمدفوع',
+//       insuranceFailed: 'فشل تحديد التأمين كمدفوع',
+//       insuranceServiceError: 'خطأ في خدمة التأمين',
+//       paymentDetailsFailed: 'فشل تحميل تفاصيل الدفع',
+//       paymentDetailsError: 'خطأ في تحميل تفاصيل الدفع',
+//       searchFailed: 'فشل البحث',
+//       closeConfirm: 'هل أنت متأكد من إغلاق هذه الشاشة؟',
+//       confirmClose: 'تأكيد الإغلاق',
+//       noVisitsForDate: 'لا توجد زيارات لهذا التاريخ',
+//     },
+//     confirm: {
+//       title: 'تأكيد',
+//       header: 'دفع التأمين',
+//       message: 'تأكيد دفع التأمين؟',
+//     },
+//     payment: {
+//       details: {
+//         title: 'تفاصيل الدفع',
+//       },
+//       original: 'المبلغ الأصلي',
+//       insurance: 'مبلغ التأمين',
+//       insurancePaid: 'المدفوع من التأمين',
+//       insuranceDiscount: 'خصم التأمين',
+//       patientPaid: 'المدفوع من المريض',
+//       remaining: 'المتبقي',
+//       transactions: 'المعاملات',
+//     },
+//     label: {
+//       visits: 'زيارات',
+//       selectedPatient: 'المريض المحدد',
+//       noPatientSelected: 'لم يتم تحديد مريض',
+//       phone: 'الجوال',
+//       gender: 'الجنس',
+//       dob: 'تاريخ الميلاد',
+//       age: 'العمر',
+//       address: 'العنوان',
+//       type: 'نوع المريض',
+//       passport: 'رقم جواز السفر',
+//       insurance: 'شركة التأمين',
+//       country: 'الدولة',
+//       city: 'المدينة',
+//       classA: 'الفئة أ',
+//       classB: 'الفئة ب',
+//       classC: 'الفئة ج',
+//     },
+//     alert: {
+//       title: 'معلومات',
+//     },
+//     tooltip: {
+//       visitClosed: 'الزيارة غير متاحة',
+//     },
+//     date: {
+//       label: 'التاريخ',
+//       today: 'اليوم',
+//       load: 'تحميل الزيارات',
+//     },
+//     paymentMethods: {
+//       NEW: 'جديد',
+//       FREE: 'مجاني',
+//       CASH: 'نقد',
+//       POS: 'بطاقة',
+//       INSURANCE: 'تأمين',
+//       'CASH + POS': 'نقد + بطاقة',
+//       'FREE + CASH': 'مجاني + نقد',
+//       'FREE + POS': 'مجاني + بطاقة',
+//       'FREE + CASH + POS': 'مجاني + نقد + بطاقة'
+//     }
+//   },
+// };
+
+// // ---------- Main Component ----------
+// const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
+//   const t = translations[lang] || translations.en;
+
+//   // ---------- State ----------
+//   const [searchBy, setSearchBy] = useState('name');
+//   const [searchText, setSearchText] = useState('');
+//   const [selectedDate, setSelectedDate] = useState(new Date());
+//   const [filteredVisits, setFilteredVisits] = useState([]);
+//   const [selectedVisit, setSelectedVisit] = useState(null);
+//   const [selectedPatient, setSelectedPatient] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//   const [statusMsg, setStatusMsg] = useState(`✅ ${t.status.ready}`);
+//   const [viewMode, setViewMode] = useState('table');
+//   const [showPayment, setShowPayment] = useState(false);
+//   const [isDateSearch, setIsDateSearch] = useState(true);
+//   const [isActionInProgress, setIsActionInProgress] = useState(false);
+  
+//   // Add ref to store current patient IDs for refresh
+//   const currentPatientIdsRef = useRef([]);
+//   // Add ref to store the selected visit ID to maintain selection after refresh
+//   const selectedVisitIdRef = useRef(null);
+
+//   // ---------- Helper: log action ----------
+//   const logAction = useCallback(async (action, details) => {
+//     try {
+//       await fetch(`${BASE_URL}/api/logs/add`, {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ username: loggedUser, action, details }),
+//       });
+//     } catch (e) { /* ignore */ }
+//   }, [loggedUser]);
+
+//   // ---------- Format date for API ----------
+//   const formatDateForApi = (date) => {
+//     const year = date.getFullYear();
+//     const month = String(date.getMonth() + 1).padStart(2, '0');
+//     const day = String(date.getDate()).padStart(2, '0');
+//     return `${year}-${month}-${day}`;
+//   };
+
+//   // ---------- Fetch patient details ----------
+//   const fetchPatientDetails = useCallback(async (patientId) => {
+//     if (!patientId) return null;
+    
+//     try {
+//       const res = await fetch(`${BASE_URL}/api/patients/${patientId}`);
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+//       const patientData = await res.json();
+//       return patientData;
+//     } catch (err) {
+//       console.error('Failed to fetch patient details:', err);
+//       return null;
+//     }
+//   }, []);
+
+//   // ---------- Parse a single visit ----------
+//   const parseVisit = (v) => {
+//     const p = v.patient || {};
+//     const d = v.doctor || {};
+
+//     let originalAmount = v.originalAmount || 0;
+//     let paidAmount = 0;
+//     let paymentMethod = 'NEW';
+//     let insurancePaid = false;
+//     let insuranceFormId = null;
+//     let insuranceCardId = null;
+
+//     const payments = v.payments || [];
+
+//     let hasCash = false;
+//     let hasPos = false;
+//     let hasInsurance = false;
+//     let hasFree = false;
+
+//     payments.forEach(pay => {
+//       const method = pay.paymentMethod;
+//       const amount = pay.amount || 0;
+
+//       if (method === 'CASH') hasCash = true;
+//       if (method === 'POS') hasPos = true;
+//       if (method === 'INSURANCE') {
+//         hasInsurance = true;
+//         insurancePaid = pay.insurancePaid || false;
+//         insuranceFormId = pay.insuranceFormId || null;
+//         insuranceCardId = pay.insuranceCardId || null;
+//       }
+//       if (method === 'FREE') hasFree = true;
+      
+//       paidAmount += amount;
+//     });
+
+//     // Determine payment method based on what payments exist
+//     if (hasInsurance) {
+//       paymentMethod = 'INSURANCE';
+//     } else if (hasFree && hasCash && hasPos) {
+//       paymentMethod = 'FREE + CASH + POS';
+//     } else if (hasFree && hasCash && !hasPos) {
+//       paymentMethod = 'FREE + CASH';
+//     } else if (hasFree && hasPos && !hasCash) {
+//       paymentMethod = 'FREE + POS';
+//     } else if (hasFree && !hasCash && !hasPos) {
+//       paymentMethod = 'FREE';
+//     } else if (hasCash && hasPos) {
+//       paymentMethod = 'CASH + POS';
+//     } else if (hasCash) {
+//       paymentMethod = 'CASH';
+//     } else if (hasPos) {
+//       paymentMethod = 'POS';
+//     } else {
+//       paymentMethod = 'NEW';
+//     }
+
+//     const totalPaid = paidAmount || 0;
+//     const remaining = Math.max(0, originalAmount - totalPaid);
+
+//     return {
+//       id: v.id,
+//       patientId: p.id || null,
+//       patientName: p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Unknown',
+//       doctorName: d.fullName || `${d.firstName || ''} ${d.lastName || ''}`.trim() || 'Unknown',
+//       visitType: v.visitType || 'N/A',
+//       visitStatus: v.visitStatus || 'NEW',
+//       paid: v.paid ? 'YES' : 'NO',
+//       paymentMethod: paymentMethod,
+//       amount: originalAmount,
+//       totalPaid: totalPaid,
+//       remaining: remaining,
+//       insurancePaid: insurancePaid,
+//       insuranceFormId: insuranceFormId,
+//       insuranceCardId: insuranceCardId,
+//       payments: payments,
+//       patient: p,
+//     };
+//   };
+
+//   // ---------- Fetch visits by date ----------
+//   const fetchVisitsByDate = useCallback(async (date) => {
+//     setLoading(true);
+//     setStatusMsg(`⏳ ${t.status.loading}`);
+
+//     try {
+//       const dateString = formatDateForApi(date);
+//       const url = `${BASE_URL}/api/visits/by-date?date=${dateString}`;
+//       console.log('📤 Fetching visits for date:', dateString);
+      
+//       const res = await fetch(url);
+      
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      
+//       const visitsData = await res.json();
+//       console.log('📊 Received visits:', visitsData.length);
+      
+//       // Parse each visit
+//       const parsedVisits = visitsData.map(v => parseVisit(v));
+      
+//       setFilteredVisits(parsedVisits);
+      
+//       // Restore selection if we have a saved visit ID
+//       if (selectedVisitIdRef.current) {
+//         const savedVisit = parsedVisits.find(v => v.id === selectedVisitIdRef.current);
+//         if (savedVisit) {
+//           setSelectedVisit(savedVisit);
+//           // Also restore patient
+//           if (savedVisit.patient && savedVisit.patient.id) {
+//             setSelectedPatient(savedVisit.patient);
+//           }
+//         } else {
+//           // Saved visit not found in results, clear selection
+//           setSelectedVisit(null);
+//           setSelectedPatient(null);
+//           selectedVisitIdRef.current = null;
+//         }
+//       }
+      
+//       if (parsedVisits.length === 0) {
+//         setStatusMsg(`📭 ${t.msg.noVisitsForDate}`);
+//       } else {
+//         setStatusMsg(`✅ ${t.status.found} ${parsedVisits.length} ${t.label.visits}`);
+//       }
+      
+//       return parsedVisits;
+//     } catch (err) {
+//       setStatusMsg(`❌ ${err.message}`);
+//       setFilteredVisits([]);
+//       return [];
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [t]);
+
+//   // ---------- Fetch visits by patient IDs ----------
+//   const fetchVisits = useCallback(async (patientIds, clearSelection = false) => {
+//     if (!patientIds || patientIds.length === 0) {
+//       setFilteredVisits([]);
+//       setSelectedVisit(null);
+//       setSelectedPatient(null);
+//       selectedVisitIdRef.current = null;
+//       return [];
+//     }
+
+//     setLoading(true);
+//     setStatusMsg(`⏳ ${t.status.loading}`);
+
+//     try {
+//       const res = await fetch(`${BASE_URL}/api/visits/patients`, {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(patientIds),
+//       });
+
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+//       const data = await res.json();
+//       let allVisits = [];
+
+//       for (const key in data) {
+//         const visitArray = data[key];
+//         if (Array.isArray(visitArray)) {
+//           visitArray.forEach(v => {
+//             allVisits.push(parseVisit(v));
+//           });
+//         }
+//       }
+
+//       setFilteredVisits(allVisits);
+
+//       // Restore selection if we have a saved visit ID and not clearing selection
+//       if (!clearSelection && selectedVisitIdRef.current) {
+//         const savedVisit = allVisits.find(v => v.id === selectedVisitIdRef.current);
+//         if (savedVisit) {
+//           setSelectedVisit(savedVisit);
+//           if (savedVisit.patient && savedVisit.patient.id) {
+//             setSelectedPatient(savedVisit.patient);
+//           }
+//         } else {
+//           // Saved visit not found in results, clear selection only if requested
+//           if (clearSelection) {
+//             setSelectedVisit(null);
+//             setSelectedPatient(null);
+//             selectedVisitIdRef.current = null;
+//           }
+//         }
+//       } else if (clearSelection) {
+//         setSelectedVisit(null);
+//         setSelectedPatient(null);
+//         selectedVisitIdRef.current = null;
+//       }
+
+//       setStatusMsg(`✅ ${t.status.found} ${allVisits.length} ${t.label.visits}`);
+
+//       return allVisits;
+//     } catch (err) {
+//       setStatusMsg(`❌ ${err.message}`);
+//       setFilteredVisits([]);
+//       setSelectedVisit(null);
+//       setSelectedPatient(null);
+//       selectedVisitIdRef.current = null;
+//       return [];
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [t]);
+
+//   // ---------- Auto-refresh function ----------
+//   const refreshVisits = useCallback(async (keepSelection = true) => {
+//     if (currentPatientIdsRef.current.length > 0) {
+//       return await fetchVisits(currentPatientIdsRef.current, !keepSelection);
+//     } else if (isDateSearch) {
+//       return await fetchVisitsByDate(selectedDate);
+//     }
+//     return [];
+//   }, [fetchVisits, fetchVisitsByDate, selectedDate, isDateSearch]);
+
+//   // ---------- Load today's visits on component mount ----------
+//   useEffect(() => {
+//     fetchVisitsByDate(new Date());
+//   }, [fetchVisitsByDate]);
+
+//   // ---------- Update selected visit and patient when filtered visits change ----------
+//   useEffect(() => {
+//     if (!selectedVisit?.id) return;
+
+//     const updated = filteredVisits.find(v => v.id === selectedVisit.id);
+
+//     if (updated) {
+//       setSelectedVisit(prev => {
+//         if (prev && JSON.stringify(prev) === JSON.stringify(updated)) {
+//           return prev;
+//         }
+//         return updated;
+//       });
+      
+//       // Update selected patient if we have patient data
+//       if (updated.patient && updated.patient.id) {
+//         setSelectedPatient(updated.patient);
+//       }
+//     }
+//   }, [filteredVisits, selectedVisit?.id]);
+
+//   // ---------- Date change handler ----------
+//   const handleDateChange = (e) => {
+//     const newDate = new Date(e.target.value + 'T00:00:00');
+//     setSelectedDate(newDate);
+//   };
+
+//   // ---------- Load visits for selected date ----------
+//   const loadVisitsForDate = useCallback(async () => {
+//     setIsDateSearch(true);
+//     setSelectedVisit(null);
+//     setSelectedPatient(null);
+//     selectedVisitIdRef.current = null;
+//     currentPatientIdsRef.current = [];
+//     setSearchText('');
+//     await fetchVisitsByDate(selectedDate);
+//     logAction('LOAD_VISITS_BY_DATE', `Loaded visits for date: ${formatDateForApi(selectedDate)}`);
+//   }, [selectedDate, fetchVisitsByDate, logAction]);
+
+//   // ---------- Search handlers ----------
+//   const performSearch = useCallback(async () => {
+//     if (!searchText || searchText.trim().length < 2) {
+//       setStatusMsg(`⚠️ ${t.msg.enterSearchValue}`);
+//       return;
+//     }
+
+//     setIsDateSearch(false);
+//     setLoading(true);
+//     setStatusMsg(`⏳ ${t.status.loading}`);
+
+//     try {
+//       const endpoint = searchBy === 'mobile'
+//         ? `${BASE_URL}/api/patients/search/mobile/${encodeURIComponent(searchText)}`
+//         : `${BASE_URL}/api/patients/search/name/${encodeURIComponent(searchText)}`;
+
+//       const res = await fetch(endpoint);
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+//       const patients = await res.json();
+//       const patientIds = patients.map(p => p.id);
+      
+//       currentPatientIdsRef.current = patientIds;
+
+//       if (patientIds.length === 0) {
+//         setStatusMsg(`📭 ${t.msg.noPatients}`);
+//         setFilteredVisits([]);
+//         setLoading(false);
+//         return;
+//       }
+
+//       await fetchVisits(patientIds);
+//       logAction('SEARCH_VISITS', `Searched by ${searchBy} = ${searchText}`);
+//     } catch (err) {
+//       setStatusMsg(`❌ ${t.msg.searchFailed}: ${err.message}`);
+//       setFilteredVisits([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [searchBy, searchText, fetchVisits, t, logAction]);
+
+//   const clearSearch = useCallback(() => {
+//     setSearchText('');
+//     setFilteredVisits([]);
+//     setSelectedVisit(null);
+//     setSelectedPatient(null);
+//     selectedVisitIdRef.current = null;
+//     currentPatientIdsRef.current = [];
+//     setStatusMsg(`🗑️ ${t.status.cleared}`);
+//     setIsDateSearch(false);
+//   }, [t]);
+
+//   // ---------- Visit actions ----------
+//   const updateVisitStatus = async (visitId, action) => {
+//     if (!selectedVisit && !visitId) {
+//       alert(t.msg.selectVisit);
+//       return;
+//     }
+
+//     const id = visitId || selectedVisit?.id;
+//     if (!id) return;
+
+//     setIsActionInProgress(true);
+//     setStatusMsg(`⏳ ${action}ing visit...`);
+
+//     try {
+//       const res = await fetch(`${BASE_URL}/api/visits/${id}/${action}`, {
+//         method: 'PUT',
+//       });
+
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+//       // Refresh visits but KEEP the selection
+//       const refreshedVisits = await refreshVisits(true);
+      
+//       // Find the updated visit in the refreshed data
+//       const updatedVisit = refreshedVisits.find(v => v.id === id);
+      
+//       if (updatedVisit) {
+//         setSelectedVisit(updatedVisit);
+//         // Update patient if we have patient data
+//         if (updatedVisit.patient && updatedVisit.patient.id) {
+//           setSelectedPatient(updatedVisit.patient);
+//         }
+//         selectedVisitIdRef.current = id;
+//       } else {
+//         // Visit no longer exists in the list, clear selection
+//         setSelectedVisit(null);
+//         setSelectedPatient(null);
+//         selectedVisitIdRef.current = null;
+//       }
+
+//       setStatusMsg(`✅ ${t.status.visit} ${action}ed ${t.status.success}`);
+//       logAction(`VISIT_${action.toUpperCase()}`, `${action}ed visit ${id}`);
+//     } catch (err) {
+//       setStatusMsg(`❌ ${err.message}`);
+//       alert(`${t.msg.visitActionFailedError.replace('{0}', action).replace('{1}', err.message)}`);
+//     } finally {
+//       setIsActionInProgress(false);
+//     }
+//   };
+
+//   const handleStartVisit = () => updateVisitStatus(null, 'start');
+//   const handleEndVisit = () => updateVisitStatus(null, 'end');
+
+//   const handlePaymentComplete = useCallback(async (amount) => {
+//     const id = selectedVisit?.id;
+    
+//     setIsActionInProgress(true);
+//     setStatusMsg(`⏳ Processing payment...`);
+
+//     // Refresh visits but KEEP the selection
+//     const visits = await refreshVisits(true);
+
+//     // Find the updated visit
+//     const updated = visits.find(v => v.id === id);
+    
+//     if (updated) {
+//       setSelectedVisit(updated);
+//       // Update patient if we have patient data
+//       if (updated.patient && updated.patient.id) {
+//         setSelectedPatient(updated.patient);
+//       }
+//       selectedVisitIdRef.current = id;
+//     } else {
+//       setSelectedVisit(null);
+//       setSelectedPatient(null);
+//       selectedVisitIdRef.current = null;
+//     }
+    
+//     setShowPayment(false);
+//     setStatusMsg(`✅ Payment of ${amount} completed successfully`);
+//     setIsActionInProgress(false);
+//   }, [selectedVisit, refreshVisits]);
+
+//   const handlePayment = () => {
+//     if (!selectedVisit) {
+//       alert(t.msg.selectVisit);
+//       return;
+//     }
+//     setShowPayment(true);
+//   };
+
+//   const handlePaymentModalClose = useCallback(async () => {
+//     setShowPayment(false);
+    
+//     // Refresh visits but KEEP the selection
+//     const visits = await refreshVisits(true);
+    
+//     if (selectedVisit) {
+//       const updatedVisit = visits.find(v => v.id === selectedVisit.id);
+//       if (updatedVisit) {
+//         setSelectedVisit(updatedVisit);
+//         if (updatedVisit.patient && updatedVisit.patient.id) {
+//           setSelectedPatient(updatedVisit.patient);
+//         }
+//         selectedVisitIdRef.current = updatedVisit.id;
+//       } else {
+//         setSelectedVisit(null);
+//         setSelectedPatient(null);
+//         selectedVisitIdRef.current = null;
+//       }
+//     }
+    
+//     setStatusMsg(`🔄 Table refreshed`);
+//   }, [selectedVisit, refreshVisits]);
+
+//   const handleMarkInsurancePaid = async (visitId) => {
+//     if (!window.confirm(t.confirm.message)) return;
+
+//     const visit = filteredVisits.find(v => v.id === visitId);
+//     if (!visit) return;
+
+//     try {
+//       const insuranceId = visit.insuranceFormId || visit.insuranceCardId;
+//       if (!insuranceId) {
+//         alert(t.msg.noInsuranceId);
+//         return;
+//       }
+
+//       const params = new URLSearchParams();
+//       if (visit.insuranceFormId) params.append('insuranceFormId', visit.insuranceFormId);
+//       if (visit.insuranceCardId) params.append('insuranceCardId', visit.insuranceCardId);
+
+//       const res = await fetch(`${BASE_URL}/api/visits/mark-insurance-paid?${params.toString()}`, {
+//         method: 'PUT',
+//       });
+
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+//       // Refresh visits but KEEP the selection
+//       await refreshVisits(true);
+
+//       setStatusMsg(`✅ ${t.msg.insuranceMarked}`);
+//       logAction('MARK_INSURANCE_PAID', `Marked insurance paid for visit ${visitId}`);
+//     } catch (err) {
+//       alert(`${t.msg.insuranceFailed}: ${err.message}`);
+//     }
+//   };
+
+//   const showPaymentDetails = async (visitId) => {
+//     try {
+//       const res = await fetch(`${BASE_URL}/api/visits/${visitId}/payments`);
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+//       const data = await res.json();
+
+//       let msg = `💳 Payment Details for Visit #${visitId}\n\n`;
+//       msg += `Original Amount: ${data.originalAmount || 0}\n`;
+//       msg += `Insurance Amount: ${data.insuranceAmount || 0}\n`;
+//       msg += `Insurance Paid: ${data.insurancePaidAmount || 0}\n`;
+//       msg += `Insurance Discount: ${data.insuranceDiscount || 0}\n`;
+//       msg += `Patient Paid: ${data.patientPaid || 0}\n`;
+//       msg += `Remaining: ${data.remainingAmount || 0}\n\n`;
+//       msg += `--- Transactions ---\n`;
+
+//       (data.payments || []).forEach(p => {
+//         msg += `${p.paymentMethod} | ${p.amount} | ${p.paidAt || ''}\n`;
+//       });
+
+//       alert(msg);
+//     } catch (err) {
+//       alert(`${t.msg.paymentDetailsFailed}: ${err.message}`);
+//     }
+//   };
+
+//   // ---------- Handle visit selection ----------
+//   const handleVisitSelect = useCallback(async (visit) => {
+//     if (shouldDisableRow(visit)) return;
+    
+//     setSelectedVisit(visit);
+//     selectedVisitIdRef.current = visit.id;
+//     logAction('SELECT_VISIT', `Selected visit ${visit.id}`);
+    
+//     // Fetch patient details if we have patient ID
+//     if (visit.patientId) {
+//       const patientData = await fetchPatientDetails(visit.patientId);
+//       if (patientData) {
+//         setSelectedPatient(patientData);
+//       }
+//     }
+//   }, [fetchPatientDetails, logAction]);
+
+//   // ---------- Determine if row should be disabled ----------
+//   const shouldDisableRow = (visit) => {
+//     if (!visit) return false;
+//     const remaining = Math.max(0, visit.amount - visit.totalPaid);
+//     return visit.visitStatus === 'CLOSED' && visit.amount > 0 && remaining === 0;
+//   };
+
+//   // ---------- Check if actions are available ----------
+//   const canStartVisit = (visit) => {
+//     if (!visit) return false;
+//     const remaining = Math.max(0, visit.amount - visit.totalPaid);
+//     const isNew = ['NEW', 'CREATED'].includes(visit.visitStatus);
+//     const notPaid = visit.paid !== 'YES' && !visit.insurancePaid;
+//     const isSpecial = visit.visitStatus === 'CREATED' && visit.amount > 0 && remaining === 0;
+//     return (isNew && notPaid) || isSpecial;
+//   };
+
+//   const canEndVisit = (visit) => {
+//     if (!visit) return false;
+//     const remaining = Math.max(0, visit.amount - visit.totalPaid);
+//     const isInProgress = visit.visitStatus === 'IN_PROGRESS';
+//     const notPaid = visit.paid !== 'YES' && !visit.insurancePaid;
+//     const isSpecial = visit.visitStatus === 'IN_PROGRESS' && remaining === 0 && visit.amount > 0;
+//     return (isInProgress && notPaid) || isSpecial;
+//   };
+
+//   const canPay = (visit) => {
+//     if (!visit) return false;
+//       return (visit.paymentMethod === 'FREE') || (visit.paid !== 'YES' && !visit.insurancePaid);
+//   };
+
+//   // ---------- Render ----------
+//   return (
+//     <>
+//       <style>{`
+//         /* ==================== VISIT TRACKING STYLES ==================== */
+//         .visit-tracking-container {
+//           padding: 20px;
+//           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+//         }
+
+//         .visit-tracking-header {
+//           display: flex;
+//           justify-content: space-between;
+//           align-items: center;
+//           margin-bottom: 20px;
+//           flex-wrap: wrap;
+//           gap: 10px;
+//         }
+
+//         .visit-tracking-header h2 {
+//           margin: 0;
+//           font-size: 24px;
+//           color: #2d3748;
+//         }
+
+//         .visit-tracking-close-btn {
+//           background: #e2e8f0;
+//           border: none;
+//           padding: 8px 16px;
+//           border-radius: 8px;
+//           cursor: pointer;
+//           font-size: 14px;
+//           min-height: 38px;
+//           transition: all 0.2s;
+//         }
+
+//         .visit-tracking-close-btn:hover {
+//           background: #cbd5e0;
+//         }
+
+//         .visit-tracking-search-section {
+//           background: white;
+//           border-radius: 12px;
+//           padding: 15px;
+//           box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+//           margin-bottom: 20px;
+//         }
+
+//         .visit-tracking-search-row {
+//           display: flex;
+//           gap: 10px;
+//           align-items: center;
+//           flex-wrap: wrap;
+//         }
+
+//         .visit-tracking-search-row select,
+//         .visit-tracking-search-row input {
+//           padding: 8px 12px;
+//           border-radius: 8px;
+//           border: 1px solid #ccc;
+//           min-height: 38px;
+//         }
+
+//         .visit-tracking-search-row select:focus,
+//         .visit-tracking-search-row input:focus {
+//           outline: none;
+//           border-color: #4299e1;
+//         }
+
+//         .visit-tracking-search-row input {
+//           flex: 1;
+//           min-width: 200px;
+//         }
+
+//         .visit-tracking-btn {
+//           color: white;
+//           font-weight: bold;
+//           border: none;
+//           border-radius: 8px;
+//           padding: 8px 16px;
+//           cursor: pointer;
+//           min-height: 38px;
+//           transition: all 0.2s;
+//           touch-action: manipulation;
+//         }
+
+//         .visit-tracking-btn:hover:not(:disabled) {
+//           transform: scale(1.05);
+//         }
+
+//         .visit-tracking-btn:disabled {
+//           opacity: 0.5;
+//           cursor: not-allowed;
+//         }
+
+//         .visit-tracking-btn-primary {
+//           background: #4299e1;
+//         }
+
+//         .visit-tracking-btn-primary:hover:not(:disabled) {
+//           background: #3182ce;
+//         }
+
+//         .visit-tracking-btn-danger {
+//           background: #fc8181;
+//         }
+
+//         .visit-tracking-btn-danger:hover:not(:disabled) {
+//           background: #f56565;
+//         }
+
+//         .visit-tracking-btn-success {
+//           background: #48bb78;
+//         }
+
+//         .visit-tracking-btn-success:hover:not(:disabled) {
+//           background: #38a169;
+//         }
+
+//         .visit-tracking-btn-secondary {
+//           background: #e2e8f0;
+//           color: #4a5568;
+//         }
+
+//         .visit-tracking-btn-secondary:hover:not(:disabled) {
+//           background: #cbd5e0;
+//         }
+
+//         .visit-tracking-date-section {
+//           display: flex;
+//           gap: 10px;
+//           align-items: center;
+//           margin-bottom: 15px;
+//           flex-wrap: wrap;
+//           background: white;
+//           padding: 10px 15px;
+//           border-radius: 12px;
+//           box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+//         }
+
+//         .visit-tracking-date-section label {
+//           font-weight: bold;
+//           color: #2d3748;
+//         }
+
+//         .visit-tracking-date-section input[type="date"] {
+//           padding: 8px 12px;
+//           border-radius: 8px;
+//           border: 1px solid #ccc;
+//           min-height: 38px;
+//         }
+
+//         .visit-tracking-date-section input[type="date"]:focus {
+//           outline: none;
+//           border-color: #4299e1;
+//         }
+
+//         .visit-tracking-toolbar {
+//           display: flex;
+//           gap: 10px;
+//           margin-bottom: 15px;
+//           align-items: center;
+//           flex-wrap: wrap;
+//         }
+
+//         .visit-tracking-toggle-btn {
+//           background: #edf2f7;
+//           border: 1px solid #e2e8f0;
+//           border-radius: 8px;
+//           padding: 8px 12px;
+//           cursor: pointer;
+//           min-height: 38px;
+//           transition: all 0.2s;
+//         }
+
+//         .visit-tracking-toggle-btn.active {
+//           background: #4299e1;
+//           color: white;
+//           font-weight: bold;
+//           border-color: #4299e1;
+//         }
+
+//         .visit-tracking-toggle-btn:hover:not(.active) {
+//           background: #e2e8f0;
+//         }
+
+//         .visit-tracking-status-msg {
+//           margin-left: auto;
+//           color: #4a5568;
+//           font-size: 13px;
+//         }
+
+//         /* ============ NEW: Fixed content with scroll ============ */
+//         .visit-tracking-content-wrapper {
+//           height: 500px;
+//           display: flex;
+//           flex-direction: column;
+//           background: white;
+//           border-radius: 12px;
+//           box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+//         }
+
+//         .visit-tracking-content-scroll {
+//           flex: 1;
+//           overflow-y: auto;
+//           padding: 10px;
+//         }
+
+//         .visit-tracking-content-scroll::-webkit-scrollbar {
+//           width: 8px;
+//         }
+
+//         .visit-tracking-content-scroll::-webkit-scrollbar-track {
+//           background: #f1f1f1;
+//           border-radius: 4px;
+//         }
+
+//         .visit-tracking-content-scroll::-webkit-scrollbar-thumb {
+//           background: #4299e1;
+//           border-radius: 4px;
+//         }
+
+//         .visit-tracking-content-scroll::-webkit-scrollbar-thumb:hover {
+//           background: #3182ce;
+//         }
+
+//         /* ============ NEW: Action buttons at top ============ */
+//         .visit-tracking-actions-top {
+//           display: flex;
+//           gap: 10px;
+//           padding: 12px 16px;
+//           background: #f7fafc;
+//           border-radius: 12px 12px 0 0;
+//           border-bottom: 1px solid #e2e8f0;
+//           flex-wrap: wrap;
+//           align-items: center;
+//         }
+
+//         .visit-tracking-actions-top .action-label {
+//           font-weight: 600;
+//           color: #2d3748;
+//           margin-right: 8px;
+//         }
+
+//         .visit-tracking-actions-top .action-btn {
+//           min-height: 36px;
+//           padding: 6px 16px;
+//           font-size: 13px;
+//         }
+
+//         .visit-tracking-actions-top .action-btn:disabled {
+//           opacity: 0.5;
+//           cursor: not-allowed;
+//         }
+
+//         .visit-tracking-actions-top .no-selection-msg {
+//           color: #718096;
+//           font-size: 13px;
+//           font-style: italic;
+//         }
+
+//         /* ============ Loading and empty states ============ */
+//         .visit-tracking-loading {
+//           text-align: center;
+//           padding: 40px;
+//           color: #7f8c8d;
+//         }
+
+//         .visit-tracking-empty {
+//           text-align: center;
+//           padding: 40px;
+//           color: #a0aec0;
+//         }
+
+//         /* Selected Patient Banner */
+//         .visit-tracking-selected-patient-banner {
+//           display: flex;
+//           align-items: center;
+//           gap: 12px;
+//           padding: 10px 16px;
+//           background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+//           border-radius: 8px;
+//           margin-bottom: 15px;
+//           border-left: 4px solid #4299e1;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-label {
+//           font-weight: 600;
+//           color: #2d3748;
+//           font-size: 14px;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-name {
+//           font-weight: 700;
+//           color: #2b6cb0;
+//           font-size: 16px;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-id {
+//           color: #4a5568;
+//           font-size: 13px;
+//           margin-left: 4px;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-details {
+//           display: flex;
+//           align-items: center;
+//           gap: 15px;
+//           flex-wrap: wrap;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-detail-item {
+//           display: flex;
+//           align-items: center;
+//           gap: 4px;
+//           color: #4a5568;
+//           font-size: 13px;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-detail-item .label {
+//           color: #718096;
+//         }
+
+//         .visit-tracking-selected-patient-banner .patient-detail-item .value {
+//           font-weight: 500;
+//           color: #2d3748;
+//         }
+
+//         .visit-tracking-selected-patient-banner .clear-btn {
+//           margin-left: auto;
+//           background: #e2e8f0;
+//           border: none;
+//           border-radius: 6px;
+//           padding: 4px 12px;
+//           cursor: pointer;
+//           font-size: 12px;
+//           min-height: 28px;
+//           transition: all 0.2s;
+//           color: #4a5568;
+//         }
+
+//         .visit-tracking-selected-patient-banner .clear-btn:hover {
+//           background: #cbd5e0;
+//         }
+
+//         /* Table Styles */
+//         .visit-tracking-table-wrapper {
+//           overflow-x: auto;
+//           -webkit-overflow-scrolling: touch;
+//         }
+
+//         .visit-tracking-table {
+//           width: 100%;
+//           border-collapse: collapse;
+//           font-size: 13px;
+//           min-width: 700px;
+//         }
+
+//         .visit-tracking-table th {
+//           padding: 10px;
+//           background: #f8f9fa;
+//           text-align: left;
+//           font-weight: bold;
+//           color: #2d3748;
+//           border-bottom: 2px solid #e2e8f0;
+//           position: sticky;
+//           top: 0;
+//           z-index: 10;
+//         }
+
+//         .visit-tracking-table td {
+//           padding: 10px;
+//           border-bottom: 1px solid #eee;
+//           vertical-align: middle;
+//         }
+
+//         .visit-tracking-table tr {
+//           cursor: pointer;
+//           transition: background 0.2s;
+//         }
+
+//         .visit-tracking-table tr:hover td {
+//           background: #f7fafc;
+//         }
+
+//         .visit-tracking-table tr.selected td {
+//           background: #ebf8ff;
+//         }
+
+//         .visit-tracking-table tr.disabled {
+//           opacity: 0.6;
+//           cursor: not-allowed;
+//         }
+
+//         .visit-tracking-table tr.disabled td {
+//           background: #f7fafc;
+//         }
+
+//         .visit-tracking-table .status-badge {
+//           font-weight: bold;
+//         }
+
+//         .visit-tracking-table .status-badge.inprogress { color: #48bb78; }
+//         .visit-tracking-table .status-badge.new { color: #4299e1; }
+//         .visit-tracking-table .status-badge.closed { color: #718096; }
+
+//         .visit-tracking-table .remaining-zero {
+//           color: #48bb78;
+//         }
+
+//         .visit-tracking-table .remaining-positive {
+//           color: #e53e3e;
+//         }
+
+//         .visit-tracking-table .btn-view {
+//           background: #4299e1;
+//           color: white;
+//           border: none;
+//           border-radius: 6px;
+//           padding: 4px 12px;
+//           cursor: pointer;
+//           font-size: 12px;
+//           min-height: 30px;
+//           transition: all 0.2s;
+//           touch-action: manipulation;
+//         }
+
+//         .visit-tracking-table .btn-view:hover:not(:disabled) {
+//           transform: scale(1.05);
+//         }
+
+//         .visit-tracking-table .btn-view:disabled {
+//           opacity: 0.5;
+//           cursor: not-allowed;
+//         }
+
+//         .visit-tracking-table .btn-view.danger {
+//           background: #fc8181;
+//         }
+
+//         .visit-tracking-table .btn-view.danger:hover:not(:disabled) {
+//           background: #f56565;
+//         }
+
+//         /* Card Styles */
+//         .visit-tracking-card-grid {
+//           display: grid;
+//           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+//           gap: 15px;
+//           padding-bottom: 10px;
+//         }
+
+//         .visit-tracking-card {
+//           background: white;
+//           border-radius: 12px;
+//           padding: 15px;
+//           box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+//           border: 1px solid #edf2f7;
+//           cursor: pointer;
+//           transition: all 0.2s;
+//         }
+
+//         .visit-tracking-card:hover {
+//           transform: translateY(-3px);
+//           box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+//         }
+
+//         .visit-tracking-card.selected {
+//           border: 2px solid #4299e1;
+//           background: #ebf8ff;
+//         }
+
+//         .visit-tracking-card.disabled {
+//           opacity: 0.6;
+//           cursor: not-allowed;
+//         }
+
+//         .visit-tracking-card-header {
+//           display: flex;
+//           justify-content: space-between;
+//           align-items: center;
+//           margin-bottom: 10px;
+//         }
+
+//         .visit-tracking-card-id {
+//           background: #4299e1;
+//           color: white;
+//           border-radius: 12px;
+//           padding: 2px 10px;
+//           font-size: 12px;
+//         }
+
+//         .visit-tracking-card-patient {
+//           font-weight: bold;
+//           flex: 1;
+//           margin: 0 8px;
+//           white-space: nowrap;
+//           overflow: hidden;
+//           text-overflow: ellipsis;
+//         }
+
+//         .visit-tracking-card-status {
+//           border-radius: 12px;
+//           padding: 2px 10px;
+//           font-size: 11px;
+//           white-space: nowrap;
+//         }
+
+//         .visit-tracking-card-status.inprogress { background: #48bb78; color: white; }
+//         .visit-tracking-card-status.new { background: #4299e1; color: white; }
+//         .visit-tracking-card-status.closed { background: #edf2f7; color: #4a5568; }
+
+//         .visit-tracking-card-body {
+//           font-size: 13px;
+//           color: #4a5568;
+//         }
+
+//         .visit-tracking-card-body .detail {
+//           margin-bottom: 4px;
+//         }
+
+//         .visit-tracking-card-body .remaining-zero {
+//           color: #48bb78;
+//         }
+
+//         .visit-tracking-card-body .remaining-positive {
+//           color: #e53e3e;
+//         }
+
+//         .visit-tracking-card-actions {
+//           margin-top: 10px;
+//           display: flex;
+//           gap: 5px;
+//           flex-wrap: wrap;
+//         }
+
+//         .visit-tracking-card-checkbox {
+//           margin-top: 4px;
+//         }
+
+//         .visit-tracking-card-checkbox label {
+//           font-size: 12px;
+//           display: flex;
+//           align-items: center;
+//           gap: 4px;
+//         }
+
+//         .visit-tracking-card-checkbox input[type="checkbox"] {
+//           cursor: pointer;
+//         }
+
+//         /* Mobile styles */
+//         @media (max-width: 768px) {
+//           .visit-tracking-container {
+//             padding: 12px;
+//           }
+
+//           .visit-tracking-header h2 {
+//             font-size: 20px;
+//           }
+
+//           .visit-tracking-search-row {
+//             flex-direction: column;
+//             align-items: stretch;
+//           }
+
+//           .visit-tracking-search-row select,
+//           .visit-tracking-search-row input {
+//             width: 100%;
+//             min-width: unset;
+//           }
+
+//           .visit-tracking-date-section {
+//             flex-direction: column;
+//             align-items: stretch;
+//           }
+
+//           .visit-tracking-date-section input[type="date"] {
+//             width: 100%;
+//           }
+
+//           .visit-tracking-toolbar {
+//             flex-direction: column;
+//             align-items: stretch;
+//           }
+
+//           .visit-tracking-status-msg {
+//             margin-left: 0;
+//             text-align: center;
+//           }
+
+//           .visit-tracking-content-wrapper {
+//             height: 400px;
+//           }
+
+//           .visit-tracking-actions-top {
+//             flex-direction: column;
+//             align-items: stretch;
+//             gap: 6px;
+//           }
+
+//           .visit-tracking-actions-top .action-btn {
+//             width: 100%;
+//             min-height: 40px;
+//           }
+
+//           .visit-tracking-table {
+//             font-size: 12px;
+//             min-width: 500px;
+//           }
+
+//           .visit-tracking-table th,
+//           .visit-tracking-table td {
+//             padding: 6px 8px;
+//           }
+
+//           .visit-tracking-table .btn-view {
+//             font-size: 10px;
+//             padding: 3px 8px;
+//             min-height: 24px;
+//           }
+
+//           .visit-tracking-card-grid {
+//             grid-template-columns: 1fr;
+//           }
+
+//           .visit-tracking-card {
+//             padding: 12px;
+//           }
+//         }
+
+//         @media (max-width: 480px) {
+//           .visit-tracking-container {
+//             padding: 8px;
+//           }
+
+//           .visit-tracking-header h2 {
+//             font-size: 17px;
+//           }
+
+//           .visit-tracking-close-btn {
+//             font-size: 12px;
+//             padding: 6px 12px;
+//             min-height: 32px;
+//           }
+
+//           .visit-tracking-search-row select,
+//           .visit-tracking-search-row input {
+//             font-size: 15px;
+//             min-height: 36px;
+//           }
+
+//           .visit-tracking-date-section input[type="date"] {
+//             font-size: 15px;
+//             min-height: 36px;
+//           }
+
+//           .visit-tracking-btn {
+//             font-size: 12px;
+//             padding: 6px 12px;
+//             min-height: 34px;
+//           }
+
+//           .visit-tracking-toggle-btn {
+//             font-size: 12px;
+//             padding: 6px 12px;
+//             min-height: 34px;
+//           }
+
+//           .visit-tracking-content-wrapper {
+//             height: 350px;
+//           }
+
+//           .visit-tracking-table {
+//             font-size: 11px;
+//             min-width: 400px;
+//           }
+
+//           .visit-tracking-table th,
+//           .visit-tracking-table td {
+//             padding: 4px 6px;
+//           }
+
+//           .visit-tracking-card {
+//             padding: 10px;
+//           }
+
+//           .visit-tracking-card .card-patient {
+//             font-size: 14px;
+//           }
+//         }
+
+//         @media (min-width: 769px) and (max-width: 1024px) {
+//           .visit-tracking-card-grid {
+//             grid-template-columns: repeat(2, 1fr);
+//           }
+//         }
+
+//         /* Dark mode */
+//         @media (prefers-color-scheme: dark) {
+//           .visit-tracking-container {
+//             background: #1a1a2e;
+//           }
+
+//           .visit-tracking-header h2 {
+//             color: #ecf0f1;
+//           }
+
+//           .visit-tracking-close-btn {
+//             background: #2d2d44;
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-close-btn:hover {
+//             background: #3d3d5c;
+//           }
+
+//           .visit-tracking-search-section,
+//           .visit-tracking-date-section {
+//             background: #2d2d44;
+//           }
+
+//           .visit-tracking-search-row select,
+//           .visit-tracking-search-row input,
+//           .visit-tracking-date-section input[type="date"] {
+//             background: #1a1a2e;
+//             border-color: #3d3d5c;
+//             color: #ecf0f1;
+//           }
+
+//           .visit-tracking-search-row select:focus,
+//           .visit-tracking-search-row input:focus,
+//           .visit-tracking-date-section input[type="date"]:focus {
+//             border-color: #4299e1;
+//           }
+
+//           .visit-tracking-search-row input::placeholder {
+//             color: #666;
+//           }
+
+//           .visit-tracking-date-section label {
+//             color: #ecf0f1;
+//           }
+
+//           .visit-tracking-toggle-btn {
+//             background: #2d2d44;
+//             border-color: #3d3d5c;
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-toggle-btn.active {
+//             background: #4299e1;
+//             color: white;
+//             border-color: #4299e1;
+//           }
+
+//           .visit-tracking-toggle-btn:hover:not(.active) {
+//             background: #3d3d5c;
+//           }
+
+//           .visit-tracking-status-msg {
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-content-wrapper {
+//             background: #2d2d44;
+//           }
+
+//           .visit-tracking-actions-top {
+//             background: #1a1a2e;
+//             border-bottom-color: #3d3d5c;
+//           }
+
+//           .visit-tracking-actions-top .action-label {
+//             color: #ecf0f1;
+//           }
+
+//           .visit-tracking-actions-top .no-selection-msg {
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-table th {
+//             background: #1a1a2e;
+//             color: #ecf0f1;
+//             border-bottom-color: #3d3d5c;
+//           }
+
+//           .visit-tracking-table td {
+//             color: #b0b0b0;
+//             border-bottom-color: #3d3d5c;
+//           }
+
+//           .visit-tracking-table tr:hover td {
+//             background: #1a1a2e;
+//           }
+
+//           .visit-tracking-table tr.selected td {
+//             background: #1a2744;
+//           }
+
+//           .visit-tracking-table .status-badge.inprogress { color: #4CAF50; }
+//           .visit-tracking-table .status-badge.new { color: #63b3ed; }
+//           .visit-tracking-table .status-badge.closed { color: #888; }
+
+//           .visit-tracking-table .btn-view {
+//             background: #3182ce;
+//           }
+
+//           .visit-tracking-table .btn-view:hover:not(:disabled) {
+//             background: #4299e1;
+//           }
+
+//           .visit-tracking-table .btn-view.danger {
+//             background: #c53030;
+//           }
+
+//           .visit-tracking-table .btn-view.danger:hover:not(:disabled) {
+//             background: #fc8181;
+//           }
+
+//           .visit-tracking-card {
+//             background: #2d2d44;
+//             border-color: #3d3d5c;
+//           }
+
+//           .visit-tracking-card.selected {
+//             border-color: #4299e1;
+//             background: #1a2744;
+//           }
+
+//           .visit-tracking-card-patient {
+//             color: #ecf0f1;
+//           }
+
+//           .visit-tracking-card-body {
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-card-status.closed {
+//             background: #2d2d44;
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-card .remaining-zero {
+//             color: #4CAF50;
+//           }
+
+//           .visit-tracking-card .remaining-positive {
+//             color: #fc8181;
+//           }
+
+//           .visit-tracking-btn-primary {
+//             background: #3182ce;
+//           }
+
+//           .visit-tracking-btn-primary:hover:not(:disabled) {
+//             background: #4299e1;
+//           }
+
+//           .visit-tracking-btn-danger {
+//             background: #c53030;
+//           }
+
+//           .visit-tracking-btn-danger:hover:not(:disabled) {
+//             background: #fc8181;
+//           }
+
+//           .visit-tracking-btn-success {
+//             background: #2f855a;
+//           }
+
+//           .visit-tracking-btn-success:hover:not(:disabled) {
+//             background: #38a169;
+//           }
+
+//           .visit-tracking-btn-secondary {
+//             background: #2d2d44;
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-btn-secondary:hover:not(:disabled) {
+//             background: #3d3d5c;
+//           }
+
+//           .visit-tracking-loading {
+//             color: #666;
+//           }
+
+//           .visit-tracking-empty {
+//             color: #666;
+//           }
+
+//           .visit-tracking-card-checkbox label {
+//             color: #b0b0b0;
+//           }
+
+//           .visit-tracking-content-scroll::-webkit-scrollbar-track {
+//             background: #1a1a2e;
+//           }
+
+//           .visit-tracking-content-scroll::-webkit-scrollbar-thumb {
+//             background: #3182ce;
+//           }
+
+//           .visit-tracking-content-scroll::-webkit-scrollbar-thumb:hover {
+//             background: #4299e1;
+//           }
+//         }
+//       `}</style>
+
+//       <div className="visit-tracking-container">
+//         {/* Header */}
+//         <div className="visit-tracking-header">
+//           <h2>📋 {t.title}</h2>
+//           <button className="visit-tracking-close-btn" onClick={onClose}>
+//             ✕ {t.btn.close}
+//           </button>
+//         </div>
+
+//         {/* Date Selection Section */}
+//         <div className="visit-tracking-date-section">
+//           <label htmlFor="visitDate">{t.date.label}:</label>
+//           <input
+//             type="date"
+//             id="visitDate"
+//             value={formatDateForApi(selectedDate)}
+//             onChange={handleDateChange}
+//           />
+//           <button
+//             className="visit-tracking-btn visit-tracking-btn-primary"
+//             onClick={loadVisitsForDate}
+//           >
+//             📅 {t.date.load}
+//           </button>
+//           <button
+//             className="visit-tracking-btn visit-tracking-btn-secondary"
+//             onClick={() => {
+//               const today = new Date();
+//               setSelectedDate(today);
+//               fetchVisitsByDate(today);
+//             }}
+//           >
+//             📅 {t.date.today}
+//           </button>
+//         </div>
+
+//         {/* Search Section */}
+//         <div className="visit-tracking-search-section">
+//           <div className="visit-tracking-search-row">
+//             <select
+//               value={searchBy}
+//               onChange={e => setSearchBy(e.target.value)}
+//             >
+//               <option value="name">{t.search.name}</option>
+//               <option value="mobile">{t.search.mobile}</option>
+//             </select>
+//             <input
+//               type="text"
+//               placeholder={t.search.placeholder}
+//               value={searchText}
+//               onChange={e => setSearchText(e.target.value)}
+//               onKeyPress={e => e.key === 'Enter' && performSearch()}
+//             />
+//             <button
+//               className="visit-tracking-btn visit-tracking-btn-primary"
+//               onClick={performSearch}
+//               disabled={!searchText || searchText.trim().length < 2}
+//             >
+//               🔍 {t.btn.search}
+//             </button>
+//             <button
+//               className="visit-tracking-btn visit-tracking-btn-danger"
+//               onClick={clearSearch}
+//             >
+//               🗑️ {t.btn.clear}
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* View Toggle */}
+//         <div className="visit-tracking-toolbar">
+//           <button
+//             className={`visit-tracking-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+//             onClick={() => setViewMode('table')}
+//           >
+//             📋 {t.btn.table}
+//           </button>
+//           <button
+//             className={`visit-tracking-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
+//             onClick={() => setViewMode('card')}
+//           >
+//             🃏 {t.btn.cards}
+//           </button>
+//           <span className="visit-tracking-status-msg">{statusMsg}</span>
+//         </div>
+
+//         {/* ============ FIXED CONTENT WITH SCROLL ============ */}
+//         <div className="visit-tracking-content-wrapper">
+          
+//           {/* Action Buttons - Always visible at top */}
+//           <div className="visit-tracking-actions-top">
+//             <span className="action-label">⚡ Actions:</span>
+            
+//             {selectedVisit ? (
+//               <>
+//                 <button
+//                   className="visit-tracking-btn visit-tracking-btn-success action-btn"
+//                   onClick={handleStartVisit}
+//                   disabled={!canStartVisit(selectedVisit) || isActionInProgress}
+//                 >
+//                   ▶ {t.btn.start}
+//                 </button>
+//                 <button
+//                   className="visit-tracking-btn visit-tracking-btn-danger action-btn"
+//                   onClick={handleEndVisit}
+//                   disabled={!canEndVisit(selectedVisit) || isActionInProgress}
+//                 >
+//                   ⏹ {t.btn.end}
+//                 </button>
+//                 <button
+//                   className="visit-tracking-btn visit-tracking-btn-success action-btn"
+//                   onClick={handlePayment}
+//                   disabled={!canPay(selectedVisit) || isActionInProgress}
+//                 >
+//                   💰 {t.btn.pay}
+//                 </button>
+//               </>
+//             ) : (
+//               <span className="no-selection-msg">👈 Select a visit to enable actions</span>
+//             )}
+//           </div>
+
+//           {/* Scrollable content */}
+//           <div className="visit-tracking-content-scroll">
+            
+//             {/* Selected Patient Banner */}
+//             {selectedPatient && (
+//               <div className="visit-tracking-selected-patient-banner">
+//                 <span className="patient-label">👤 {t.label.selectedPatient}:</span>
+//                 <span className="patient-name">
+//                   {selectedPatient.firstName || ''} {selectedPatient.middleName || ''} {selectedPatient.lastName || ''}
+//                   <span className="patient-id">(#{selectedPatient.id})</span>
+//                 </span>
+//                 <div className="patient-details">
+//                   {selectedPatient.phone && (
+//                     <span className="patient-detail-item">
+//                       <span className="label">📞</span>
+//                       <span className="value">{selectedPatient.phone}</span>
+//                     </span>
+//                   )}
+//                   {selectedPatient.gender && (
+//                     <span className="patient-detail-item">
+//                       <span className="label">⚧</span>
+//                       <span className="value">{selectedPatient.gender}</span>
+//                     </span>
+//                   )}
+//                   {selectedPatient.patientType && (
+//                     <span className="patient-detail-item">
+//                       <span className="label">📋</span>
+//                       <span className="value">{selectedPatient.patientType}</span>
+//                     </span>
+//                   )}
+//                   {selectedPatient.insuranceProvider && (
+//                     <span className="patient-detail-item">
+//                       <span className="label">🏥</span>
+//                       <span className="value">{selectedPatient.insuranceProvider}</span>
+//                     </span>
+//                   )}
+//                 </div>
+//                 <button
+//                   className="clear-btn"
+//                   onClick={() => {
+//                     setSelectedPatient(null);
+//                     setSelectedVisit(null);
+//                     selectedVisitIdRef.current = null;
+//                   }}
+//                 >
+//                   ✕ {t.btn.clear}
+//                 </button>
+//               </div>
+//             )}
+
+//             {/* Table/Cards */}
+//             {loading ? (
+//               <div className="visit-tracking-loading">⏳ Loading...</div>
+//             ) : filteredVisits.length === 0 ? (
+//               <div className="visit-tracking-empty">📭 {t.msg.noVisitsForDate || 'No visits found'}</div>
+//             ) : viewMode === 'table' ? (
+//               <div className="visit-tracking-table-wrapper">
+//                 <table className="visit-tracking-table">
+//                   <thead>
+//                     <tr>
+//                       <th>{t.col.id}</th>
+//                       <th>{t.col.patient}</th>
+//                       <th>{t.col.doctor}</th>
+//                       <th>{t.col.type}</th>
+//                       <th>{t.col.status}</th>
+//                       <th>{t.col.payment}</th>
+//                       <th>{t.col.amount}</th>
+//                       <th>{t.col.insurancePaid}</th>
+//                       <th>{t.col.remaining}</th>
+//                       <th>{t.col.details}</th>
+//                     </tr>
+//                   </thead>
+//                   <tbody>
+//                     {filteredVisits.map(visit => {
+//                       const disabled = shouldDisableRow(visit);
+//                       const remaining = Math.max(0, visit.amount - visit.totalPaid);
+
+//                       return (
+//                         <tr
+//                           key={visit.id}
+//                           className={`${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+//                           onClick={() => handleVisitSelect(visit)}
+//                         >
+//                           <td>{visit.id}</td>
+//                           <td>{visit.patientName}</td>
+//                           <td>{visit.doctorName}</td>
+//                           <td>{visit.visitType}</td>
+//                           <td>
+//                             <span className={`status-badge 
+//                               ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
+//                                 visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
+//                                 'closed'}`}>
+//                               {visit.visitStatus}
+//                             </span>
+//                           </td>
+//                           <td>{t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</td>
+//                           <td>{visit.amount.toFixed(2)}</td>
+//                           <td>
+//                             {visit.paymentMethod === 'INSURANCE' && (
+//                               <input
+//                                 type="checkbox"
+//                                 checked={visit.insurancePaid || false}
+//                                 disabled={visit.insurancePaid}
+//                                 onChange={() => handleMarkInsurancePaid(visit.id)}
+//                                 style={{ cursor: 'pointer' }}
+//                               />
+//                             )}
+//                           </td>
+//                           <td className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>
+//                             {remaining.toFixed(2)}
+//                           </td>
+//                           <td>
+//                             <button
+//                               className={`btn-view ${disabled ? 'danger' : ''}`}
+//                               onClick={(e) => {
+//                                 e.stopPropagation();
+//                                 showPaymentDetails(visit.id);
+//                               }}
+//                               disabled={disabled}
+//                             >
+//                               📋 {t.btn.view}
+//                             </button>
+//                           </td>
+//                         </tr>
+//                       );
+//                     })}
+//                   </tbody>
+//                 </table>
+//               </div>
+//             ) : (
+//               <div className="visit-tracking-card-grid">
+//                 {filteredVisits.map(visit => {
+//                   const disabled = shouldDisableRow(visit);
+//                   const remaining = Math.max(0, visit.amount - visit.totalPaid);
+
+//                   return (
+//                     <div
+//                       key={visit.id}
+//                       className={`visit-tracking-card ${selectedVisit?.id === visit.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+//                       onClick={() => handleVisitSelect(visit)}
+//                     >
+//                       <div className="visit-tracking-card-header">
+//                         <span className="visit-tracking-card-id">#{visit.id}</span>
+//                         <span className="visit-tracking-card-patient">{visit.patientName}</span>
+//                         <span className={`visit-tracking-card-status 
+//                           ${visit.visitStatus === 'IN_PROGRESS' ? 'inprogress' : 
+//                             visit.visitStatus === 'NEW' || visit.visitStatus === 'CREATED' ? 'new' : 
+//                             'closed'}`}>
+//                           {visit.visitStatus}
+//                         </span>
+//                       </div>
+//                       <div className="visit-tracking-card-body">
+//                         <div className="detail">👨‍⚕️ {visit.doctorName}</div>
+//                         <div className="detail">📋 {visit.visitType} | 💳 {t.paymentMethods[visit.paymentMethod] || visit.paymentMethod}</div>
+//                         <div className="detail">
+//                           💰 {visit.amount.toFixed(2)} | {t.col.remaining}: <span className={remaining === 0 ? 'remaining-zero' : 'remaining-positive'}>{remaining.toFixed(2)}</span>
+//                         </div>
+//                         {visit.paymentMethod === 'INSURANCE' && (
+//                           <div className="visit-tracking-card-checkbox">
+//                             <label>
+//                               <input
+//                                 type="checkbox"
+//                                 checked={visit.insurancePaid || false}
+//                                 disabled={visit.insurancePaid}
+//                                 onChange={(e) => {
+//                                   e.stopPropagation();
+//                                   handleMarkInsurancePaid(visit.id);
+//                                 }}
+//                               /> {t.col.insurancePaid}
+//                             </label>
+//                           </div>
+//                         )}
+//                       </div>
+//                       <button
+//                         className="btn-view"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           showPaymentDetails(visit.id);
+//                         }}
+//                       >
+//                         📋 {t.btn.view}
+//                       </button>
+//                     </div>
+//                   );
+//                 })}
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Payment Modal */}
+//         {showPayment && selectedVisit && (
+//           <VisitPayScreen
+//             visit={selectedVisit}
+//             remaining={Math.max(0, selectedVisit.amount - selectedVisit.totalPaid)}
+//             loggedUser={loggedUser}
+//             onClose={handlePaymentModalClose}
+//             onPaymentComplete={handlePaymentComplete}
+//           />
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// export default VisitTrackingScreen;   21072026  10:00 Pm
+
+
+
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { BASE_URL } from '../../utils/api';
 import VisitPayScreen from './VisitPayScreen';
@@ -13192,6 +15271,8 @@ const translations = {
       placeholder: 'Search by name or mobile...',
     },
     btn: {
+          print: 'Print',
+
       search: 'Search',
       clear: 'Clear',
       start: 'Start Visit',
@@ -13250,15 +15331,40 @@ const translations = {
     },
     payment: {
       details: {
+ thankYou: 'Thank you for your payment!',
+    generatedAt: 'Generated at',
+
         title: 'Payment Details',
+        visitNumber: 'Visit #',
+        patient: 'Patient',
+        doctor: 'Doctor',
+        totalAmount: 'Total Amount',
+        currency: 'Currency',
+        paid: 'Paid',
+        originalAmount: 'Original Amount',
+        insuranceAmount: 'Insurance Amount',
+        insurancePaid: 'Insurance Paid',
+        insuranceDiscount: 'Insurance Discount',
+        patientPaid: 'Patient Paid',
+        remaining: 'Remaining',
+        transactions: 'Transactions',
+        paymentMethod: 'Payment Method',
+        amount: 'Amount',
+        paidAt: 'Paid At',
+        receiptNumber: 'Receipt #',
+        insuranceFields: 'Insurance Fields',
+        posFields: 'POS Fields',
+        provider: 'Provider',
+        class: 'Class',
+        type: 'Type',
+        coverage: 'Coverage',
+        acceptNumber: 'Accept #',
+        terminalId: 'Terminal ID',
+        referenceNumber: 'Reference #',
+        cardType: 'Card Type',
+        approvalCode: 'Approval Code',
+        noTransactions: 'No transactions found',
       },
-      original: 'Original Amount',
-      insurance: 'Insurance Amount',
-      insurancePaid: 'Insurance Paid',
-      insuranceDiscount: 'Insurance Discount',
-      patientPaid: 'Patient Paid',
-      remaining: 'Remaining',
-      transactions: 'Transactions',
     },
     label: {
       visits: 'visits',
@@ -13309,6 +15415,8 @@ const translations = {
       placeholder: 'ابحث بالاسم أو رقم الجوال...',
     },
     btn: {
+          print: 'طباعة',
+
       search: 'بحث',
       clear: 'مسح',
       start: 'بدء الزيارة',
@@ -13367,15 +15475,39 @@ const translations = {
     },
     payment: {
       details: {
+        thankYou: 'شكراً لدفعكم!',
+    generatedAt: 'تم الإنشاء في',
         title: 'تفاصيل الدفع',
+        visitNumber: 'زيارة رقم',
+        patient: 'المريض',
+        doctor: 'الطبيب',
+        totalAmount: 'المبلغ الإجمالي',
+        currency: 'العملة',
+        paid: 'مدفوع',
+        originalAmount: 'المبلغ الأصلي',
+        insuranceAmount: 'مبلغ التأمين',
+        insurancePaid: 'المدفوع من التأمين',
+        insuranceDiscount: 'خصم التأمين',
+        patientPaid: 'المدفوع من المريض',
+        remaining: 'المتبقي',
+        transactions: 'المعاملات',
+        paymentMethod: 'طريقة الدفع',
+        amount: 'المبلغ',
+        paidAt: 'تاريخ الدفع',
+        receiptNumber: 'رقم الإيصال',
+        insuranceFields: 'بيانات التأمين',
+        posFields: 'بيانات POS',
+        provider: 'المزود',
+        class: 'الفئة',
+        type: 'النوع',
+        coverage: 'التغطية',
+        acceptNumber: 'رقم القبول',
+        terminalId: 'رقم الجهاز',
+        referenceNumber: 'رقم المرجع',
+        cardType: 'نوع البطاقة',
+        approvalCode: 'رمز الموافقة',
+        noTransactions: 'لا توجد معاملات',
       },
-      original: 'المبلغ الأصلي',
-      insurance: 'مبلغ التأمين',
-      insurancePaid: 'المدفوع من التأمين',
-      insuranceDiscount: 'خصم التأمين',
-      patientPaid: 'المدفوع من المريض',
-      remaining: 'المتبقي',
-      transactions: 'المعاملات',
     },
     label: {
       visits: 'زيارات',
@@ -13420,6 +15552,1306 @@ const translations = {
   },
 };
 
+// ---------- Payment Details Modal Component ----------
+// const PaymentDetailsModal = ({ visit, paymentData, onClose, t }) => {
+//   if (!paymentData) return null;
+
+//   const formatDate = (dateString) => {
+//     if (!dateString) return '-';
+//     try {
+//       const date = new Date(dateString);
+//       return date.toLocaleString();
+//     } catch (e) {
+//       return dateString;
+//     }
+//   };
+
+//   const formatCurrency = (amount) => {
+//     if (amount === null || amount === undefined) return '-';
+//     return amount.toFixed(2);
+//   };
+
+//   const getPaymentMethodLabel = (method) => {
+//     return t.paymentMethods[method] || method;
+//   };
+
+//   return (
+//     <>
+//       <style>{`
+//         .payment-details-modal-overlay {
+//           position: fixed;
+//           top: 0;
+//           left: 0;
+//           right: 0;
+//           bottom: 0;
+//           background: rgba(0, 0, 0, 0.6);
+//           display: flex;
+//           justify-content: center;
+//           align-items: center;
+//           z-index: 3000;
+//           padding: 20px;
+//           animation: fadeIn 0.3s ease;
+//         }
+
+//         .payment-details-modal {
+//           background: white;
+//           border-radius: 16px;
+//           padding: 24px;
+//           max-width: 800px;
+//           width: 100%;
+//           max-height: 90vh;
+//           overflow-y: auto;
+//           box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+//           animation: slideUp 0.3s ease;
+//         }
+
+//         .payment-details-header {
+//           display: flex;
+//           justify-content: space-between;
+//           align-items: center;
+//           margin-bottom: 20px;
+//           border-bottom: 2px solid #e2e8f0;
+//           padding-bottom: 15px;
+//         }
+
+//         .payment-details-header h2 {
+//           margin: 0;
+//           font-size: 22px;
+//           color: #2d3748;
+//         }
+
+//         .payment-details-header .close-btn {
+//           background: #e2e8f0;
+//           border: none;
+//           border-radius: 8px;
+//           padding: 8px 16px;
+//           cursor: pointer;
+//           font-size: 14px;
+//           transition: all 0.2s;
+//         }
+
+//         .payment-details-header .close-btn:hover {
+//           background: #cbd5e0;
+//         }
+
+//         .payment-details-summary {
+//           display: grid;
+//           grid-template-columns: 1fr 1fr;
+//           gap: 10px;
+//           background: #f7fafc;
+//           padding: 15px;
+//           border-radius: 12px;
+//           margin-bottom: 20px;
+//         }
+
+//         .payment-details-summary .summary-item {
+//           display: flex;
+//           justify-content: space-between;
+//           padding: 4px 0;
+//           font-size: 14px;
+//         }
+
+//         .payment-details-summary .summary-item .label {
+//           color: #4a5568;
+//           font-weight: 500;
+//         }
+
+//         .payment-details-summary .summary-item .value {
+//           font-weight: 600;
+//           color: #2d3748;
+//         }
+
+//         .payment-details-summary .summary-item .value.positive {
+//           color: #e53e3e;
+//         }
+
+//         .payment-details-summary .summary-item .value.zero {
+//           color: #48bb78;
+//         }
+
+//         .payment-details-summary .summary-item .value.green {
+//           color: #48bb78;
+//         }
+
+//         .payment-details-transactions-title {
+//           font-size: 16px;
+//           font-weight: 600;
+//           color: #2d3748;
+//           margin: 15px 0 10px 0;
+//         }
+
+//         .payment-details-transactions-table-wrapper {
+//           overflow-x: auto;
+//         }
+
+//         .payment-details-transactions-table {
+//           width: 100%;
+//           border-collapse: collapse;
+//           font-size: 13px;
+//         }
+
+//         .payment-details-transactions-table th {
+//           background: #f8f9fa;
+//           padding: 10px;
+//           text-align: left;
+//           font-weight: 600;
+//           color: #2d3748;
+//           border-bottom: 2px solid #e2e8f0;
+//         }
+
+//         .payment-details-transactions-table td {
+//           padding: 10px;
+//           border-bottom: 1px solid #edf2f7;
+//           vertical-align: top;
+//         }
+
+//         .payment-details-transactions-table tr:hover td {
+//           background: #f7fafc;
+//         }
+
+//         .payment-details-transactions-table .payment-method-badge {
+//           display: inline-block;
+//           padding: 2px 10px;
+//           border-radius: 12px;
+//           font-size: 11px;
+//           font-weight: 600;
+//         }
+
+//         .payment-details-transactions-table .payment-method-badge.CASH {
+//           background: #c6f6d5;
+//           color: #22543d;
+//         }
+
+//         .payment-details-transactions-table .payment-method-badge.POS {
+//           background: #bee3f8;
+//           color: #2a4365;
+//         }
+
+//         .payment-details-transactions-table .payment-method-badge.INSURANCE {
+//           background: #fefcbf;
+//           color: #744210;
+//         }
+
+//         .payment-details-transactions-table .payment-method-badge.FREE {
+//           background: #e9d8fd;
+//           color: #44337a;
+//         }
+
+//         .payment-details-transactions-table .insurance-details {
+//           font-size: 12px;
+//           color: #4a5568;
+//           margin-top: 4px;
+//         }
+
+//         .payment-details-transactions-table .insurance-details div {
+//           margin: 2px 0;
+//         }
+
+//         .payment-details-transactions-table .pos-details {
+//           font-size: 12px;
+//           color: #4a5568;
+//           margin-top: 4px;
+//         }
+
+//         .payment-details-transactions-table .pos-details div {
+//           margin: 2px 0;
+//         }
+
+//         .payment-details-no-transactions {
+//           text-align: center;
+//           padding: 30px;
+//           color: #a0aec0;
+//         }
+
+//         @media (max-width: 768px) {
+//           .payment-details-modal {
+//             padding: 16px;
+//             max-width: 95%;
+//           }
+
+//           .payment-details-summary {
+//             grid-template-columns: 1fr;
+//           }
+
+//           .payment-details-transactions-table {
+//             font-size: 12px;
+//           }
+
+//           .payment-details-transactions-table th,
+//           .payment-details-transactions-table td {
+//             padding: 6px 8px;
+//           }
+//         }
+
+//         @media (prefers-color-scheme: dark) {
+//           .payment-details-modal-overlay {
+//             background: rgba(0, 0, 0, 0.7);
+//           }
+
+//           .payment-details-modal {
+//             background: #1a1a2e;
+//           }
+
+//           .payment-details-header h2 {
+//             color: #ecf0f1;
+//           }
+
+//           .payment-details-header .close-btn {
+//             background: #2d2d44;
+//             color: #b0b0b0;
+//           }
+
+//           .payment-details-header .close-btn:hover {
+//             background: #3d3d5c;
+//           }
+
+//           .payment-details-summary {
+//             background: #2d2d44;
+//           }
+
+//           .payment-details-summary .summary-item .label {
+//             color: #b0b0b0;
+//           }
+
+//           .payment-details-summary .summary-item .value {
+//             color: #ecf0f1;
+//           }
+
+//           .payment-details-transactions-title {
+//             color: #ecf0f1;
+//           }
+
+//           .payment-details-transactions-table th {
+//             background: #1a1a2e;
+//             color: #ecf0f1;
+//             border-bottom-color: #3d3d5c;
+//           }
+
+//           .payment-details-transactions-table td {
+//             color: #b0b0b0;
+//             border-bottom-color: #3d3d5c;
+//           }
+
+//           .payment-details-transactions-table tr:hover td {
+//             background: #1a1a2e;
+//           }
+
+//           .payment-details-transactions-table .payment-method-badge.CASH {
+//             background: #22543d;
+//             color: #c6f6d5;
+//           }
+
+//           .payment-details-transactions-table .payment-method-badge.POS {
+//             background: #2a4365;
+//             color: #bee3f8;
+//           }
+
+//           .payment-details-transactions-table .payment-method-badge.INSURANCE {
+//             background: #744210;
+//             color: #fefcbf;
+//           }
+
+//           .payment-details-transactions-table .payment-method-badge.FREE {
+//             background: #44337a;
+//             color: #e9d8fd;
+//           }
+
+//           .payment-details-transactions-table .insurance-details {
+//             color: #b0b0b0;
+//           }
+
+//           .payment-details-transactions-table .pos-details {
+//             color: #b0b0b0;
+//           }
+
+//           .payment-details-no-transactions {
+//             color: #666;
+//           }
+//         }
+//       `}</style>
+
+//       <div className="payment-details-modal-overlay" onClick={onClose}>
+//         <div className="payment-details-modal" onClick={(e) => e.stopPropagation()}>
+//           <div className="payment-details-header">
+//             <h2>💳 {t.payment.details.title}</h2>
+//             <button className="close-btn" onClick={onClose}>✕ {t.btn.close}</button>
+//           </div>
+
+//           <div className="payment-details-summary">
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.visitNumber}{visit.id}</span>
+//               <span className="value">{visit.patientName}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.doctor}:</span>
+//               <span className="value">{visit.doctorName}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.currency}:</span>
+//               <span className="value">{paymentData.currency || 'JOD'}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.originalAmount}:</span>
+//               <span className="value">{formatCurrency(paymentData.originalAmount)}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.insuranceAmount}:</span>
+//               <span className="value">{formatCurrency(paymentData.insuranceAmount)}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.insurancePaid}:</span>
+//               <span className="value green">{formatCurrency(paymentData.insurancePaidAmount)}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.insuranceDiscount}:</span>
+//               <span className="value green">{formatCurrency(paymentData.insuranceDiscount)}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.patientPaid}:</span>
+//               <span className="value">{formatCurrency(paymentData.patientPaid)}</span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.remaining}:</span>
+//               <span className={`value ${paymentData.remainingAmount === 0 ? 'zero' : 'positive'}`}>
+//                 {formatCurrency(paymentData.remainingAmount)}
+//               </span>
+//             </div>
+//             <div className="summary-item">
+//               <span className="label">{t.payment.details.paid}:</span>
+//               <span className="value">{paymentData.paid ? '✅ Yes' : '❌ No'}</span>
+//             </div>
+//           </div>
+
+//           <div className="payment-details-transactions-title">
+//             📋 {t.payment.details.transactions} ({paymentData.payments?.length || 0})
+//           </div>
+
+//           {paymentData.payments && paymentData.payments.length > 0 ? (
+//             <div className="payment-details-transactions-table-wrapper">
+//               <table className="payment-details-transactions-table">
+//                 <thead>
+//                   <tr>
+//                     <th>{t.payment.details.paymentMethod}</th>
+//                     <th>{t.payment.details.amount}</th>
+//                     <th>{t.payment.details.receiptNumber}</th>
+//                     <th>{t.payment.details.paidAt}</th>
+//                     <th>{t.payment.details.details}</th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {paymentData.payments.map((payment, index) => (
+//                     <tr key={payment.id || index}>
+//                       <td>
+//                         <span className={`payment-method-badge ${payment.paymentMethod}`}>
+//                           {getPaymentMethodLabel(payment.paymentMethod)}
+//                         </span>
+//                       </td>
+//                       <td>{formatCurrency(payment.amount || payment.insuranceAmount || 0)}</td>
+//                       <td>{payment.paymentNumber || '-'}</td>
+//                       <td>{formatDate(payment.paidAt)}</td>
+//                       <td>
+//                         {/* Insurance Details */}
+//                         {payment.paymentMethod === 'INSURANCE' && (
+//                           <div className="insurance-details">
+//                             <div><strong>{t.payment.details.provider}:</strong> {payment.insuranceProvider || '-'}</div>
+//                             <div><strong>{t.payment.details.class}:</strong> {payment.insuranceClass || '-'}</div>
+//                             <div><strong>{t.payment.details.type}:</strong> {payment.insuranceType || '-'}</div>
+//                             <div><strong>{t.payment.details.coverage}:</strong> {payment.coveragePercent || 0}%</div>
+//                             <div><strong>{t.payment.details.acceptNumber}:</strong> {payment.insuranceAcceptNumber || '-'}</div>
+//                             <div><strong>{t.payment.details.insurancePaid}:</strong> {formatCurrency(payment.insurancePaidAmount)}</div>
+//                             <div><strong>{t.payment.details.insuranceDiscount}:</strong> {formatCurrency(payment.insuranceDiscount)}</div>
+//                           </div>
+//                         )}
+                        
+//                         {/* POS Details */}
+//                         {payment.paymentMethod === 'POS' && (
+//                           <div className="pos-details">
+//                             <div><strong>{t.payment.details.terminalId}:</strong> {payment.terminalId || '-'}</div>
+//                             <div><strong>{t.payment.details.referenceNumber}:</strong> {payment.referenceNumber || '-'}</div>
+//                             <div><strong>{t.payment.details.cardType}:</strong> {payment.cardType || '-'}</div>
+//                             <div><strong>{t.payment.details.approvalCode}:</strong> {payment.approvalCode || '-'}</div>
+//                           </div>
+//                         )}
+
+//                         {/* Free/Cash - no additional details */}
+//                         {['FREE', 'CASH'].includes(payment.paymentMethod) && (
+//                           <div className="insurance-details" style={{ color: '#718096' }}>
+//                             {payment.paymentMethod === 'FREE' ? '🆓 Free payment' : '💵 Cash payment'}
+//                           </div>
+//                         )}
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             </div>
+//           ) : (
+//             <div className="payment-details-no-transactions">
+//               {t.payment.details.noTransactions}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// ---------- Payment Details Modal Component ----------
+const PaymentDetailsModal = ({ visit, paymentData, onClose, t }) => {
+  if (!paymentData) return null;
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    if (amount === null || amount === undefined) return '-';
+    return amount.toFixed(2);
+  };
+
+  const getPaymentMethodLabel = (method) => {
+    return t.paymentMethods[method] || method;
+  };
+
+  // ---------- Print Invoice Function ----------
+  const handlePrintInvoice = () => {
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    
+    if (!printWindow) {
+      alert('Please allow popups to print the invoice');
+      return;
+    }
+
+    const currentDate = new Date().toLocaleString();
+    const invoiceNumber = `INV-${visit.id}-${Date.now().toString().slice(-6)}`;
+
+    let transactionsHtml = '';
+    paymentData.payments?.forEach((payment, index) => {
+      const methodLabel = getPaymentMethodLabel(payment.paymentMethod);
+      const amount = formatCurrency(payment.amount || payment.insuranceAmount || 0);
+      const receiptNumber = payment.paymentNumber || '-';
+      const paidAt = formatDate(payment.paidAt);
+      
+      transactionsHtml += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${methodLabel}</td>
+          <td>${amount}</td>
+          <td>${receiptNumber}</td>
+          <td>${paidAt}</td>
+        </tr>
+      `;
+    });
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Invoice #${invoiceNumber}</title>
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: #fff;
+            color: #333;
+          }
+          .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          }
+          .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #4299e1;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+          }
+          .invoice-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2d3748;
+          }
+          .invoice-title span {
+            color: #4299e1;
+          }
+          .invoice-number {
+            text-align: right;
+            font-size: 14px;
+            color: #4a5568;
+          }
+          .invoice-number strong {
+            color: #2d3748;
+          }
+          .invoice-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+          }
+          .invoice-details .detail-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          }
+          .invoice-details .detail-group .label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .invoice-details .detail-group .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+          }
+          .invoice-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            border-left: 4px solid #4299e1;
+          }
+          .invoice-summary .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+          }
+          .invoice-summary .summary-item .label {
+            color: #4a5568;
+            font-weight: 500;
+          }
+          .invoice-summary .summary-item .value {
+            font-weight: 600;
+            color: #2d3748;
+          }
+          .invoice-summary .summary-item .value.green {
+            color: #48bb78;
+          }
+          .invoice-summary .summary-item .value.red {
+            color: #e53e3e;
+          }
+          .invoice-summary .summary-item .value.total {
+            font-size: 18px;
+            color: #2b6cb0;
+          }
+          .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+          }
+          .invoice-table th {
+            background: #edf2f7;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+          }
+          .invoice-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+          }
+          .invoice-table tr:last-child td {
+            border-bottom: none;
+          }
+          .invoice-table .payment-method {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+          }
+          .invoice-table .payment-method.CASH {
+            background: #c6f6d5;
+            color: #22543d;
+          }
+          .invoice-table .payment-method.POS {
+            background: #bee3f8;
+            color: #2a4365;
+          }
+          .invoice-table .payment-method.INSURANCE {
+            background: #fefcbf;
+            color: #744210;
+          }
+          .invoice-table .payment-method.FREE {
+            background: #e9d8fd;
+            color: #44337a;
+          }
+          .invoice-footer {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #718096;
+          }
+          .invoice-footer .thank-you {
+            font-weight: 600;
+            color: #2d3748;
+          }
+          .print-btn {
+            display: none;
+          }
+          @media print {
+            body {
+              padding: 20px;
+            }
+            .invoice-container {
+              border: none;
+              box-shadow: none;
+              padding: 0;
+            }
+            .print-btn {
+              display: none !important;
+            }
+            .invoice-details {
+              background: #f7fafc;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-summary {
+              background: #ebf8ff;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-table th {
+              background: #edf2f7;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-table .payment-method.CASH {
+              background: #c6f6d5;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-table .payment-method.POS {
+              background: #bee3f8;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-table .payment-method.INSURANCE {
+              background: #fefcbf;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .invoice-table .payment-method.FREE {
+              background: #e9d8fd;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+          }
+          @media (max-width: 768px) {
+            .invoice-details {
+              grid-template-columns: 1fr;
+            }
+            .invoice-summary {
+              grid-template-columns: 1fr;
+            }
+            .invoice-header {
+              flex-direction: column;
+              text-align: center;
+              gap: 10px;
+            }
+            .invoice-number {
+              text-align: center;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-container">
+          <div class="invoice-header">
+            <div class="invoice-title">💳 <span>INVOICE</span></div>
+            <div class="invoice-number">
+              <strong>Invoice #:</strong> ${invoiceNumber}<br>
+              <strong>Date:</strong> ${currentDate}
+            </div>
+          </div>
+
+          <div class="invoice-details">
+            <div class="detail-group">
+              <span class="label">${t.payment.details.patient}</span>
+              <span class="value">${visit.patientName}</span>
+            </div>
+            <div class="detail-group">
+              <span class="label">${t.payment.details.doctor}</span>
+              <span class="value">${visit.doctorName}</span>
+            </div>
+            <div class="detail-group">
+              <span class="label">${t.payment.details.visitNumber}</span>
+              <span class="value">#${visit.id}</span>
+            </div>
+            <div class="detail-group">
+              <span class="label">${t.payment.details.currency}</span>
+              <span class="value">${paymentData.currency || 'JOD'}</span>
+            </div>
+          </div>
+
+          <div class="invoice-summary">
+            <div class="summary-item">
+              <span class="label">${t.payment.details.originalAmount}:</span>
+              <span class="value">${formatCurrency(paymentData.originalAmount)}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">${t.payment.details.insuranceAmount}:</span>
+              <span class="value">${formatCurrency(paymentData.insuranceAmount)}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">${t.payment.details.insurancePaid}:</span>
+              <span class="value green">${formatCurrency(paymentData.insurancePaidAmount)}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">${t.payment.details.insuranceDiscount}:</span>
+              <span class="value green">${formatCurrency(paymentData.insuranceDiscount)}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">${t.payment.details.patientPaid}:</span>
+              <span class="value">${formatCurrency(paymentData.patientPaid)}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">${t.payment.details.remaining}:</span>
+              <span class="value ${paymentData.remainingAmount === 0 ? 'green' : 'red'}">
+                ${formatCurrency(paymentData.remainingAmount)}
+              </span>
+            </div>
+            <div class="summary-item" style="grid-column: 1 / -1; border-top: 2px solid #e2e8f0; padding-top: 10px; margin-top: 5px;">
+              <span class="label" style="font-size: 16px; font-weight: 700;">${t.payment.details.totalAmount}:</span>
+              <span class="value total">${formatCurrency(paymentData.originalAmount || 0)}</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 15px; font-weight: 600; color: #2d3748;">
+            📋 ${t.payment.details.transactions} (${paymentData.payments?.length || 0})
+          </div>
+
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>${t.payment.details.paymentMethod}</th>
+                <th>${t.payment.details.amount}</th>
+                <th>${t.payment.details.receiptNumber}</th>
+                <th>${t.payment.details.paidAt}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${transactionsHtml}
+            </tbody>
+          </table>
+
+          <div class="invoice-footer">
+            <span class="thank-you">${t.payment.details.thankYou || 'Thank you for your payment!'}</span>
+            <span>${t.payment.details.generatedAt || 'Generated at'}: ${currentDate}</span>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+    
+    // Wait for content to load then print
+    printWindow.onload = function() {
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    };
+  };
+
+  return (
+    <>
+      <style>{`
+        .payment-details-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 3000;
+          padding: 20px;
+          animation: fadeIn 0.3s ease;
+        }
+
+        .payment-details-modal {
+          background: white;
+          border-radius: 16px;
+          padding: 24px;
+          max-width: 800px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+          animation: slideUp 0.3s ease;
+        }
+
+        .payment-details-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          border-bottom: 2px solid #e2e8f0;
+          padding-bottom: 15px;
+        }
+
+        .payment-details-header h2 {
+          margin: 0;
+          font-size: 22px;
+          color: #2d3748;
+        }
+
+        .payment-details-header .header-actions {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        }
+
+        .payment-details-header .close-btn {
+          background: #e2e8f0;
+          border: none;
+          border-radius: 8px;
+          padding: 8px 16px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: all 0.2s;
+        }
+
+        .payment-details-header .close-btn:hover {
+          background: #cbd5e0;
+        }
+
+        .payment-details-header .print-btn {
+          background: #4299e1;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 8px 16px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .payment-details-header .print-btn:hover {
+          background: #3182ce;
+          transform: scale(1.05);
+        }
+
+        .payment-details-summary {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          background: #f7fafc;
+          padding: 15px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+        }
+
+        .payment-details-summary .summary-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 4px 0;
+          font-size: 14px;
+        }
+
+        .payment-details-summary .summary-item .label {
+          color: #4a5568;
+          font-weight: 500;
+        }
+
+        .payment-details-summary .summary-item .value {
+          font-weight: 600;
+          color: #2d3748;
+        }
+
+        .payment-details-summary .summary-item .value.positive {
+          color: #e53e3e;
+        }
+
+        .payment-details-summary .summary-item .value.zero {
+          color: #48bb78;
+        }
+
+        .payment-details-summary .summary-item .value.green {
+          color: #48bb78;
+        }
+
+        .payment-details-transactions-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #2d3748;
+          margin: 15px 0 10px 0;
+        }
+
+        .payment-details-transactions-table-wrapper {
+          overflow-x: auto;
+        }
+
+        .payment-details-transactions-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+        }
+
+        .payment-details-transactions-table th {
+          background: #f8f9fa;
+          padding: 10px;
+          text-align: left;
+          font-weight: 600;
+          color: #2d3748;
+          border-bottom: 2px solid #e2e8f0;
+        }
+
+        .payment-details-transactions-table td {
+          padding: 10px;
+          border-bottom: 1px solid #edf2f7;
+          vertical-align: top;
+        }
+
+        .payment-details-transactions-table tr:hover td {
+          background: #f7fafc;
+        }
+
+        .payment-details-transactions-table .payment-method-badge {
+          display: inline-block;
+          padding: 2px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 600;
+        }
+
+        .payment-details-transactions-table .payment-method-badge.CASH {
+          background: #c6f6d5;
+          color: #22543d;
+        }
+
+        .payment-details-transactions-table .payment-method-badge.POS {
+          background: #bee3f8;
+          color: #2a4365;
+        }
+
+        .payment-details-transactions-table .payment-method-badge.INSURANCE {
+          background: #fefcbf;
+          color: #744210;
+        }
+
+        .payment-details-transactions-table .payment-method-badge.FREE {
+          background: #e9d8fd;
+          color: #44337a;
+        }
+
+        .payment-details-transactions-table .insurance-details {
+          font-size: 12px;
+          color: #4a5568;
+          margin-top: 4px;
+        }
+
+        .payment-details-transactions-table .insurance-details div {
+          margin: 2px 0;
+        }
+
+        .payment-details-transactions-table .pos-details {
+          font-size: 12px;
+          color: #4a5568;
+          margin-top: 4px;
+        }
+
+        .payment-details-transactions-table .pos-details div {
+          margin: 2px 0;
+        }
+
+        .payment-details-no-transactions {
+          text-align: center;
+          padding: 30px;
+          color: #a0aec0;
+        }
+
+        @media (max-width: 768px) {
+          .payment-details-modal {
+            padding: 16px;
+            max-width: 95%;
+          }
+
+          .payment-details-summary {
+            grid-template-columns: 1fr;
+          }
+
+          .payment-details-transactions-table {
+            font-size: 12px;
+          }
+
+          .payment-details-transactions-table th,
+          .payment-details-transactions-table td {
+            padding: 6px 8px;
+          }
+          
+          .payment-details-header .header-actions {
+            flex-direction: column;
+          }
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .payment-details-modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+          }
+
+          .payment-details-modal {
+            background: #1a1a2e;
+          }
+
+          .payment-details-header h2 {
+            color: #ecf0f1;
+          }
+
+          .payment-details-header .close-btn {
+            background: #2d2d44;
+            color: #b0b0b0;
+          }
+
+          .payment-details-header .close-btn:hover {
+            background: #3d3d5c;
+          }
+
+          .payment-details-header .print-btn {
+            background: #3182ce;
+          }
+
+          .payment-details-header .print-btn:hover {
+            background: #4299e1;
+          }
+
+          .payment-details-summary {
+            background: #2d2d44;
+          }
+
+          .payment-details-summary .summary-item .label {
+            color: #b0b0b0;
+          }
+
+          .payment-details-summary .summary-item .value {
+            color: #ecf0f1;
+          }
+
+          .payment-details-transactions-title {
+            color: #ecf0f1;
+          }
+
+          .payment-details-transactions-table th {
+            background: #1a1a2e;
+            color: #ecf0f1;
+            border-bottom-color: #3d3d5c;
+          }
+
+          .payment-details-transactions-table td {
+            color: #b0b0b0;
+            border-bottom-color: #3d3d5c;
+          }
+
+          .payment-details-transactions-table tr:hover td {
+            background: #1a1a2e;
+          }
+
+          .payment-details-transactions-table .payment-method-badge.CASH {
+            background: #22543d;
+            color: #c6f6d5;
+          }
+
+          .payment-details-transactions-table .payment-method-badge.POS {
+            background: #2a4365;
+            color: #bee3f8;
+          }
+
+          .payment-details-transactions-table .payment-method-badge.INSURANCE {
+            background: #744210;
+            color: #fefcbf;
+          }
+
+          .payment-details-transactions-table .payment-method-badge.FREE {
+            background: #44337a;
+            color: #e9d8fd;
+          }
+
+          .payment-details-transactions-table .insurance-details {
+            color: #b0b0b0;
+          }
+
+          .payment-details-transactions-table .pos-details {
+            color: #b0b0b0;
+          }
+
+          .payment-details-no-transactions {
+            color: #666;
+          }
+        }
+      `}</style>
+
+      <div className="payment-details-modal-overlay" onClick={onClose}>
+        <div className="payment-details-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="payment-details-header">
+            <h2>💳 {t.payment.details.title}</h2>
+            <div className="header-actions">
+              <button 
+                className="print-btn" 
+                onClick={handlePrintInvoice}
+                title="Print Invoice"
+              >
+                🖨️ {t.btn.print || 'Print'}
+              </button>
+              <button className="close-btn" onClick={onClose}>✕ {t.btn.close}</button>
+            </div>
+          </div>
+
+          <div className="payment-details-summary">
+            <div className="summary-item">
+              <span className="label">{t.payment.details.visitNumber}{visit.id}</span>
+              <span className="value">{visit.patientName}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.doctor}:</span>
+              <span className="value">{visit.doctorName}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.currency}:</span>
+              <span className="value">{paymentData.currency || 'JOD'}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.originalAmount}:</span>
+              <span className="value">{formatCurrency(paymentData.originalAmount)}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.insuranceAmount}:</span>
+              <span className="value">{formatCurrency(paymentData.insuranceAmount)}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.insurancePaid}:</span>
+              <span className="value green">{formatCurrency(paymentData.insurancePaidAmount)}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.insuranceDiscount}:</span>
+              <span className="value green">{formatCurrency(paymentData.insuranceDiscount)}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.patientPaid}:</span>
+              <span className="value">{formatCurrency(paymentData.patientPaid)}</span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.remaining}:</span>
+              <span className={`value ${paymentData.remainingAmount === 0 ? 'zero' : 'positive'}`}>
+                {formatCurrency(paymentData.remainingAmount)}
+              </span>
+            </div>
+            <div className="summary-item">
+              <span className="label">{t.payment.details.paid}:</span>
+              <span className="value">{paymentData.paid ? '✅ Yes' : '❌ No'}</span>
+            </div>
+          </div>
+
+          <div className="payment-details-transactions-title">
+            📋 {t.payment.details.transactions} ({paymentData.payments?.length || 0})
+          </div>
+
+          {paymentData.payments && paymentData.payments.length > 0 ? (
+            <div className="payment-details-transactions-table-wrapper">
+              <table className="payment-details-transactions-table">
+                <thead>
+                  <tr>
+                    <th>{t.payment.details.paymentMethod}</th>
+                    <th>{t.payment.details.amount}</th>
+                    <th>{t.payment.details.receiptNumber}</th>
+                    <th>{t.payment.details.paidAt}</th>
+                    <th>{t.payment.details.details}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentData.payments.map((payment, index) => (
+                    <tr key={payment.id || index}>
+                      <td>
+                        <span className={`payment-method-badge ${payment.paymentMethod}`}>
+                          {getPaymentMethodLabel(payment.paymentMethod)}
+                        </span>
+                      </td>
+                      <td>{formatCurrency(payment.amount || payment.insuranceAmount || 0)}</td>
+                      <td>{payment.paymentNumber || '-'}</td>
+                      <td>{formatDate(payment.paidAt)}</td>
+                      <td>
+                        {/* Insurance Details */}
+                        {payment.paymentMethod === 'INSURANCE' && (
+                          <div className="insurance-details">
+                            <div><strong>{t.payment.details.provider}:</strong> {payment.insuranceProvider || '-'}</div>
+                            <div><strong>{t.payment.details.class}:</strong> {payment.insuranceClass || '-'}</div>
+                            <div><strong>{t.payment.details.type}:</strong> {payment.insuranceType || '-'}</div>
+                            <div><strong>{t.payment.details.coverage}:</strong> {payment.coveragePercent || 0}%</div>
+                            <div><strong>{t.payment.details.acceptNumber}:</strong> {payment.insuranceAcceptNumber || '-'}</div>
+                            <div><strong>{t.payment.details.insurancePaid}:</strong> {formatCurrency(payment.insurancePaidAmount)}</div>
+                            <div><strong>{t.payment.details.insuranceDiscount}:</strong> {formatCurrency(payment.insuranceDiscount)}</div>
+                          </div>
+                        )}
+                        
+                        {/* POS Details */}
+                        {payment.paymentMethod === 'POS' && (
+                          <div className="pos-details">
+                            <div><strong>{t.payment.details.terminalId}:</strong> {payment.terminalId || '-'}</div>
+                            <div><strong>{t.payment.details.referenceNumber}:</strong> {payment.referenceNumber || '-'}</div>
+                            <div><strong>{t.payment.details.cardType}:</strong> {payment.cardType || '-'}</div>
+                            <div><strong>{t.payment.details.approvalCode}:</strong> {payment.approvalCode || '-'}</div>
+                          </div>
+                        )}
+
+                        {/* Free/Cash - no additional details */}
+                        {['FREE', 'CASH'].includes(payment.paymentMethod) && (
+                          <div className="insurance-details" style={{ color: '#718096' }}>
+                            {payment.paymentMethod === 'FREE' ? '🆓 Free payment' : '💵 Cash payment'}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="payment-details-no-transactions">
+              {t.payment.details.noTransactions}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
 // ---------- Main Component ----------
 const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const t = translations[lang] || translations.en;
@@ -13435,6 +16867,8 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
   const [statusMsg, setStatusMsg] = useState(`✅ ${t.status.ready}`);
   const [viewMode, setViewMode] = useState('table');
   const [showPayment, setShowPayment] = useState(false);
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+  const [paymentDetailsData, setPaymentDetailsData] = useState(null);
   const [isDateSearch, setIsDateSearch] = useState(true);
   const [isActionInProgress, setIsActionInProgress] = useState(false);
   
@@ -13939,31 +17373,23 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
     }
   };
 
-  const showPaymentDetails = async (visitId) => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/visits/${visitId}/payments`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  // ---------- Show payment details in modal ----------
+ // ---------- Show payment details in modal ----------
+const handleShowPaymentDetails = async (visitId) => {
+  try {
+    setLoading(true);
+    const res = await fetch(`${BASE_URL}/api/visits/${visitId}/payments`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      const data = await res.json();
-
-      let msg = `💳 Payment Details for Visit #${visitId}\n\n`;
-      msg += `Original Amount: ${data.originalAmount || 0}\n`;
-      msg += `Insurance Amount: ${data.insuranceAmount || 0}\n`;
-      msg += `Insurance Paid: ${data.insurancePaidAmount || 0}\n`;
-      msg += `Insurance Discount: ${data.insuranceDiscount || 0}\n`;
-      msg += `Patient Paid: ${data.patientPaid || 0}\n`;
-      msg += `Remaining: ${data.remainingAmount || 0}\n\n`;
-      msg += `--- Transactions ---\n`;
-
-      (data.payments || []).forEach(p => {
-        msg += `${p.paymentMethod} | ${p.amount} | ${p.paidAt || ''}\n`;
-      });
-
-      alert(msg);
-    } catch (err) {
-      alert(`${t.msg.paymentDetailsFailed}: ${err.message}`);
-    }
-  };
+    const data = await res.json();
+    setPaymentDetailsData(data);
+    setShowPaymentDetails(true);
+  } catch (err) {
+    alert(`${t.msg.paymentDetailsFailed}: ${err.message}`);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ---------- Handle visit selection ----------
   const handleVisitSelect = useCallback(async (visit) => {
@@ -15161,7 +18587,7 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
                               className={`btn-view ${disabled ? 'danger' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                showPaymentDetails(visit.id);
+    handleShowPaymentDetails(visit.id);  // ✅ Changed to new name
                               }}
                               disabled={disabled}
                             >
@@ -15222,7 +18648,7 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
                         className="btn-view"
                         onClick={(e) => {
                           e.stopPropagation();
-                          showPaymentDetails(visit.id);
+    handleShowPaymentDetails(visit.id);  // ✅ Changed to new name
                         }}
                       >
                         📋 {t.btn.view}
@@ -15243,6 +18669,19 @@ const VisitTrackingScreen = ({ loggedUser, lang = 'en', onClose }) => {
             loggedUser={loggedUser}
             onClose={handlePaymentModalClose}
             onPaymentComplete={handlePaymentComplete}
+          />
+        )}
+
+        {/* Payment Details Modal */}
+        {showPaymentDetails && paymentDetailsData && (
+          <PaymentDetailsModal
+            visit={selectedVisit || filteredVisits.find(v => v.id === paymentDetailsData.visitId)}
+            paymentData={paymentDetailsData}
+            onClose={() => {
+              setShowPaymentDetails(false);
+              setPaymentDetailsData(null);
+            }}
+            t={t}
           />
         )}
       </div>
